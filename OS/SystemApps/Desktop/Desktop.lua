@@ -436,7 +436,9 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBorders, 
             :setPosition(buttonx,1)
             :setSize(1,1)
             :setText("\7")
-        :onClick(function() end)
+        :onClick(function() 
+            basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future")
+        end)
 
         --Creating Program Window
        
@@ -453,7 +455,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBorders, 
             frame:setBar(name, colors.gray, colors.white)
             button1:setForeground(colors.red)
             button2:setForeground(colors.orange)
-            button3:setForeground(colors.lime)
+            button3:setForeground(colors.lightGray)
         end)
         frame:onLoseFocus(function() 
             frame:setBar(name, colors.gray, colors.lightGray)
