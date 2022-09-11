@@ -1,0 +1,330 @@
+
+
+--119 x 50
+
+--  _  _ ___   _   ___  
+-- | || | __| /_\ |   \ 
+-- | __ | _| / _ \| |) |
+-- |_||_|___/_/ \_\___/ 
+
+-- API --
+local basalt = require(".Basalt")
+
+local mainFrame = basalt.createFrame():show()   
+mainFrame:setBackground(colors.lightGray)
+local rw, rh = mainFrame:getSize()
+
+local function Update()
+    basalt.autoUpdate()
+end
+
+local DockApps = {}
+
+local DesktopColor = colors.lightGray
+
+local UseDesktopImage = true
+
+local DesktopImage = "BucketOS/Apps/Desktop/Desktop2.nfp"
+
+local TimeFormat = true
+
+local createWindow
+
+local function DoubleClick(btn, func)
+    local doubleClickMaxTime = 0.25 -- in seconds
+    local doubleClick = 0
+    btn:onClick(function()
+        if(os.epoch("local")-doubleClickMaxTime*1000<=doubleClick)then
+            func()
+            doubleClick = 0
+        end
+        doubleClick = os.epoch("local")
+    end)
+end
+
+--         ___   _____  _   _ _____ 
+-- | |    /_\ \ / / _ \| | | |_   _|
+-- | |__ / _ \ V / (_) | |_| | | |  
+-- |____/_/ \_\_| \___/ \___/  |_|  
+
+local desktop = mainFrame:addFrame()
+desktop:setBackground(false)
+
+if UseDesktopImage then
+    local desktopBG = mainFrame:addImage():loadImage(DesktopImage)
+       :setSize(119,71)
+       :setPosition(1,1)
+    else
+        desktop:setBackground(DesktopColor)                    
+    end
+
+local UpMenu = desktop:addFrame():show()
+    :setSize(rw,1)
+    :setPosition(1,1)
+    :setBackground(colors.gray)
+    :setForeground(colors.white)
+
+
+-- Clock
+local Clock = UpMenu:addLabel()
+    :setBackground(false)
+    :setText("")
+    :setForeground(colors.white)
+
+    local function RunClock()
+      while true do
+        local day = os.day()
+        local time = os.time()
+        local ClockWidth = rw - Clock:getSize() - 1
+        Clock:setPosition(ClockWidth,1)
+        Clock:setText("Day "..day.." | "..textutils.formatTime(time, TimeFormat))
+        sleep(0.8)
+      end
+    end
+
+local function centerObject(Object, height, ow, oh)
+    ow, oh = Object:getSize()
+    Object:setPosition(rw.."/2".." - "..ow.."/2", height)
+end
+
+local DockPanel = desktop:addFrame()
+local Dock = DockPanel:addFrame():setSize(1,2)
+local function loadDock(path, Object)
+    
+    DockPanel:remove()
+        DockPanel = desktop:addFrame()
+
+        if table.getn(DockApps) == 0 then
+            DockPanel:hide()
+        else
+            DockPanel:show()
+        end
+    -----------------------
+        local DownPanelSize = table.getn(DockApps)*5 + 1
+        local DownPanelPos = DownPanelSize/2
+        DownPanelPos = rw/2 - DownPanelSize
+            DockPanel
+                :setSize(DownPanelSize,3)
+                :setPosition(DownPanelPos.."+4", rh.."-3")
+    -----------------------
+    Dock = DockPanel:addFrame()
+        Dock:setBackground(colors.gray)
+        Dock:setForeground(colors.lightGray)
+        Dock:setPosition(1,2)
+        Dock:setSize(DownPanelSize, 3)
+        local n = 1
+        for _, object in pairs(DockApps) do
+        local path = DockApps[n]
+            Object = DockPanel:addFrame()
+                :setSize(4,3)
+                    Object:setPosition("1+"..n.."*5-4", 1)--
+                    if fs.exists(path.."/icon.nfp") then
+                        Object:addImage():loadImage(path.."/icon.nfp"):setSize(4,2):shrink()
+                    else
+                        Object:addImage():loadImage("BucketOS/OS/Icons/app.nfp"):setSize(4,2):shrink()
+                    end
+                    Object:addLabel():setForeground(colors.lightGray):setBackground(colors.gray):setText("\140\140\140\140"):setPosition(1,3):setSize(4,1)--"\140".."\140".."\140"
+                    n = n+1
+                    centerObject(DockPanel, rh-3)
+
+                    Object:onClick(function(self, event, button)
+                        if button == 1 then
+                            createWindow(path, false, nil, fs.getName(path)..n)
+                        else
+                            deleteWindow(id)
+                        end
+                    end)
+        end
+        return DockPanel, Dock
+end -- This is the end of Dock
+
+-- ANIMATIONS
+local function hideWindow(frame, program)
+    desktop:removeFocusedObject()
+    frame:setBar(" ", colors.gray, colors.gray)
+    basalt.update()
+    local hideWAnimation = mainFrame:addAnimation()
+        :setObject(frame)
+        :size(1,1,1)
+        :move(119, 50,1)
+        program:pause()
+
+    hideWAnimation:play()
+    end
+
+local function showWindow(desktop, frame, program, lastw, lasth, lastx, lasty, name)
+    local showWAnimation = mainFrame:addAnimation()
+        :setObject(frame)
+        :size(lastw,lasth,1)
+        :move(lastx,lasty,1)
+    showWAnimation:play()
+    frame:setBar(name, colors.whute, colors.lightGray)
+    frame:setBarTextAlign("center")
+    program:pause(false)
+    end
+
+deleteWindow = function(id, frame) -- REWRITE THIS
+        table.remove(DockApps, id)
+        loadDock()
+        frame:remove()
+end
+
+-- CREATING WINDOWS
+createWindow = function(path, fullscreen, executable, name, ww, wh, useBorders, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe)
+    
+    --Getting Settings from file
+    if fs.exists(path.."/settings") then
+
+        settings.load(path.."/settings")
+        fullscreen = settings.get(fullscreen, fullscreen)
+        ww = settings.get(width, ww)
+        wh = settings.get(heigt, wh)
+        name = settings.get(name, fs.getName(path))
+        executable = settings.get(executable, fs.getName(path)..".lua")
+        useBorders = settings.get(borders, false)
+        pageBackground = settings.get(background, colors.black)
+
+    else -- settings defaults if there is no file
+        if fullscreen == nil then
+            fullscreen = false
+        end
+        if ww == nil then
+            ww = 51
+        end
+        if wh == nil then
+            wh = 19
+        end
+        if executable == nil then
+            executable = fs.getName(path)
+        end
+        if name == nil then
+            name = executable
+        end
+        if useBorders == nil then
+            useBorders = false
+        end
+        if pageBackground == nil then
+            pageBackground = colors.black
+        end
+    end
+    id = table.getn(DockApps) + 1
+    table.insert(DockApps, id, path)
+    loadDock()
+    --Creating Frame
+    if fullscreen then -- if fullscreen
+
+        frame = desktop:addFrame(id)
+            :setSize(rw,rh)
+            :setPosition(1,1)
+        fullscreen = true
+
+        shell.setDir(":")
+
+        program = frame:addProgram()
+            :setSize(rw,rh)
+            :setPosition(1,1)
+            :execute(path.."/"..executable)
+        shell.setDir("BucketOS/Apps/Desktop")
+
+    else -- if general frame
+        if framePosx == nil or framePosy == nil then
+            framePosx = math.random(5,rw-ww-5)
+            framePosy = math.random(5,rh-wh-5)
+        end
+
+        frame = desktop:addFrame():setBorder(colors.gray, "left", "right", "bottom")
+            :setSize(ww,wh.."+1")
+            :setPosition(framePosx,framePosy)
+            :setMovable(true)
+            :setBackground(colors.gray)
+            :setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
+            if useBorders then
+                frame:setBackground(pageBackground)
+                frame:setBorder(colors.gray, "left", "right", "bottom")
+            end
+
+    end
+
+        --Creating Buttons
+        buttonx = ww
+        button1 = frame:addButton() -- close button
+            :setForeground(colors.lightGray)
+            :setBackground(false) --colors.red
+            :setPosition(buttonx,1)
+            :setSize(1,1)
+            :setText("\132")
+        :onClick(function()
+            deleteWindow(id, frame)
+
+        end)
+        buttonx = ww - 2
+        button2 = frame:addButton() -- hide button
+            :setForeground(colors.lightGray)
+            :setBackground(false) --colors.orange
+            :setPosition(buttonx,1)
+            :setSize(1,1)
+            :setText("\132")
+        :onClick(function() 
+            local lastw, lasth = frame:getSize()
+            local lastx, lasty = frame:getPosition()
+            hideWindow(frame, program)
+
+            frame:addThread():start(function()
+                sleep(2)
+                showWindow(desktop, frame, program, lastw, lasth, lastx, lasty, name)
+            end)
+        end)
+
+        buttonx = ww - 4
+        button3 = frame:addButton() -- fullscreen button
+            :setForeground(colors.lightGray)
+            :setBackground(false) --colors.lime
+            :setPosition(buttonx,1)
+            :setSize(1,1)
+            :setText("\132")
+        :onClick(function() end)
+
+        --Creating Program Window
+       
+        shell.setDir(":")
+        program = frame:addProgram()
+            :setSize(ww,wh)
+            :setPosition(1,2)
+            :execute(path.."/"..executable) -- running program
+        shell.setDir("BucketOS/Apps/Desktop")
+
+        --Focus change
+
+        frame:onGetFocus(function() 
+            frame:setBar(name, colors.gray, colors.white)
+            button1:setForeground(colors.red)
+            button2:setForeground(colors.orange)
+            button3:setForeground(colors.lime)
+        end)
+        frame:onLoseFocus(function() 
+            frame:setBar(name, colors.gray, colors.lightGray)
+            button1:setForeground(colors.lightGray)
+            button2:setForeground(colors.lightGray)
+            button3:setForeground(colors.lightGray)
+        end)
+        return frame
+end
+
+
+
+
+-------------------
+createWindow("BucketOS/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
+--createWindow("BucketOS/Apps/Finder", false, "Finder.lua", "Finder")
+
+loadDock()
+
+desktop:onKeyUp(function(self, event, key)
+    if key == keys.c then
+        createWindow("BucketOS/Apps/Finder", false, "Finder.lua", "Finder")
+    end
+    end)
+
+parallel.waitForAll(Update, RunClock)
+
+basalt:addFrame()
