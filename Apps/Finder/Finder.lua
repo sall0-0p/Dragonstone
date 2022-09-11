@@ -5,7 +5,7 @@
                  
 --> Api <--   
 shell.setDir(":")
-local basalt = require(".Basalt")
+local basalt = require(".BucketOS.OS.Libraries.Basalt")
 shell.setDir("BucketOS/Apps/Finder")
 
 local mainFrame = basalt.createFrame():show()
