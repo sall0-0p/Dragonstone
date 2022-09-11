@@ -151,7 +151,10 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     end
     
     
+    if id == nil then  
+    else
     databaser.setValue("RunningWindows", "hidden", "false", id)
+    end
     
     --program:pause(false)
     end
