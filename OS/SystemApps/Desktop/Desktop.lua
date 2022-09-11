@@ -1,4 +1,5 @@
-
+--TODO: make Silent Apps (do not appear in dock)
+--TODO: Button for moving unmovable windows
 
 --119 x 50
 
@@ -78,6 +79,11 @@ local UpMenu = desktop:addFrame():show()
     :setBackground(colors.gray)
     :setForeground(colors.white)
 
+local UpMenuBottom = desktop:addFrame():show()
+    :setSize(rw,1)
+    :setPosition(1,2)
+    :setBackground(false, "\131", colors.gray)
+
 
 -- Clock
 local Clock = UpMenu:addLabel()
@@ -95,6 +101,19 @@ local Clock = UpMenu:addLabel()
         sleep(0.8)
       end
     end
+
+local UwUButton = UpMenu:addButton()
+    :setBackground(false)
+    :setForeground(colors.white)
+    :setText("UwU")
+    :setSize(3,1)
+    :setPosition(2,1)
+
+    local openMyUwU = function()
+        createWindow("BucketOS/OS/SystemApps/AboutThisUwU", false, "About.lua", "MyUwU", 39, 12, false, 6, 1)
+        basalt.debug("MyUwU coming soon. Your UwUloper")
+    end
+    UwUButton:onClick(openMyUwU)
 
 local function centerObject(Object, height, ow, oh, launchpad)
     ow, oh = Object:getSize()
@@ -130,7 +149,7 @@ local function hideWindow(frame, program, ah, aw)
         aw = rw + 5
         hideWAnimation:move(aw, ah, 1)
     
-        --program:pause()
+        program:pause()
 
     hideWAnimation:play()
     end
@@ -156,7 +175,7 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     databaser.setValue("RunningWindows", "hidden", "false", id)
     end
     
-    --program:pause(false)
+    program:pause(false)
     end
 
 
@@ -182,6 +201,7 @@ local LaunchPad = desktop:addFrame()
         :setPosition(2,4)
         :setSize(11,11)
         :setScrollable(true)
+        :selectItem(4)
         :setSelectedItem(colors.orange, colors.black)
 
         local AppList = fs.list("BucketOS/Apps")
@@ -325,7 +345,7 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
 end
 
 -- CREATING WINDOWS
-createWindow = function(path, fullscreen, executable, name, ww, wh, useBorders, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe)
+createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe)
     
     --Getting Settings from file
     if fs.exists(path.."/UwUsettings") then
@@ -338,6 +358,9 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBorders, 
         executable = settings.get(executable, fs.getName(path)..".lua")
         useBorders = settings.get(borders, false)
         pageBackground = settings.get(background, colors.black)
+        useBar = settings.get(bar, true)
+        buttonPosX = settings.get(ButtonPosX, nil)
+        buttonPosY = settings.get(ButtonPosY, nil)
 
     else -- settings defaults if there is no file
         if fullscreen == nil then
@@ -360,6 +383,9 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBorders, 
         end
         if pageBackground == nil then
             pageBackground = colors.black
+        end
+        if useBar == nil then
+            useBar = true
         end
     end
     --databaser.addValue("RunningWindows", "id", id)
@@ -390,83 +416,113 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBorders, 
             framePosy = math.random(5,10)
         end
 
-        frame = desktop:addFrame():setBorder(colors.gray, "left", "right", "bottom")
-            :setSize(ww,wh.."+1")
+        frame = desktop:addFrame()
+            
             :setPosition(framePosx,framePosy)
             :setMovable(true)
             :setBackground(colors.gray)
-            :setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
-            if useBorders then
-                frame:setBackground(pageBackground)
+            if useBar == true then
+                frame:setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
                 frame:setBorder(colors.gray, "left", "right", "bottom")
+                frame:setSize(ww,wh.."+1")
+            else
+                frame:setBorder(colors.gray)
+                frame:setSize(ww,wh)
             end
         --databaser.addValue("RunningWindows", "frame", frame)
     end
-
-        --Creating Buttons
-        buttonx = ww
-        button1 = frame:addButton() -- close button
-            :setForeground(colors.lightGray)
-            :setBackground(false) --colors.red
-            :setPosition(buttonx,1)
-            :setSize(1,1)
-            :setText("\7")
-        :onClick(function()
-            deleteWindow(name, frame)
-
-        end)
-        buttonx = ww - 2
-        button2 = frame:addButton() -- hide button
-            :setForeground(colors.lightGray)
-            :setBackground(false) --colors.orange
-            :setPosition(buttonx,1)
-            :setSize(1,1)
-            :setText("\7")
-        :onClick(function() 
-            local lastw, lasth = frame:getSize()
-            local lastx, lasty = frame:getPosition()
-            hideWindow(frame, program)
-            local id = databaser.search("RunningWindows", "name", name)
-            databaser.setValue("RunningWindows", "hidden", "true", id)
-            loadDock()
-            
-        end)
-
-        buttonx = ww - 4
-        button3 = frame:addButton() -- fullscreen button
-            :setForeground(colors.lightGray)
-            :setBackground(false) --colors.lime
-            :setPosition(buttonx,1)
-            :setSize(1,1)
-            :setText("\7")
-        :onClick(function() 
-            basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future")
-        end)
-
-        --Creating Program Window
-       
         shell.setDir(":")
         program = frame:addProgram()
             :setSize(ww,wh)
-            :setPosition(1,2)
-            :execute(path.."/"..executable) -- running program
+            if useBar == false then
+            program:setPosition(1,1)
+            else
+            program:setPosition(1,2)
+            end
+            program:execute(path.."/"..executable) -- running program
         shell.setDir("BucketOS/OS/SystemApps/Desktop")
+
+        --Creating Buttons
+        if useBar == false and buttonPosX == nil then
+        
+        else
+            if buttonPosX == nil then
+                buttonx = ww
+            else
+                buttonx = buttonPosX
+            end
+            if ButtonPosY == nil then
+                buttony = 1
+            else
+                buttony = buttonPosY
+            end
+            button1 = frame:addButton() -- close button
+                :setForeground(colors.lightGray)
+                :setBackground(false) --colors.red
+                :setPosition(buttonx, buttony)
+                :setSize(1,1)
+                :setText("\7")
+                if useBar == false then
+                    button1:setForeground(colors.red)
+                end
+            button1:onClick(function()
+                deleteWindow(name, frame)
+
+            end)
+            buttonx = buttonx - 2
+            button2 = frame:addButton() -- hide button
+                :setForeground(colors.lightGray)
+                :setBackground(false) --colors.orange
+                :setPosition(buttonx,1)
+                :setSize(1,1)
+                :setText("\7")
+                if useBar == false then
+                    button2:setForeground(colors.orange)
+                end
+            button2:onClick(function() 
+                local lastw, lasth = frame:getSize()
+                local lastx, lasty = frame:getPosition()
+                hideWindow(frame, program)
+                local id = databaser.search("RunningWindows", "name", name)
+                databaser.setValue("RunningWindows", "hidden", "true", id)
+                loadDock()
+                
+            end)
+
+            buttonx = buttonx - 2
+            button3 = frame:addButton() -- fullscreen button
+                :setForeground(colors.lightGray)
+                :setBackground(false) --colors.lime
+                :setPosition(buttonx,1)
+                :setSize(1,1)
+                :setText("\7")
+                if useBar == false then
+                    button3:setForeground(colors.lime)
+                end
+            button3:onClick(function() 
+                basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future")
+            end)
+        end
+
+        --Creating Program Window
+       
+        
         FramePosx, FramePosy = frame:getPosition()
         --Focus change
-
-        frame:onGetFocus(function() 
-            frame:setBar(name, colors.gray, colors.white)
-            button1:setForeground(colors.red)
-            button2:setForeground(colors.orange)
-            button3:setForeground(colors.lightGray)
-        end)
-        frame:onLoseFocus(function() 
-            frame:setBar(name, colors.gray, colors.lightGray)
-            button1:setForeground(colors.lightGray)
-            button2:setForeground(colors.lightGray)
-            button3:setForeground(colors.lightGray)
-        end)
-
+        if useBar == true then
+            frame:onGetFocus(function() 
+                frame:setBar(name, colors.gray, colors.white)
+                button1:setForeground(colors.red)
+                button2:setForeground(colors.orange)
+                button3:setForeground(colors.lightGray)
+            end)
+            frame:onLoseFocus(function() 
+                frame:setBar(name, colors.gray, colors.lightGray)
+                button1:setForeground(colors.lightGray)
+                button2:setForeground(colors.lightGray)
+                button3:setForeground(colors.lightGray)
+            end)
+        end
         mainFrame:onKeyUp(function(self, event, key)
             if key == keys.k then
                 
@@ -485,7 +541,7 @@ end
 
 -------------------
 --createWindow("BucketOS/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
-createWindow("BucketOS/Apps/Terminal/", false, nil, "Terminal (Shell)")
+createWindow("BucketOS/Apps/Terminal/", false, nil, "Terminal")
 --createWindow("BucketOS/Apps/Finder", false, "Finder.lua", "Finder")
 --createWindow("BucketOS/Apps/Worm/", false, "Worm")
 --createWindow(":", false, "LevelOS.lua", "LevelOS", 119, 50)
