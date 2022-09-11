@@ -293,7 +293,6 @@ local function loadDock(path)
                         if ObjectStatus[n] == false then
                             createWindow(path, false)
                         else
-                            showWindow(desktop, name)
                         end
                     end
 

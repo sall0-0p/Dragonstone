@@ -1,4 +1,6 @@
 
 local basalt = require(".BucketOS.OS.Libraries.Basalt")
 
-local mainFrame = basalt.createFrame()
+basalt.debug("This is debug from basalt!")
+local mainFrame = basalt.createFrame():show()
+    mainFrame:setBackground(colors.black)
