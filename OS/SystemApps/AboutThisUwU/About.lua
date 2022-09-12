@@ -20,10 +20,12 @@ if version == nil then
 end
 local mainFrame = basalt.createFrame():show()
     :setBackground(colors.gray)
+
 local Overview = mainFrame:addFrame()
     :setBackground(colors.black)
     :setPosition(1,2)
     :setSize(39,13)
+    :setScrollable(true)
 
 local Storage = mainFrame:addFrame():hide()
     :setBackground(colors.black)
@@ -50,9 +52,9 @@ local MenuBar = mainFrame:addMenubar()
     :setSize(28,1)
     :setScrollable(true)
     :addItem("Overview", colors.gray, colors.lightGray)
-    --[[:addItem("Storage", colors.gray, colors.lightGray)
+    :addItem("Storage", colors.gray, colors.lightGray)
     :addItem("Support", colors.gray, colors.lightGray)
-    :addItem("Resources", colors.gray, colors.lightGray)]]--
+    --:addItem("Resources", colors.gray, colors.lightGray)
 
     MenuBar:onChange(function()
         if MenuBar:getItemIndex() == 1 then
@@ -91,9 +93,9 @@ local VersionLabel = Overview:addLabel()
     :setBackground(colors.black)
     :setPosition(17,5)
 
-local OSLogo = Overview:addImage():loadImage("BucketOS/OS/SystemApps/AboutThisUwU/logo.nfp"):shrink()
+--[[local OSLogo = Overview:addImage():loadImage("BucketOS/OS/SystemApps/AboutThisUwU/logo.nfp"):shrink()
     :setPosition(2,4)
-    :setSize(12,8)
+    :setSize(12,8)]]--
 
 local CPULabel = Overview:addLabel()
     :setText("\4 CPU: Idk")
@@ -198,7 +200,7 @@ local UpdatesWindow = Overview:addFrame():hide()
             :setPosition(2,3)
             :setBackground(false)
             :setForeground(colors.black)
-            :setText("  No Updates  ")
+            :setText("  No Updates =)")
     CheckVersions:onClick(function() 
         UpdatesWindow:show()
         local success = checkVersion(version)
@@ -212,5 +214,81 @@ local UpdatesWindow = Overview:addFrame():hide()
             StatusLabel:setText(" Check Failed ER: 405 ")
         end
     end)
-    basalt.autoUpdate()
+
+local DiskFrame = Storage:addFrame()
+    :setBackground(colors.black)
+    :setSize(39,3)
+    :setPosition(1,1)
+    local Load = 0
+    if fs.getFreeSpace("BucketOS") < 1000000 then
+        local Load = fs.getFreeSpace("BucketOS")/1000000 * 100
+    end
+    local DiskIcon = DiskFrame:addImage():loadImage("BucketOS/OS/Icons/Disks/Blue.nfp"):shrink()
+        :setPosition(2,2)
+        :setSize(3,3)
+
+    local DiskName = DiskFrame:addLabel()
+        :setText("HDD "..Load.." %")
+        :setPosition(6,2)
+        :setBackground(colors.black)
+        :setForeground(colors.lightGray)
+        :setSize(13,1)
+
+    local DiskProgress = DiskFrame:addProgressbar()
+        :setDirection(0)
+        :setBackground(colors.gray)
+        :setProgressBar(colors.lightGray, " ")
+        :setPosition(6,3)
+        :setSize(29)
+
+        if Load < 4 then
+            DiskProgress:setProgress(4)
+            :setDirection(0)
+        else
+            DiskProgress:setProgress(Load)
+            :setDirection(3)
+        end
+
+
+    local ComingSoonLabel = Storage:addLabel()
+        :setText("Coming Soon")
+        :setForeground(colors.lightGray)
+        :setBackground(false)
+        :setPosition(14,5)
+
+    
+    local GitHubLabel = Support:addLabel()
+        :setText("GitHub: ")
+        :setPosition(2,2)
+        :setForeground(colors.white)
+        :setBackground(false)
+        local GitHubLinkLabel = Support:addLabel()
+        :setText("https://github.com/sall0-0p/UwUntuCC")
+        :setPosition(3,3)
+        :setForeground(colors.lightGray)
+        :setBackground(false)
+
+    local DiscordLabel = Support:addLabel()
+        :setText("Discord: ")
+        :setPosition(2,5)
+        :setForeground(colors.white)
+        :setBackground(false)
+        local DiscordLinkLabel = Support:addLabel()
+        :setText("https://discord.gg/ANaFzp8n8Y")
+        :setPosition(3,6)
+        :setForeground(colors.lightGray)
+        :setBackground(false)
+
+    local ImportantLabel = Support:addLabel()
+        :setText("SEARCHING FOR DEVS =)")
+        :setPosition(2,12)
+        :setForeground(colors.magenta)
+        :setBackground(false)
+
+
+basalt.autoUpdate()
+
+
+
+
 
