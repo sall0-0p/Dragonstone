@@ -110,8 +110,7 @@ local UwUButton = UpMenu:addButton()
     :setPosition(2,1)
 
     local openMyUwU = function()
-        createWindow("BucketOS/OS/SystemApps/AboutThisUwU", false, "About.lua", "MyUwU", 39, 12, false, 6, 1)
-        basalt.debug("MyUwU coming soon. Your UwUloper")
+        createWindow("BucketOS/OS/SystemApps/AboutThisUwU", false, "About.lua", "MyUwU", 39, 14, false, 6, 1, true, true)
     end
     UwUButton:onClick(openMyUwU)
 
@@ -345,7 +344,7 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
 end
 
 -- CREATING WINDOWS
-createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe)
+createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe)
     
     --Getting Settings from file
     if fs.exists(path.."/UwUsettings") then
@@ -361,6 +360,8 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         useBar = settings.get(bar, true)
         buttonPosX = settings.get(ButtonPosX, nil)
         buttonPosY = settings.get(ButtonPosY, nil)
+        disableFullscreen = settings.get(disableFullscreen, false)
+        disableHide = settings.get(disableHide, false)
 
     else -- settings defaults if there is no file
         if fullscreen == nil then
@@ -386,6 +387,12 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         end
         if useBar == nil then
             useBar = true
+        end
+        if disableFullscreen == nil then
+            disableFullscreen = false
+        end
+        if disableHide == nil then
+            disableHide = false
         end
     end
     --databaser.addValue("RunningWindows", "id", id)
@@ -426,7 +433,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 frame:setBorder(colors.gray, "left", "right", "bottom")
                 frame:setSize(ww,wh.."+1")
             else
-                frame:setBorder(colors.gray)
+                frame:setBorder(colors.gray, "left", "right", "bottom")
                 frame:setSize(ww,wh)
             end
         --databaser.addValue("RunningWindows", "frame", frame)
@@ -473,15 +480,16 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 :setPosition(buttonx,1)
                 :setSize(1,1)
                 :setText("\7")
-            button2:onClick(function() 
-                local lastw, lasth = frame:getSize()
-                local lastx, lasty = frame:getPosition()
-                hideWindow(frame, program)
-                local id = databaser.search("RunningWindows", "name", name)
-                databaser.setValue("RunningWindows", "hidden", "true", id)
-                loadDock()
-                
-            end)
+            if disableHide ~= true then
+                button2:onClick(function() 
+                    local lastw, lasth = frame:getSize()
+                    local lastx, lasty = frame:getPosition()
+                    hideWindow(frame, program)
+                    local id = databaser.search("RunningWindows", "name", name)
+                    databaser.setValue("RunningWindows", "hidden", "true", id)
+                    loadDock()
+                end)
+            end
 
             buttonx = buttonx - 2
             button3 = frame:addButton() -- fullscreen button
@@ -490,9 +498,11 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 :setPosition(buttonx,1)
                 :setSize(1,1)
                 :setText("\7")
-            button3:onClick(function() 
-                basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future")
-            end)
+            if disableFullscreen ~= true then
+                button3:onClick(function() 
+                    --basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future")
+                end)
+            end
         end
 
         --Creating Program Window
@@ -503,15 +513,24 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
     if button1 ~= nil and button2 ~= nil and button3 ~= nil then
             frame:onGetFocus(function() 
                 frame:setBar(name, colors.gray, colors.white)
+
                 button1:setForeground(colors.red)
-                button2:setForeground(colors.orange)
-                button3:setForeground(colors.lightGray)
+
+                if disableHide ~= true then
+                    button2:setForeground(colors.orange)
+                end
+                if disableFullscreen ~= true then
+                    button3:setForeground(colors.lightGray)
+                end
+                
             end)
+
             frame:onLoseFocus(function() 
                 frame:setBar(name, colors.gray, colors.lightGray)
                 button1:setForeground(colors.lightGray)
                 button2:setForeground(colors.lightGray)
                 button3:setForeground(colors.lightGray)
+
             end)
         end
         mainFrame:onKeyUp(function(self, event, key)
