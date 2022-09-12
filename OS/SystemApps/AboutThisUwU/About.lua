@@ -202,8 +202,6 @@ local UpdatesWindow = Overview:addFrame():hide()
     CheckVersions:onClick(function() 
         UpdatesWindow:show()
         local success = checkVersion(version)
-        basalt.debug(success)
-        basalt.debug(version)
         if success ~= version then
             StatusLabel:setText(" Update Found ")
         elseif success == nil then
