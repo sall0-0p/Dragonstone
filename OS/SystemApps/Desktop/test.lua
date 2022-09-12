@@ -1,3 +1,4 @@
-local desktop = require("Desktop")
+settings.load("BucketOS/Apps/Figma/UwUSettings")
+local curSettings = settings.getNames()
 
-desktop.createWindow("BucketOS/Apps/ASCII", false, "ASCII")
+print(textutils.serialise(curSettings))

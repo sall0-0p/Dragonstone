@@ -212,7 +212,7 @@ local LaunchPad = desktop:addFrame()
         local function LaunchProgram()
             local AppsFolder = fs.list("BucketOS/Apps/")
             local SelectedID = LaunchPadList:getItemIndex()
-            createWindow("BucketOS/Apps/"..AppsFolder[SelectedID], false)
+            createWindow("BucketOS/Apps/"..AppsFolder[SelectedID])
         end
 
         LaunchPadList:onChange(LaunchProgram)
@@ -231,15 +231,8 @@ local LaunchPad = desktop:addFrame()
                 LaunchPadIcon:setText("\30")
             else end
         end)
-        LaunchPadLabel:onClickUp(function(self, event, button)
-            local LaunchPadX, LaunchPadY = LaunchPad:getPosition()
-            if button == 1 and LaunchPadY == rh-2 then
-                showLaunchPad(LaunchPad)
-                LaunchPadIcon:setText("\31")
-            elseif button == 1 and LaunchPadY == rh-15 then
-                hideLaunchPad(LaunchPad)
-                LaunchPadIcon:setText("\30")
-            else end
+        LaunchPadLabel:onClickUp(function()
+            LaunchProgram()
         end)
 
 
@@ -352,26 +345,38 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
 end
 
 -- CREATING WINDOWS
-createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe)
+createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
     
     --Getting Settings from file
     if fs.exists(path.."/UwUsettings") then
 
-        settings.load(path.."/UwUsettings")
-        fullscreen = settings.get(fullscreen, fullscreen)
-        ww = settings.get(width, ww)
-        wh = settings.get(heigt, wh)
-        name = settings.get(name, fs.getName(path))
-        executable = settings.get(executable, fs.getName(path)..".lua")
-        useBorders = settings.get(borders, false)
-        pageBackground = settings.get(background, colors.black)
-        useBar = settings.get(bar, true)
-        buttonPosX = settings.get(ButtonPosX, nil)
-        buttonPosY = settings.get(ButtonPosY, nil)
-        disableFullscreen = settings.get(disableFullscreen, false)
-        disableHide = settings.get(disableHide, false)
+        --[[]settings.load(path.."/UwUsettings")
+        ww = settings.get("width", ww)
+        wh = settings.get("height", wh)
+        name = settings.get("name", fs.getName(path))
+        executable = settings.get("executable", fs.getName(path)..".lua")
+        useBorders = settings.get("borders", false)
+        pageBackground = settings.get("background", colors.black)
+        useBar = settings.get("bar", true)
+        buttonPosX = settings.get("ButtonPosX", nil)
+        buttonPosY = settings.get("ButtonPosY", nil)
+        disableFullscreen = settings.get("disableFullscreen", false)
+        disableHide = settings.get("disableHide", false)]]--
 
-    else -- settings defaults if there is no file
+        local file = fs.open(path.."/UwUsettings", "r")
+        local curSettings = file.readAll()
+        curSettings = textutils.unserialize(curSettings)
+        ww = curSettings[1]
+        wh = curSettings[2]
+        name = curSettings[3]
+        executable = curSettings[4]
+        useBar = curSettings[5]
+        buttonPosX = curSettings[6]
+        buttonPosY = curSettings[7]
+        disableFullscreen = curSettings[8]
+        disableHide = curSettings[9]
+        file.close()
+    end
         if fullscreen == nil then
             fullscreen = false
         end
@@ -402,7 +407,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         if disableHide == nil then
             disableHide = false
         end
-    end
+
     --databaser.addValue("RunningWindows", "id", id)
     databaser.addValue("RunningWindows", "name", name)
     databaser.addValue("RunningWindows", "path", path)
@@ -444,6 +449,8 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 frame:setBorder(colors.gray, "left", "right", "bottom")
                 frame:setSize(ww,wh)
             end
+
+            
         --databaser.addValue("RunningWindows", "frame", frame)
     end
         shell.setDir(":")
@@ -541,6 +548,15 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
 
             end)
         end
+
+        --[[MoveButton = frame:addLabel()
+                :setSize(1,1)
+                :setBackground(colors.gray)
+                :setPosition(1,1)
+                :setText("\186")
+                :setForeground(colors.white)]]--
+
+        
         mainFrame:onKeyUp(function(self, event, key)
             if(key==keys.k)and(basalt.isKeyDown(keys.leftCtrl))then
                 showWindow(frame, program, ww, wh, FramePosx, FramePosy, name)
@@ -554,7 +570,7 @@ end
 
 -------------------
 --createWindow("BucketOS/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
-createWindow("BucketOS/Apps/Terminal/", false, nil, "Terminal")
+createWindow("BucketOS/Apps/Terminal/", nil, nil, "Terminal")
 --createWindow("BucketOS/Apps/Finder", false, "Finder.lua", "Finder")
 --createWindow("BucketOS/Apps/Worm/", false, "Worm")
 --createWindow(":", false, "LevelOS.lua", "LevelOS", 119, 50)
