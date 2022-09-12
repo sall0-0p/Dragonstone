@@ -462,9 +462,6 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 :setPosition(buttonx, buttony)
                 :setSize(1,1)
                 :setText("\7")
-                if useBar == false then
-                    button1:setForeground(colors.red)
-                end
             button1:onClick(function()
                 deleteWindow(name, frame)
 
@@ -476,9 +473,6 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 :setPosition(buttonx,1)
                 :setSize(1,1)
                 :setText("\7")
-                if useBar == false then
-                    button2:setForeground(colors.orange)
-                end
             button2:onClick(function() 
                 local lastw, lasth = frame:getSize()
                 local lastx, lasty = frame:getPosition()
@@ -496,9 +490,6 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 :setPosition(buttonx,1)
                 :setSize(1,1)
                 :setText("\7")
-                if useBar == false then
-                    button3:setForeground(colors.lime)
-                end
             button3:onClick(function() 
                 basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future")
             end)
@@ -509,7 +500,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         
         FramePosx, FramePosy = frame:getPosition()
         --Focus change
-        if useBar == true then
+    if button1 ~= nil and button2 ~= nil and button3 ~= nil then
             frame:onGetFocus(function() 
                 frame:setBar(name, colors.gray, colors.white)
                 button1:setForeground(colors.red)
@@ -524,17 +515,12 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
             end)
         end
         mainFrame:onKeyUp(function(self, event, key)
-            if key == keys.k then
-                
-                
+            if(key==keys.k)and(basalt.isKeyDown(keys.leftCtrl))then
                 showWindow(frame, program, ww, wh, FramePosx, FramePosy, name)
                 loadDock()
             end
         end)
         return frame
-
-        
-
 end
 
 
@@ -548,12 +534,5 @@ createWindow("BucketOS/Apps/Terminal/", false, nil, "Terminal")
 
 loadDock()
 
-
-
-desktop:onKeyUp(function(self, event, key)
-    if key == keys.c then
-        loadDock()
-    end
-    end)
 
 parallel.waitForAll(Update, RunClock)
