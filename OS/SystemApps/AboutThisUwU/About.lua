@@ -280,7 +280,7 @@ local DiskFrame = Storage:addFrame()
         :setBackground(false)
 
     local ImportantLabel = Support:addLabel()
-        :setText("SEARCHING FOR DEVS =)")
+        :setText("LOOKING FOR DEVS =)")
         :setPosition(2,12)
         :setForeground(colors.magenta)
         :setBackground(false)
