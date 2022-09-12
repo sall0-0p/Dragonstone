@@ -324,8 +324,16 @@ local function loadDock(path)
 end
 
 
-
-
+--[[local desktopIcon = desktop:addFrame()
+    :setSize(5,5)
+    :setPosition(3,3)
+    :setBackground(colors.lightGray)
+    
+    local desktopIconImage = desktopIcon:addImage()
+        :setPosition(2,1)
+        :loadImage("BucketOS/OS/Icons/folder.nfp")
+        :setSize(3,2)
+        :shrink()]]--
 
 
 

@@ -258,7 +258,7 @@ local DiskFrame = Storage:addFrame()
 
     
     local GitHubLabel = Support:addLabel()
-        :setText("GitHub: ")
+        :setText("\4 GitHub: ")
         :setPosition(2,2)
         :setForeground(colors.white)
         :setBackground(false)
@@ -269,7 +269,7 @@ local DiskFrame = Storage:addFrame()
         :setBackground(false)
 
     local DiscordLabel = Support:addLabel()
-        :setText("Discord: ")
+        :setText("\4 Discord: ")
         :setPosition(2,5)
         :setForeground(colors.white)
         :setBackground(false)
