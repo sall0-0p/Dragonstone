@@ -1,23 +1,27 @@
 local basalt = require(".BucketOS.OS.Libraries.Basalt")
 local databaser = require(".BucketOS.OS.Libraries.Databaser.main")
-
+local path = "BucketOS/Apps/Figma"
 local mainFrame = basalt.createFrame()
     :setBackground(colors.black)
 
 local rw, rh = mainFrame:getSize()
 
-local ProjectX, ProjectY = 51,19
+local ProjectW, ProjectH = 51,19
 
 local Enviroment = mainFrame:addFrame()
-    :setSize(ProjectX.."+16", ProjectY.."+10")
+    :setSize(rw.."-16", rh.."-6")
     :setPosition(16,6)
     :setBackground(colors.black)
     :setScrollable(true)
     local ew, eh = Enviroment:getSize()
 
     local Project = Enviroment:addFrame()
-    :setSize(ProjectX, ProjectY)
-    :setPosition(8,5)
+    Project:setSize(ProjectW, ProjectH)
+    local ProjectX = ew/2 - ProjectW/2
+    local ProjectY = eh/2 - ProjectH/2
+    ProjectX = math.floor(ProjectX) + 1
+    ProjectY = math.floor(ProjectY) + 1
+    Project:setPosition(ProjectX, ProjectY)
 
     local EnviromentScrollVert = mainFrame:addScrollbar():hide()
         :setSize(1, rh.."-6")
@@ -71,12 +75,12 @@ local TopMenu = mainFrame:addFrame()
         :setBackground(colors.lightGray, "\143", colors.gray)
 
     local TopMenuMenuBar = TopMenu:addMenubar()
-        :setPosition(1,1)
-        :setSize(70,1)
+        :setPosition(rw.."-40",1)
+        :setSize(40,1)
+        :setScrollable(true)
         :setBackground(colors.gray)
         :setForeground(colors.lightGray)
         :setSelectedItem(colors.gray, colors.white)
-        :addItem("Project", colors.gray, colors.lightGray)
         :addItem("Object", colors.gray, colors.lightGray)
         :addItem("Edit", colors.gray, colors.lightGray)
         :addItem("Events", colors.gray, colors.lightGray)
@@ -84,6 +88,37 @@ local TopMenu = mainFrame:addFrame()
         :addItem("ASCII", colors.gray, colors.lightGray)
         :addItem("FAQ", colors.gray, colors.lightGray)
 
+    local ObjectsTab = TopMenu:addFrame()
+        :setSize(rw,3)
+        :setPosition(1,2)
+        
+        local AddFrame = ObjectsTab:addButton()
+            :setPosition(2,1)
+            :setSize(7,3)
+            :setBackground(colors.lightGray)
+            :setForeground(colors.white)
+            :setText("Frame")
+            --[[:addLabel()
+            :setPosition(2,1)
+            :setSize(7,1)
+            :setText("Frame")
+            :setForeground(colors.white)]]
+
+        local AddLabel = ObjectsTab:addButton()
+            :setPosition(11,1)
+            :setSize(7,1)
+            :setBackground(colors.lightGray)
+            :setForeground(colors.white)
+            :setText("Label")
+
+        local AddImage = ObjectsTab:addButton()
+            :setPosition(11,3)
+            :setSize(7,1)
+            :setBackground(colors.lightGray)
+            :setForeground(colors.white)
+            :setText("Image")
+
+    
 local Explorer = mainFrame:addFrame()
     :setSize(15,rh.."-5")
     :setPosition(1,6)
