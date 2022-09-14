@@ -18,3 +18,17 @@ When user runs program, UwU calls config file, where developer can state some se
 "disableFullScreen" - currently fullscreen is in dev. dont mind it.
 
 "disableHide" - for programs where folding/unfolding works incorrectly, you can just turn this ability off.
+
+## Template
+
+{
+    width,
+    height,
+    "name",
+    executable,
+    bar,
+    buttonPosX,
+    buttonPosY,
+    disableFullScreen,
+    disableHide,
+}
