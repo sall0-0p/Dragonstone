@@ -651,4 +651,4 @@ createWindow("UwUntuCC/Apps/Terminal/", nil, "Terminal.lua", "Terminal")
 loadDock()
 
 
-parallel.waitForAll(Update)
+parallel.waitForAll(Update, RunClock)
