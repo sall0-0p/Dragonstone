@@ -3,7 +3,7 @@ local logFileName = "basaltLog.txt"
 
 local defaultLogType = "Debug"
 
-fs.delete(logDir~="" and logDir.."/"..logFileName or logFileName)
+--fs.delete(logDir~="" and logDir.."/"..logFileName or logFileName)
 
 local mt = {
     __call = function(_,text, typ)

@@ -170,16 +170,16 @@ return function(name)
                         if (imageGotShrinked) then
                             -- this is copy pasted (and slightly changed) from blittle by Bomb Bloke: http://www.computercraft.info/forums2/index.php?/topic/25354-cc-176-blittle-api/
                             local t, tC, bC = shrinkedImage[1], shrinkedImage[2], shrinkedImage[3]
-                            for i = 1, shrinkedImage.height do
+                            for i = 1, math.min(shrinkedImage.height, h) do
                                 local tI = t[i]
                                 if type(tI) == "string" then
-                                    self.parent:setText(obx, oby + i - 1, tI)
-                                    self.parent:setFG(obx, oby + i - 1, tC[i])
-                                    self.parent:setBG(obx, oby + i - 1, bC[i])
+                                    self.parent:setText(obx, oby + i - 1, tI:sub(1,w))
+                                    self.parent:setFG(obx, oby + i - 1, tC[i]:sub(1,w))
+                                    self.parent:setBG(obx, oby + i - 1, bC[i]:sub(1,w))
                                 elseif type(tI) == "table" then
-                                    self.parent:setText(obx, oby + i - 1, tI[2])
-                                    self.parent:setFG(obx, oby + i - 1, tC[i])
-                                    self.parent:setBG(obx, oby + i - 1, bC[i])
+                                    self.parent:setText(obx, oby + i - 1, tI[2]:sub(1,w))
+                                    self.parent:setFG(obx, oby + i - 1, tC[i]:sub(1,w))
+                                    self.parent:setBG(obx, oby + i - 1, bC[i]:sub(1,w))
                                 end
                             end
                         else

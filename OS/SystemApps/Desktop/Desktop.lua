@@ -16,6 +16,8 @@ local mainFrame = basalt.createFrame():show()
 mainFrame:setBackground(colors.lightGray)
 local rw, rh = mainFrame:getSize()
 
+--basalt.debug(textutils.formatTime(os.time("local"), true))
+
 local function Update()
     basalt.autoUpdate()
 end
@@ -43,6 +45,14 @@ local createWindow
 
 local ShowWindowF
 
+local TimeType = "local"
+
+if TimeType == "ingame" then
+    local TimeTimeOut = 0.8
+else
+    local TimeTimeOut = 15
+end
+
 local function DoubleClick(btn, func, mouseButton)
     local doubleClickMaxTime = 0.25 -- in seconds
     local doubleClick = 0
@@ -57,7 +67,8 @@ local function DoubleClick(btn, func, mouseButton)
     end)
 end
 
---         ___   _____  _   _ _____ 
+
+--  _      ___   _____  _   _ _____ 
 -- | |    /_\ \ / / _ \| | | |_   _|
 -- | |__ / _ \ V / (_) | |_| | | |  
 -- |____/_/ \_\_| \___/ \___/  |_|  
@@ -84,21 +95,22 @@ local UpMenuBottom = desktop:addFrame():show()
     :setPosition(1,2)
     :setBackground(false, "\131", colors.gray)
 
-
 -- Clock
 local Clock = UpMenu:addLabel()
     :setBackground(false)
     :setText("")
     :setForeground(colors.white)
+    :setSize(15,1)
 
     local function RunClock()
       while true do
-        local day = os.day()
-        local time = os.time()
+        
+        local time = os.time(TimeType)
+        day = os.date("%a %d %b")
         local ClockWidth = rw - Clock:getSize() - 1
         Clock:setPosition(ClockWidth,1)
-        Clock:setText("Day "..day.." | "..textutils.formatTime(time, TimeFormat))
-        sleep(0.8)
+        Clock:setText(day.." "..textutils.formatTime(time, TimeFormat))
+        sleep(5)
       end
     end
 
@@ -109,10 +121,58 @@ local UwUButton = UpMenu:addButton()
     :setSize(3,1)
     :setPosition(2,1)
 
+    local UwUMenu = desktop:addFrame()
+        :setSize(9, 6)
+        :setPosition(2,3)
+        :setBackground(colors.gray)
+        :setBorder(colors.black)
+
+        local myUwU = UwUMenu:addLabel()
+            :setPosition(1,1)
+            :setBackground(colors.gray)
+            :setForeground(colors.white)
+            :setText("About UwU")
+
+        local UwUMenuSeparator1 = UwUMenu:addLabel()
+            :setPosition(1,2)
+            :setBackground(colors.gray)
+            :setForeground(colors.lightGray)
+            :setText("---------")
+
+        local SettingsButton = UwUMenu:addLabel()
+            :setPosition(1,3)
+            :setBackground(colors.gray)
+            :setForeground(colors.white)
+            :setText("Settings")
+
+        local UwUStoreButton = UwUMenu:addLabel()
+            :setPosition(1,4)
+            :setBackground(colors.gray)
+            :setForeground(colors.white)
+            :setText("UwUStore")
+
+        local UwUMenuSeparator2 = UwUMenu:addLabel()
+            :setPosition(1,5)
+            :setBackground(colors.gray)
+            :setForeground(colors.lightGray)
+            :setText("---------")
+
+        local PowerButton = UwUMenu:addLabel()
+            :setPosition(1,6)
+            :setBackground(colors.gray)
+            :setForeground(colors.white)
+            :setText("Power")
+
+
     local openMyUwU = function()
-        createWindow("BucketOS/OS/SystemApps/AboutThisUwU", false, "About.lua", "MyUwU", 39, 14, false, 6, 1, true, true)
+        createWindow("BucketOS/OS/SystemApps/AboutThisUwU", false, "About.lua", "MyUwU", 39, 14, false, 6, 1, true, true, true)
     end
-    UwUButton:onClick(openMyUwU)
+    myUwU:onClick(openMyUwU)
+
+    local AreYouSure = function()
+        createWindow("BucketOS/OS/SystemApps/AreYouSure", false, nil, "Confirm", 26, 7, true, nil, nil, true, true, true)
+    end
+    PowerButton:onClick(AreYouSure)
 
 local function centerObject(Object, height, ow, oh, launchpad)
     ow, oh = Object:getSize()
@@ -345,7 +405,7 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
 end
 
 -- CREATING WINDOWS
-createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
+createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
     
     --Getting Settings from file
     if fs.exists(path.."/UwUsettings") then
@@ -375,6 +435,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         buttonPosY = curSettings[7]
         disableFullscreen = curSettings[8]
         disableHide = curSettings[9]
+        centered = curSettings[10]
         file.close()
     end
         if fullscreen == nil then
@@ -407,6 +468,9 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         if disableHide == nil then
             disableHide = false
         end
+        if centered == nil then
+            centered = false
+        end
 
     --databaser.addValue("RunningWindows", "id", id)
     databaser.addValue("RunningWindows", "name", name)
@@ -432,12 +496,21 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
 
     else -- if general frame
         if framePosx == nil or framePosy == nil then
-            framePosx = math.random(5,10)
-            framePosy = math.random(5,10)
+            if centered == false then
+            
+                framePosx = math.random(5,10)
+                framePosy = math.random(5,10)
+            
+            else
+
+                framePosx = rw/2 - ww/2
+                framePosy = rh/2 - wh/2
+                framePosx = math.floor( framePosx )
+                framePosy = math.floor( framePosy )
+            end
         end
 
         frame = desktop:addFrame()
-            
             :setPosition(framePosx,framePosy)
             :setMovable(true)
             :setBackground(colors.gray)
@@ -578,4 +651,4 @@ createWindow("BucketOS/Apps/Terminal/", nil, nil, "Terminal")
 loadDock()
 
 
-parallel.waitForAll(Update, RunClock)
+parallel.waitForAll(Update)

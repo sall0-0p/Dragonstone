@@ -41,7 +41,6 @@ local Resources = mainFrame:addFrame():hide()
     :setBackground(colors.black)
     :setPosition(1,2)
     :setSize(39,13)
-    
 
 
 local MenuBar = mainFrame:addMenubar()
@@ -215,48 +214,42 @@ local UpdatesWindow = Overview:addFrame():hide()
         end
     end)
 
-local DiskFrame = Storage:addFrame()
-    :setBackground(colors.black)
-    :setSize(39,3)
-    :setPosition(1,1)
-    local Load = 0
-    if fs.getFreeSpace("BucketOS") < 1000000 then
-        local Load = fs.getFreeSpace("BucketOS")/1000000 * 100
-    end
-    local DiskIcon = DiskFrame:addImage():loadImage("BucketOS/OS/Icons/Disks/Blue.nfp"):shrink()
-        :setPosition(2,2)
-        :setSize(3,3)
 
-    local DiskName = DiskFrame:addLabel()
-        :setText("HDD "..Load.." %")
-        :setPosition(6,2)
+    local DiskFrame = Storage:addFrame()
         :setBackground(colors.black)
-        :setForeground(colors.lightGray)
-        :setSize(13,1)
-
-    local DiskProgress = DiskFrame:addProgressbar()
-        :setDirection(0)
-        :setBackground(colors.gray)
-        :setProgressBar(colors.lightGray, " ")
-        :setPosition(6,3)
-        :setSize(29)
-
-        if Load < 4 then
-            DiskProgress:setProgress(4)
-            :setDirection(0)
-        else
-            DiskProgress:setProgress(Load)
-            :setDirection(3)
+        :setSize(39,3)
+        :setPosition(1,1)
+        local Load = 0
+        if fs.getFreeSpace("BucketOS") < 1000000 then
+            local Load = fs.getFreeSpace("BucketOS")/1000000 * 100
         end
+        local DiskIcon = DiskFrame:addImage():loadImage("BucketOS/OS/Icons/Disks/Blue.nfp"):shrink()
+            :setPosition(2,2)
+            :setSize(3,3)
+
+        local DiskName = DiskFrame:addLabel()
+            :setText("HDD "..Load.." %")
+            :setPosition(6,2)
+            :setBackground(colors.black)
+            :setForeground(colors.lightGray)
+            :setSize(13,1)
+
+        local DiskProgress = DiskFrame:addProgressbar()
+            :setDirection(0)
+            :setBackground(colors.gray)
+            :setProgressBar(colors.lightGray, " ")
+            :setPosition(6,3)
+            :setSize(29)
+
+            if Load < 4 then
+                DiskProgress:setProgress(4)
+                :setDirection(0)
+            else
+                DiskProgress:setProgress(Load)
+                :setDirection(3)
+            end
 
 
-    local ComingSoonLabel = Storage:addLabel()
-        :setText("Coming Soon")
-        :setForeground(colors.lightGray)
-        :setBackground(false)
-        :setPosition(14,5)
-
-    
     local GitHubLabel = Support:addLabel()
         :setText("\4 GitHub: ")
         :setPosition(2,2)

@@ -894,6 +894,25 @@ return function(name, parent, pTerm, basalt)
             return false
         end,
 
+        hoverHandler = function(self, x, y, stopped)
+            if(base.hoverHandler(self, x, y, stopped))then
+                if(events["mouse_move"]~=nil)then
+                    for _, index in pairs(eventZIndex["mouse_move"]) do
+                        if (events["mouse_move"][index] ~= nil) then
+                            for _, value in rpairs(events["mouse_move"][index]) do
+                                if (value.hoverHandler ~= nil) then
+                                    if (value:hoverHandler(x, y, stopped)) then
+                                        return true
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            return false
+        end,
+
         dragHandler = function(self, button, x, y)
             if (isDragging) then
                 local xO, yO = self.parent:getOffsetInternal()
@@ -1035,6 +1054,17 @@ return function(name, parent, pTerm, basalt)
                 end
             end
         end;
+
+        blit = function (self, x, y, t, b, f)
+            local obx, oby = self:getAnchorPosition()
+            if (y >= 1) and (y <= self:getHeight()) then
+                if (self.parent ~= nil) then
+                    self.parent:blit(max(x + (obx - 1), obx), oby + y - 1, sub(text, max(1 - x + 1, 1), self:getWidth() - x + 1), bgCol, fgCol)
+                else
+                    basaltDraw.blit(max(x + (obx - 1), obx), oby + y - 1, sub(text, max(1 - x + 1, 1), max(self:getWidth() - x + 1,1)), bgCol, fgCol)
+                end
+            end
+        end,
 
         drawBackgroundBox = function(self, x, y, width, height, bgCol)
             local obx, oby = self:getAnchorPosition()
