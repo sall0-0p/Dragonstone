@@ -121,7 +121,7 @@ local UwUButton = UpMenu:addButton()
     :setSize(3,1)
     :setPosition(2,1)
 
-    local UwUMenu = desktop:addFrame()
+    local UwUMenu = desktop:addFrame():hide()
         :setSize(9, 6)
         :setPosition(2,3)
         :setBackground(colors.gray)
@@ -643,7 +643,7 @@ end
 
 -------------------
 --createWindow("UwUntuCC/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
-createWindow("UwUntuCC/Apps/Terminal/", nil, nil, "Terminal")
+createWindow("UwUntuCC/Apps/Terminal/", nil, "Terminal.lua", "Terminal")
 --createWindow("UwUntuCC/Apps/Finder", false, "Finder.lua", "Finder")
 --createWindow("UwUntuCC/Apps/Worm/", false, "Worm")
 --createWindow(":", false, "LevelOS.lua", "LevelOS", 119, 50)
