@@ -1,6 +1,6 @@
 
 -- Change this if you want to set custom directory for saving local Databases
-local directory = "BucketOS/OS/Data/"
+local directory = "UwUntuCC/OS/Data/"
 
 local databaser = {}
 

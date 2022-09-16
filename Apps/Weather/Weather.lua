@@ -1,5 +1,5 @@
-local basalt = require(".BucketOS.OS.Libraries.Basalt")
-local databaser = require(".BucketOS.OS.Libraries.Databaser.main")
+local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
 
 local city = "Lutsk"
 
@@ -99,10 +99,10 @@ local RainBlock = currentWeather:addFrame()
         :setSize(10,2)
         :setText("Wind: \n idk")
 
-if fs.exists("BucketOS/AppData/Weather/location") then
-    fs.open("BucketOS/AppData/Weather/location", "r")
+if fs.exists("UwUntuCC/AppData/Weather/location") then
+    fs.open("UwUntuCC/AppData/Weather/location", "r")
 else
-    fs.open("BucketOS/AppData/Weather/location", "w")
+    fs.open("UwUntuCC/AppData/Weather/location", "w")
 end
     
 local request = http.get("http://api.weatherbit.io/v2.0/current?city="..city.."&key=8cdb39c55d874958b006d5c569865a78")

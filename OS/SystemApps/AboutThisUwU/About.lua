@@ -1,6 +1,6 @@
 local version
 local success
-local basalt = require(".BucketOS.OS.Libraries.Basalt")
+local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
 local function checkVersion(version)
     local request = http.get("https://raw.githubusercontent.com/sall0-0p/UwUntuCC/master/OS/Version.md")
@@ -10,8 +10,8 @@ local function checkVersion(version)
     return content
 end
 
-if fs.exists("BucketOS/OS/Version.md") then
-    local file = fs.open("BucketOS/OS/Version.md", "r")
+if fs.exists("UwUntuCC/OS/Version.md") then
+    local file = fs.open("UwUntuCC/OS/Version.md", "r")
         version = file.readAll()
         file.close()
 end
@@ -92,7 +92,7 @@ local VersionLabel = Overview:addLabel()
     :setBackground(colors.black)
     :setPosition(17,5)
 
---[[local OSLogo = Overview:addImage():loadImage("BucketOS/OS/SystemApps/AboutThisUwU/logo.nfp"):shrink()
+--[[local OSLogo = Overview:addImage():loadImage("UwUntuCC/OS/SystemApps/AboutThisUwU/logo.nfp"):shrink()
     :setPosition(2,4)
     :setSize(12,8)]]--
 
@@ -220,10 +220,10 @@ local UpdatesWindow = Overview:addFrame():hide()
         :setSize(39,3)
         :setPosition(1,1)
         local Load = 0
-        if fs.getFreeSpace("BucketOS") < 1000000 then
-            local Load = fs.getFreeSpace("BucketOS")/1000000 * 100
+        if fs.getFreeSpace("UwUntuCC") < 1000000 then
+            local Load = fs.getFreeSpace("UwUntuCC")/1000000 * 100
         end
-        local DiskIcon = DiskFrame:addImage():loadImage("BucketOS/OS/Icons/Disks/Blue.nfp"):shrink()
+        local DiskIcon = DiskFrame:addImage():loadImage("UwUntuCC/OS/Icons/Disks/Blue.nfp"):shrink()
             :setPosition(2,2)
             :setSize(3,3)
 

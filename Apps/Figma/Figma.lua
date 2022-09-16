@@ -1,6 +1,6 @@
-local basalt = require(".BucketOS.OS.Libraries.Basalt")
-local databaser = require(".BucketOS.OS.Libraries.Databaser.main")
-local path = "BucketOS/Apps/Figma"
+local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
+local path = "UwUntuCC/Apps/Figma"
 local mainFrame = basalt.createFrame()
     :setBackground(colors.black)
 

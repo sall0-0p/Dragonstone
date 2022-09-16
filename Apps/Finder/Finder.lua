@@ -5,8 +5,8 @@
                  
 --> Api <--   
 shell.setDir(":")
-local basalt = require(".BucketOS.OS.Libraries.Basalt")
-shell.setDir("BucketOS/Apps/Finder")
+local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+shell.setDir("UwUntuCC/Apps/Finder")
 
 local mainFrame = basalt.createFrame():show()
 local Window = mainFrame:addFrame():show()
@@ -41,7 +41,7 @@ local Directory = arg[1]
 local file
 
 if Directory == nil then
-	Directory = "BucketOS/User/Documents"
+	Directory = "UwUntuCC/User/Documents"
 end
 
 local path = "/"..fs.getName(fs.getDir(Directory)).."/"..fs.getName(Directory) -- getting last to elements to show in UI
@@ -171,7 +171,7 @@ local function LoadFiles()
 end
 
 local function open(dir)
-	shell.setDir("BucketOS/Apps/Finder")
+	shell.setDir("UwUntuCC/Apps/Finder")
 	shell.run("Finder.lua", dir)
 end
 
@@ -183,7 +183,7 @@ local function edit(file)
 	else
 		if SelectedFile ~= nil then
 			shell.run("edit", SelectedFile)
-			shell.setDir("BucketOS/Apps/Finder")
+			shell.setDir("UwUntuCC/Apps/Finder")
 			shell.run("Finder", Directory)
 		end
 	end
@@ -270,7 +270,7 @@ local ButtonReload = Window:addButton()
 	ButtonReload:setSize(1,1)
 
 	ButtonReload:onClick(function() 
-		shell.setDir("BucketOS/Apps/Finder")
+		shell.setDir("UwUntuCC/Apps/Finder")
 		shell.run("Update")
 	end)
 
@@ -351,27 +351,27 @@ local Favourites = sidePanel:addList()
 
 local function SidePane1() -- change Directory
 	if Favourites:getItemIndex() == 1 then
-		open("BucketOS/User/Desktop")
+		open("UwUntuCC/User/Desktop")
 	end
 	if Favourites:getItemIndex() == 2 then
-		open("BucketOS/User/Documents")
+		open("UwUntuCC/User/Documents")
 	end
 	if Favourites:getItemIndex() == 3 then
-		open("BucketOS/User/Downloads")
+		open("UwUntuCC/User/Downloads")
 	end
 	if Favourites:getItemIndex() == 4 then
-		open("BucketOS/Apps")
+		open("UwUntuCC/Apps")
 	end
 end
 
 
-if Directory == "BucketOS/User/Desktop" then
+if Directory == "UwUntuCC/User/Desktop" then
 	Favourites:selectItem(1)
-elseif Directory == "BucketOS/User/Documents" then
+elseif Directory == "UwUntuCC/User/Documents" then
 	Favourites:selectItem(2)
-elseif Directory == "BucketOS/User/Downloads" then
+elseif Directory == "UwUntuCC/User/Downloads" then
 	Favourites:selectItem(3)
-elseif Directory == "BucketOS/Apps" then
+elseif Directory == "UwUntuCC/Apps" then
 	Favourites:selectItem(4)
 else
 	Favourites:selectItem(nil)

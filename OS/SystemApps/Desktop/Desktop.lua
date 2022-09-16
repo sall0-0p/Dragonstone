@@ -9,8 +9,8 @@
 -- |_||_|___/_/ \_\___/ 
 
 -- API --
-local databaser = require(".BucketOS.OS.Libraries.Databaser.main")
-local basalt = require(".BucketOS.OS.Libraries.Basalt")
+local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
+local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
 local mainFrame = basalt.createFrame():show()   
 mainFrame:setBackground(colors.lightGray)
@@ -22,7 +22,7 @@ local function Update()
     basalt.autoUpdate()
 end
 
-databaser.setDir("BucketOS/OS/Data")
+databaser.setDir("UwUntuCC/OS/Data")
 databaser.deleteColumn("RunningWindows", "name")
 databaser.deleteColumn("RunningWindows", "path")
 databaser.deleteColumn("RunningWindows", "executable")
@@ -35,7 +35,7 @@ databaser.addColumn("RunningWindows", "hidden")
 
 local DesktopColor = colors.lightGray
 
-local DesktopImage = "BucketOS/OS/SystemApps/Desktop/Desktop2.nfp"
+local DesktopImage = "UwUntuCC/OS/SystemApps/Desktop/Desktop2.nfp"
 
 local UseDesktopImage = false
 
@@ -165,12 +165,12 @@ local UwUButton = UpMenu:addButton()
 
 
     local openMyUwU = function()
-        createWindow("BucketOS/OS/SystemApps/AboutThisUwU", false, "About.lua", "MyUwU", 39, 14, false, 6, 1, true, true, true)
+        createWindow("UwUntuCC/OS/SystemApps/AboutThisUwU", false, "About.lua", "MyUwU", 39, 14, false, 6, 1, true, true, true)
     end
     myUwU:onClick(openMyUwU)
 
     local AreYouSure = function()
-        createWindow("BucketOS/OS/SystemApps/AreYouSure", false, nil, "Confirm", 26, 7, true, nil, nil, true, true, true)
+        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", false, nil, "Confirm", 26, 7, true, nil, nil, true, true, true)
     end
     PowerButton:onClick(AreYouSure)
 
@@ -263,16 +263,16 @@ local LaunchPad = desktop:addFrame()
         :selectItem(4)
         :setSelectedItem(colors.orange, colors.black)
 
-        local AppList = fs.list("BucketOS/Apps")
+        local AppList = fs.list("UwUntuCC/Apps")
         
         for _, app in pairs(AppList) do
             LaunchPadList:addItem(" "..app, colors.black, colors.lightGray)
         end
 
         local function LaunchProgram()
-            local AppsFolder = fs.list("BucketOS/Apps/")
+            local AppsFolder = fs.list("UwUntuCC/Apps/")
             local SelectedID = LaunchPadList:getItemIndex()
-            createWindow("BucketOS/Apps/"..AppsFolder[SelectedID])
+            createWindow("UwUntuCC/Apps/"..AppsFolder[SelectedID])
         end
 
         LaunchPadList:onChange(LaunchProgram)
@@ -353,7 +353,7 @@ local function loadDock(path)
                     if fs.exists(path.."/icon.nfp") then
                         Object:addImage():loadImage(path.."/icon.nfp"):setSize(4,2):shrink()
                     else
-                        Object:addImage():loadImage("BucketOS/OS/Icons/app.nfp"):setSize(3,2):shrink()
+                        Object:addImage():loadImage("UwUntuCC/OS/Icons/app.nfp"):setSize(3,2):shrink()
                     end
                     if ObjectStatus[n] == "false" then
                     Object:addLabel():setForeground(colors.lightGray):setBackground(colors.gray):setText("\0".."\7"):setPosition(1,3):setSize(3,1)
@@ -384,7 +384,7 @@ end
     
     local desktopIconImage = desktopIcon:addImage()
         :setPosition(2,1)
-        :loadImage("BucketOS/OS/Icons/folder.nfp")
+        :loadImage("UwUntuCC/OS/Icons/folder.nfp")
         :setSize(3,2)
         :shrink()]]--
 
@@ -492,7 +492,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
             :setSize(rw,rh)
             :setPosition(1,1)
             :execute(path.."/"..executable)
-        shell.setDir("BucketOS/OS/SystemApps/Desktop")
+        shell.setDir("UwUntuCC/OS/SystemApps/Desktop")
 
     else -- if general frame
         if framePosx == nil or framePosy == nil then
@@ -535,7 +535,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
             program:setPosition(1,2)
             end
             program:execute(path.."/"..executable) -- running program
-        shell.setDir("BucketOS/OS/SystemApps/Desktop")
+        shell.setDir("UwUntuCC/OS/SystemApps/Desktop")
 
         --Creating Buttons
         if useBar == false and buttonPosX == nil then
@@ -642,10 +642,10 @@ end
 
 
 -------------------
---createWindow("BucketOS/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
-createWindow("BucketOS/Apps/Terminal/", nil, nil, "Terminal")
---createWindow("BucketOS/Apps/Finder", false, "Finder.lua", "Finder")
---createWindow("BucketOS/Apps/Worm/", false, "Worm")
+--createWindow("UwUntuCC/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
+createWindow("UwUntuCC/Apps/Terminal/", nil, nil, "Terminal")
+--createWindow("UwUntuCC/Apps/Finder", false, "Finder.lua", "Finder")
+--createWindow("UwUntuCC/Apps/Worm/", false, "Worm")
 --createWindow(":", false, "LevelOS.lua", "LevelOS", 119, 50)
 
 loadDock()
