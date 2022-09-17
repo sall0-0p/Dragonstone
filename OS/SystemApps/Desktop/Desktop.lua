@@ -301,7 +301,6 @@ local LaunchPad = desktop:addFrame()
 
         LaunchPadList:onKey(function(self, event, key)
             if key == keys.enter then
-        
             end
         end)
 
