@@ -45,6 +45,8 @@ local createWindow
 
 local ShowWindowF
 
+local LoadDock
+
 local TimeType = "local"
 
 if TimeType == "ingame" then
@@ -216,6 +218,8 @@ local function hideWindow(frame, program, ah, aw)
 local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     lastx = math.random(5,15)
     lasty = math.random(5,10)
+    lastw = lastw+1
+    lasty = lasty+1
     local id = databaser.search("RunningWindows", "name", name)
     local frameStatus = databaser.getColumn("RunningWindows", "hidden")
     local showWAnimation = mainFrame:addAnimation()
@@ -228,10 +232,9 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     frame:setBarTextAlign("center")
     end
     
-    
-    if id == nil then  
-    else
+    if id ~= nil then
     databaser.setValue("RunningWindows", "hidden", "false", id)
+    loadDock()
     end
     
     program:pause(false)
@@ -308,7 +311,7 @@ local LaunchPad = desktop:addFrame()
 local DockPanel = desktop:addFrame()
 local Dock = DockPanel:addFrame():setSize(1,2)
 
-local function loadDock(path)
+loadDock = function(path)
     local DockApps = databaser.getColumn("RunningWindows", "path")
     if DockApps == nil then
         DockApps = {   
@@ -336,17 +339,13 @@ local function loadDock(path)
         Dock:setForeground(colors.lightGray)
         Dock:setPosition(1,2)
         Dock:setSize(DownPanelSize, 3)
-        --[[local DownLabelTop = Dock:addFrame():show()
-            :setPosition(1,1)
-            :setSize(DownPanelSize, 1)
-            :setBackground(colors.glay, "\143", DesktopColor)]]--
         local n = 1
         local DockApps = databaser.getColumn("RunningWindows", "path")
         for _, object in pairs(DockApps) do
         local path = DockApps[n]
         
             ---------- Custom Generated ------------
-            local Object = DockPanel:addFrame()
+            local Object = DockPanel:addFrame(n)
                 :setSize(3,3)
                     local ObjectStatus = databaser.getColumn("RunningWindows", "hidden")
                     Object:setPosition("2+"..n.."*4-4", 1)--
@@ -364,14 +363,23 @@ local function loadDock(path)
                     n = n+1
                     centerObject(DockPanel, rh-3)
 
-                    local runWindow = function()
-                        if ObjectStatus[n] == false then
-                            createWindow(path, false)
+                    Object:onClick(function() 
+                    
+                    local ObjectID = Object:getName()
+                    local ObjectStatus = databaser.getColumn("RunningWindows", "hidden")
+                    basalt.debug(ObjectStatus[ObjectID])
+                    local frame = desktop:getObject(ObjectID)
+                    local program = frame:getObject(ObjectID.."p")
+                        basalt.debug(ObjectStatus[ObjectID])
+                        if ObjectStatus[ObjectID] == true then
+                                basalt.debug("DO THIS")
+                                showWindow(frame, program, 51, 19, 5, 5, "Terminal")
                         else
+                            basalt.debug("Hello there")
+                            frame:setFocus()
                         end
-                    end
-
-                    DoubleClick(Object, runWindow, 1)
+                    end)
+                    
         end
         return DockPanel, Dock
 end
@@ -471,7 +479,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
             end
 
     shell.setDir(":")
-    program = frame:addProgram()
+    program = frame:addProgram(id.."p")
         :setSize(ww,wh)
         if useBar == false then
             program:setPosition(2,1)
@@ -486,7 +494,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         
         else
             if buttonPosX == nil then
-                buttonx = ww
+                buttonx = ww+1
             else
                 buttonx = buttonPosX
             end
@@ -537,7 +545,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 button3:disable()
             end
             button3:onClick(function() 
-                --basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future")
+                --basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future"
             end)
         end
 
