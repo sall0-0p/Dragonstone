@@ -16,9 +16,6 @@ local mainFrame = basalt.createFrame("mainFrame"):show()
 mainFrame:setBackground(colors.lightGray)
 local rw, rh = mainFrame:getSize()
 
---basalt.debug(textutils.formatTime(os.time("local"), true))
-
-
 local function Update()
     basalt.autoUpdate()
 end
@@ -431,7 +428,6 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         disableHide = disableHide or curSettings[9] or false
         isResizeable = isResizeable or curSettings[10] or false
         centered = centered or curSettings[11] or false
-        basalt.debug(executable)
 
         local ids = databaser.getColumn("RunningWindows", "id")
         if ids ~= nil then
