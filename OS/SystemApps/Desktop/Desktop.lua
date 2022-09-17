@@ -409,72 +409,29 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
 end
 
 -- CREATING WINDOWS
-createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
+createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
     
     --Getting Settings from file
     if fs.exists(path.."/UwUsettings") then
-
-        --[[]settings.load(path.."/UwUsettings")
-        ww = settings.get("width", ww)
-        wh = settings.get("height", wh)
-        name = settings.get("name", fs.getName(path))
-        executable = settings.get("executable", fs.getName(path)..".lua")
-        useBorders = settings.get("borders", false)
-        pageBackground = settings.get("background", colors.black)
-        useBar = settings.get("bar", true)
-        buttonPosX = settings.get("ButtonPosX", nil)
-        buttonPosY = settings.get("ButtonPosY", nil)
-        disableFullscreen = settings.get("disableFullscreen", false)
-        disableHide = settings.get("disableHide", false)]]--
-
         local file = fs.open(path.."/UwUsettings", "r")
         local curSettings = file.readAll()
         curSettings = textutils.unserialize(curSettings)
-        ww = curSettings[1]
-        wh = curSettings[2]
-        name = curSettings[3]
-        executable = curSettings[4]
-        useBar = curSettings[5]
-        buttonPosX = curSettings[6]
-        buttonPosY = curSettings[7]
-        disableFullscreen = curSettings[8]
-        disableHide = curSettings[9]
-        centered = curSettings[10]
         file.close()
+    else
+        curSettings = {}
     end
-        if fullscreen == nil then
-            fullscreen = false
-        end
-        if ww == nil then
-            ww = 51
-        end
-        if wh == nil then
-            wh = 19
-        end
-        if executable == nil then
-            executable = fs.getName(path)
-        end
-        if name == nil then
-            name = executable
-        end
-        if useBorders == nil then
-            useBorders = false
-        end
-        if pageBackground == nil then
-            pageBackground = colors.black
-        end
-        if useBar == nil then
-            useBar = true
-        end
-        if disableFullscreen == nil then
-            disableFullscreen = false
-        end
-        if disableHide == nil then
-            disableHide = false
-        end
-        if centered == nil then
-            centered = false
-        end
+        ww = ww or curSettings[1] or 51
+        wh = wh or curSettings[2] or 19
+        executable = executable or curSettings[4] or fs.getName(path)
+        name = name or curSettings[3] or executable
+        useBar = useBar or curSettings[5] or true
+        buttonPosX = ButtonPosX or curSettings[6] or nil
+        buttonPosY = buttonPosY or curSettings[7] or nil
+        disableFullscreen = disableFullscreen or curSettings[8] or true
+        disableHide = disableHide or curSettings[9] or false
+        isResizeable = isResizeable or curSettings[10] or false
+        centered = centered or curSettings[11] or false
+        basalt.debug(executable)
 
         local ids = databaser.getColumn("RunningWindows", "id")
         if ids ~= nil then
@@ -484,69 +441,48 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         end
             
 
-    databaser.addValue("RunningWindows", "id", id)
-    databaser.addValue("RunningWindows", "name", name)
-    databaser.addValue("RunningWindows", "path", path)
-    databaser.addValue("RunningWindows", "hidden", "false")
-    databaser.addValue("RunningWindows", "executable", executable)
-    loadDock()
+        databaser.addValue("RunningWindows", "id", id)
+        databaser.addValue("RunningWindows", "name", name)
+        databaser.addValue("RunningWindows", "path", path)
+        databaser.addValue("RunningWindows", "hidden", "false")
+        databaser.addValue("RunningWindows", "executable", executable)
+        loadDock()
     --Creating Frame
-    if fullscreen then -- if fullscreen
 
-        frame = desktop:addFrame(id)
-            :setSize(rw,rh)
-            :setPosition(1,1)
-        fullscreen = true
-
-        shell.setDir(":")
-
-        program = frame:addProgram()
-            :setSize(rw,rh)
-            :setPosition(1,1)
-            :execute(path.."/"..executable)
-        shell.setDir("UwUntuCC/OS/SystemApps/Desktop")
-
-    else -- if general frame
-        if framePosx == nil or framePosy == nil then
-            if centered == false then
-            
-                framePosx = math.random(5,10)
-                framePosy = math.random(5,10)
-            
-            else
-
-                framePosx = rw/2 - ww/2
-                framePosy = rh/2 - wh/2
-                framePosx = math.floor( framePosx )
-                framePosy = math.floor( framePosy )
-            end
+    if framePosx == nil or framePosy == nil then
+        if centered == false then
+            framePosx = math.random(5,10)
+            framePosy = math.random(5,10)
+        else
+            framePosx = rw/2 - ww/2
+            framePosy = rh/2 - wh/2
+            framePosx = math.floor( framePosx )
+            framePosy = math.floor( framePosy )
         end
-        basalt.debug(id)
-        frame = desktop:addFrame("DEBUG")
-            :setPosition(framePosx,framePosy)
-            :setMovable(true)
-            :setBackground(colors.gray)
+    end
+
+    frame = desktop:addFrame(id)
+        :setPosition(framePosx,framePosy)
+        :setMovable(true)
+        :setBackground(colors.gray)
             if useBar == true then
                 frame:setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
                 frame:setBorder(colors.gray, "left", "right", "bottom")
-                frame:setSize(ww,wh.."+1")
+                frame:setSize(ww.."+1",wh.."+1")
             else
                 frame:setBorder(colors.gray, "left", "right", "bottom")
-                frame:setSize(ww,wh)
+                frame:setSize(ww.."+1",wh)
             end
 
-            
-        --databaser.addValue("RunningWindows", "frame", frame)
-    end
-        shell.setDir(":")
-        program = frame:addProgram()
-            :setSize(ww,wh)
-            if useBar == false then
-            program:setPosition(1,1)
-            else
-            program:setPosition(1,2)
-            end
-            program:execute(path.."/"..executable) -- running program
+    shell.setDir(":")
+    program = frame:addProgram()
+        :setSize(ww,wh)
+        if useBar == false then
+            program:setPosition(2,1)
+        else
+            program:setPosition(2,2)
+        end
+        program:execute(path.."/"..executable) -- running program
         shell.setDir("UwUntuCC/OS/SystemApps/Desktop")
 
         --Creating Buttons
@@ -580,7 +516,11 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 :setPosition(buttonx,1)
                 :setSize(1,1)
                 :setText("\7")
-            if disableHide ~= true then
+            
+                if disableHide then
+                    button2:disable()
+                end
+
                 button2:onClick(function() 
                     local lastw, lasth = frame:getSize()
                     local lastx, lasty = frame:getPosition()
@@ -589,7 +529,6 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                     databaser.setValue("RunningWindows", "hidden", "true", id)
                     loadDock()
                 end)
-            end
 
             buttonx = buttonx - 2
             button3 = frame:addButton() -- fullscreen button
@@ -598,11 +537,12 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 :setPosition(buttonx,1)
                 :setSize(1,1)
                 :setText("\7")
-            if disableFullscreen ~= true then
-                button3:onClick(function() 
-                    --basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future")
-                end)
+            if disableFullScreen then
+                button3:disable()
             end
+            button3:onClick(function() 
+                --basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future")
+            end)
         end
 
         --Creating Program Window
@@ -674,14 +614,7 @@ createWindow("UwUntuCC/Apps/Terminal/", nil, "Terminal.lua", "Terminal")
 --createWindow("UwUntuCC/Apps/Worm/", false, "Worm")
 --createWindow(":", false, "LevelOS.lua", "LevelOS", 119, 50)
 
-desktop:onClick(function()
-    basalt.debug("Event")
-      local frame2 = basalt.getFrame("DEBUG")
-      if(frame2~=nil)then
-            frame2:setBackground(colors.red)
-            basalt.debug("Triggered")
-      end
-end)
+
 
 loadDock()
 
