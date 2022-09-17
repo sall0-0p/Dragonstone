@@ -12,11 +12,12 @@
 local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
-local mainFrame = basalt.createFrame():show()   
+local mainFrame = basalt.createFrame("mainFrame"):show()   
 mainFrame:setBackground(colors.lightGray)
 local rw, rh = mainFrame:getSize()
 
 --basalt.debug(textutils.formatTime(os.time("local"), true))
+
 
 local function Update()
     basalt.autoUpdate()
@@ -27,11 +28,13 @@ databaser.deleteColumn("RunningWindows", "name")
 databaser.deleteColumn("RunningWindows", "path")
 databaser.deleteColumn("RunningWindows", "executable")
 databaser.deleteColumn("RunningWindows", "hidden")
+databaser.deleteColumn("RunningWindows", "id")
 
 databaser.addColumn("RunningWindows", "name")
 databaser.addColumn("RunningWindows", "path")
 databaser.addColumn("RunningWindows", "executable")
 databaser.addColumn("RunningWindows", "hidden")
+databaser.addColumn("RunningWindows", "id")
 
 local DesktopColor = colors.lightGray
 
@@ -399,6 +402,7 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
         databaser.removeValue("RunningWindows", "path", id)
         databaser.removeValue("RunningWindows", "executable", id)
         databaser.removeValue("RunningWindows", "hidden", id)
+        databaser.removeValue("RunningWindows", "id", id)
         sleep(0.05)
         loadDock()
         frame:remove()
@@ -472,7 +476,15 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
             centered = false
         end
 
-    --databaser.addValue("RunningWindows", "id", id)
+        local ids = databaser.getColumn("RunningWindows", "id")
+        if ids ~= nil then
+            id = table.getn(ids) + 1
+        else
+            id = 1
+        end
+            
+
+    databaser.addValue("RunningWindows", "id", id)
     databaser.addValue("RunningWindows", "name", name)
     databaser.addValue("RunningWindows", "path", path)
     databaser.addValue("RunningWindows", "hidden", "false")
@@ -509,8 +521,8 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 framePosy = math.floor( framePosy )
             end
         end
-
-        frame = desktop:addFrame()
+        basalt.debug(id)
+        frame = desktop:addFrame("DEBUG")
             :setPosition(framePosx,framePosy)
             :setMovable(true)
             :setBackground(colors.gray)
@@ -639,7 +651,21 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         return frame
 end
 
+        --[[desktop:onClick(function()
+            UwUMenu:hide()
+        end)]]
 
+        UwUButton:onClick(function()
+            UwUMenu:show()
+        end)
+
+        UwUButton:onHover(function()
+            UwUMenu:show()
+        end)
+
+        UwUMenu:onLeave(function()
+            UwUMenu:hide()
+        end)
 
 -------------------
 --createWindow("UwUntuCC/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
@@ -648,7 +674,15 @@ createWindow("UwUntuCC/Apps/Terminal/", nil, "Terminal.lua", "Terminal")
 --createWindow("UwUntuCC/Apps/Worm/", false, "Worm")
 --createWindow(":", false, "LevelOS.lua", "LevelOS", 119, 50)
 
-loadDock()
+desktop:onClick(function()
+    basalt.debug("Event")
+      local frame2 = basalt.getFrame("DEBUG")
+      if(frame2~=nil)then
+            frame2:setBackground(colors.red)
+            basalt.debug("Triggered")
+      end
+end)
 
+loadDock()
 
 parallel.waitForAll(Update, RunClock)
