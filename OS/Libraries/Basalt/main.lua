@@ -297,7 +297,7 @@ basalt = {
 
     setMouseDragThrottle = function(amount)
         if(amount<50)then
-            dragThrottle = 5
+            dragThrottle = 50
         else
             dragThrottle = amount
         end

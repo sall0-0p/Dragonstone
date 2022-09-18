@@ -212,7 +212,7 @@ local licenseScreen = mainFrame:addFrame()
         end)
 
 NextButton:onClick(function()
-    
+    projectTree = createTree("https://github.com/sall0-0p/UwUntuCC/git/trees/master:UwUntuCC")
 end)
         
         

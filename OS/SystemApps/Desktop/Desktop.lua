@@ -11,12 +11,11 @@
 -- API --
 local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+basalt.setMouseMoveThrottle(100)
 
-local mainFrame = basalt.createFrame():show()   
+local mainFrame = basalt.createFrame("mainFrame"):show()   
 mainFrame:setBackground(colors.lightGray)
 local rw, rh = mainFrame:getSize()
-
---basalt.debug(textutils.formatTime(os.time("local"), true))
 
 local function Update()
     basalt.autoUpdate()
@@ -27,11 +26,13 @@ databaser.deleteColumn("RunningWindows", "name")
 databaser.deleteColumn("RunningWindows", "path")
 databaser.deleteColumn("RunningWindows", "executable")
 databaser.deleteColumn("RunningWindows", "hidden")
+databaser.deleteColumn("RunningWindows", "id")
 
 databaser.addColumn("RunningWindows", "name")
 databaser.addColumn("RunningWindows", "path")
 databaser.addColumn("RunningWindows", "executable")
 databaser.addColumn("RunningWindows", "hidden")
+databaser.addColumn("RunningWindows", "id")
 
 local DesktopColor = colors.lightGray
 
@@ -44,6 +45,8 @@ local TimeFormat = true
 local createWindow
 
 local ShowWindowF
+
+local LoadDock
 
 local TimeType = "local"
 
@@ -122,55 +125,60 @@ local UwUButton = UpMenu:addButton()
     :setPosition(2,1)
 
     local UwUMenu = desktop:addFrame():hide()
-        :setSize(9, 6)
-        :setPosition(2,3)
+        :setSize(11, 8)
+        :setPosition(1,2)
         :setBackground(colors.gray)
-        :setBorder(colors.black)
+        --:setBorder(colors.black)
 
+        local UwUMenuSeparator0 = UwUMenu:addLabel()
+            :setPosition(2,1)
+            :setBackground(colors.gray)
+            :setForeground(colors.lightGray)
+            :setText("---------")
         local myUwU = UwUMenu:addLabel()
-            :setPosition(1,1)
+            :setPosition(2,2)
             :setBackground(colors.gray)
             :setForeground(colors.white)
             :setText("About UwU")
 
         local UwUMenuSeparator1 = UwUMenu:addLabel()
-            :setPosition(1,2)
+            :setPosition(2,3)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText("---------")
 
         local SettingsButton = UwUMenu:addLabel()
-            :setPosition(1,3)
+            :setPosition(2,4)
             :setBackground(colors.gray)
             :setForeground(colors.white)
             :setText("Settings")
 
         local UwUStoreButton = UwUMenu:addLabel()
-            :setPosition(1,4)
+            :setPosition(2,5)
             :setBackground(colors.gray)
             :setForeground(colors.white)
             :setText("UwUStore")
 
         local UwUMenuSeparator2 = UwUMenu:addLabel()
-            :setPosition(1,5)
+            :setPosition(2,6)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText("---------")
 
         local PowerButton = UwUMenu:addLabel()
-            :setPosition(1,6)
+            :setPosition(2,7)
             :setBackground(colors.gray)
             :setForeground(colors.white)
             :setText("Power")
 
 
     local openMyUwU = function()
-        createWindow("UwUntuCC/OS/SystemApps/AboutThisUwU", false, "About.lua", "MyUwU", 39, 14, false, 6, 1, true, true, true)
-    end
+        createWindow("UwUntuCC/OS/SystemApps/AboutThisUwU", "About.lua") --"MyUwU", 39, 14, false, 6, 1, true, true, true
+    end 
     myUwU:onClick(openMyUwU)
 
     local AreYouSure = function()
-        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", false, nil, "Confirm", 26, 7, true, nil, nil, true, true, true)
+        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", nil, "Confirm", 26, 7, true, nil, nil, true, true, true)
     end
     PowerButton:onClick(AreYouSure)
 
@@ -216,6 +224,8 @@ local function hideWindow(frame, program, ah, aw)
 local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     lastx = math.random(5,15)
     lasty = math.random(5,10)
+    lastw = lastw+1
+    lasty = lasty+1
     local id = databaser.search("RunningWindows", "name", name)
     local frameStatus = databaser.getColumn("RunningWindows", "hidden")
     local showWAnimation = mainFrame:addAnimation()
@@ -228,10 +238,9 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     frame:setBarTextAlign("center")
     end
     
-    
-    if id == nil then  
-    else
+    if id ~= nil then
     databaser.setValue("RunningWindows", "hidden", "false", id)
+    loadDock()
     end
     
     program:pause(false)
@@ -298,7 +307,6 @@ local LaunchPad = desktop:addFrame()
 
         LaunchPadList:onKey(function(self, event, key)
             if key == keys.enter then
-        
             end
         end)
 
@@ -308,7 +316,7 @@ local LaunchPad = desktop:addFrame()
 local DockPanel = desktop:addFrame()
 local Dock = DockPanel:addFrame():setSize(1,2)
 
-local function loadDock(path)
+loadDock = function(path)
     local DockApps = databaser.getColumn("RunningWindows", "path")
     if DockApps == nil then
         DockApps = {   
@@ -336,18 +344,15 @@ local function loadDock(path)
         Dock:setForeground(colors.lightGray)
         Dock:setPosition(1,2)
         Dock:setSize(DownPanelSize, 3)
-        --[[local DownLabelTop = Dock:addFrame():show()
-            :setPosition(1,1)
-            :setSize(DownPanelSize, 1)
-            :setBackground(colors.glay, "\143", DesktopColor)]]--
         local n = 1
         local DockApps = databaser.getColumn("RunningWindows", "path")
         for _, object in pairs(DockApps) do
         local path = DockApps[n]
         
             ---------- Custom Generated ------------
-            local Object = DockPanel:addFrame()
+            local Object = DockPanel:addFrame(n)
                 :setSize(3,3)
+                :setZIndex(10)
                     local ObjectStatus = databaser.getColumn("RunningWindows", "hidden")
                     Object:setPosition("2+"..n.."*4-4", 1)--
                     if fs.exists(path.."/icon.nfp") then
@@ -364,14 +369,35 @@ local function loadDock(path)
                     n = n+1
                     centerObject(DockPanel, rh-3)
 
-                    local runWindow = function()
-                        if ObjectStatus[n] == false then
-                            createWindow(path, false)
-                        else
+                    Object:onClick(function() 
+                    
+                    local ObjectID = Object:getName()
+                    local ObjectStatus = databaser.getColumn("RunningWindows", "hidden")
+                    local frame = desktop:getObject(ObjectID)
+                    local program = frame:getObject(ObjectID.."p")
+                    local name = frame:getValue()
+                        if ObjectStatus[ObjectID] == "true" then
+                                showWindow(frame, program, 51, 19, 5, 5, name)
+                        elseif ObjectStatus[ObjectID] == "false" then
+                                frame:setFocus()
                         end
-                    end
+                    end)
 
-                    DoubleClick(Object, runWindow, 1)
+                    Object:onHover(function()
+                        local ObjectID = Object:getName()
+                        local frame = desktop:getObject(ObjectID)
+                        local name = frame:getValue()
+                        local ox, oy = Object:getAbsolutePosition()
+                        local NameLabel = desktop:addLabel()
+                            :setPosition(ox, oy.."-3")
+                            :setText(name)
+                        desktop:onHover(function()
+                            NameLabel:remove()
+                        end)
+                    end)
+
+                    
+                    
         end
         return DockPanel, Dock
 end
@@ -399,142 +425,95 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
         databaser.removeValue("RunningWindows", "path", id)
         databaser.removeValue("RunningWindows", "executable", id)
         databaser.removeValue("RunningWindows", "hidden", id)
+        databaser.removeValue("RunningWindows", "id", id)
         sleep(0.05)
         loadDock()
         frame:remove()
 end
 
 -- CREATING WINDOWS
-createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
+createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
     
     --Getting Settings from file
+    
     if fs.exists(path.."/UwUsettings") then
-
-        --[[]settings.load(path.."/UwUsettings")
-        ww = settings.get("width", ww)
-        wh = settings.get("height", wh)
-        name = settings.get("name", fs.getName(path))
-        executable = settings.get("executable", fs.getName(path)..".lua")
-        useBorders = settings.get("borders", false)
-        pageBackground = settings.get("background", colors.black)
-        useBar = settings.get("bar", true)
-        buttonPosX = settings.get("ButtonPosX", nil)
-        buttonPosY = settings.get("ButtonPosY", nil)
-        disableFullscreen = settings.get("disableFullscreen", false)
-        disableHide = settings.get("disableHide", false)]]--
-
         local file = fs.open(path.."/UwUsettings", "r")
         local curSettings = file.readAll()
         curSettings = textutils.unserialize(curSettings)
+        file.close()
         ww = curSettings[1]
         wh = curSettings[2]
-        name = curSettings[3]
         executable = curSettings[4]
+        name = curSettings[3]
         useBar = curSettings[5]
         buttonPosX = curSettings[6]
         buttonPosY = curSettings[7]
         disableFullscreen = curSettings[8]
         disableHide = curSettings[9]
-        centered = curSettings[10]
-        file.close()
+        isResizeable = curSettings[10]
+        centered = curSettings[11]
+    else
+        ww = ww or 51
+        wh = wh or 19
+        executable = executable or fs.getName(path)
+        name = name or executable
+        useBar = useBar or true
+        buttonPosX = ButtonPosX or nil
+        buttonPosY = buttonPosY or nil
+        disableFullscreen = disableFullscreen or true
+        disableHide = disableHide or false
+        isResizeable = isResizeable or false
+        centered = centered or false
     end
-        if fullscreen == nil then
-            fullscreen = false
+        local ids = databaser.getColumn("RunningWindows", "id")
+        if ids ~= nil then
+            id = table.getn(ids) + 1
+        else
+            id = 1
         end
-        if ww == nil then
-            ww = 51
-        end
-        if wh == nil then
-            wh = 19
-        end
-        if executable == nil then
-            executable = fs.getName(path)
-        end
-        if name == nil then
-            name = executable
-        end
-        if useBorders == nil then
-            useBorders = false
-        end
-        if pageBackground == nil then
-            pageBackground = colors.black
-        end
-        if useBar == nil then
-            useBar = true
-        end
-        if disableFullscreen == nil then
-            disableFullscreen = false
-        end
-        if disableHide == nil then
-            disableHide = false
-        end
-        if centered == nil then
-            centered = false
-        end
-
-    --databaser.addValue("RunningWindows", "id", id)
-    databaser.addValue("RunningWindows", "name", name)
-    databaser.addValue("RunningWindows", "path", path)
-    databaser.addValue("RunningWindows", "hidden", "false")
-    databaser.addValue("RunningWindows", "executable", executable)
-    loadDock()
+            
+        databaser.addValue("RunningWindows", "id", id)
+        databaser.addValue("RunningWindows", "name", name)
+        databaser.addValue("RunningWindows", "path", path)
+        databaser.addValue("RunningWindows", "hidden", "false")
+        databaser.addValue("RunningWindows", "executable", executable)
+        loadDock()
     --Creating Frame
-    if fullscreen then -- if fullscreen
 
-        frame = desktop:addFrame(id)
-            :setSize(rw,rh)
-            :setPosition(1,1)
-        fullscreen = true
-
-        shell.setDir(":")
-
-        program = frame:addProgram()
-            :setSize(rw,rh)
-            :setPosition(1,1)
-            :execute(path.."/"..executable)
-        shell.setDir("UwUntuCC/OS/SystemApps/Desktop")
-
-    else -- if general frame
-        if framePosx == nil or framePosy == nil then
-            if centered == false then
-            
-                framePosx = math.random(5,10)
-                framePosy = math.random(5,10)
-            
-            else
-
-                framePosx = rw/2 - ww/2
-                framePosy = rh/2 - wh/2
-                framePosx = math.floor( framePosx )
-                framePosy = math.floor( framePosy )
-            end
+    if framePosx == nil or framePosy == nil then
+        if centered == false then
+            framePosx = math.random(5,10)
+            framePosy = math.random(5,10)
+        else
+            framePosx = rw/2 - ww/2
+            framePosy = rh/2 - wh/2
+            framePosx = math.floor( framePosx )
+            framePosy = math.floor( framePosy )
         end
+    end
 
-        frame = desktop:addFrame()
-            :setPosition(framePosx,framePosy)
-            :setMovable(true)
-            :setBackground(colors.gray)
+    frame = desktop:addFrame(id):setValue(name)
+        :setPosition(framePosx,framePosy)
+        :setMovable(true)
+        :setBackground(colors.gray)
             if useBar == true then
                 frame:setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
                 frame:setBorder(colors.gray, "left", "right", "bottom")
-                frame:setSize(ww,wh.."+1")
+                frame:setSize(ww.."+1",wh.."+1")
             else
                 frame:setBorder(colors.gray, "left", "right", "bottom")
-                frame:setSize(ww,wh)
+                frame:setSize(ww.."+1",wh)
             end
 
-            
-        --databaser.addValue("RunningWindows", "frame", frame)
-    end
-        shell.setDir(":")
-        program = frame:addProgram()
-            :setSize(ww,wh)
-            if useBar == false then
-            program:setPosition(1,1)
-            else
-            program:setPosition(1,2)
-            end
-            program:execute(path.."/"..executable) -- running program
+    shell.setDir(":")
+    program = frame:addProgram(id.."p")
+        :setSize(ww,wh)
+        if useBar == false then
+            program:setPosition(2,1)
+        else
+            program:setPosition(2,2)
+        end
+        program:execute(path.."/"..executable) -- running program
         shell.setDir("UwUntuCC/OS/SystemApps/Desktop")
 
         --Creating Buttons
@@ -542,7 +521,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         
         else
             if buttonPosX == nil then
-                buttonx = ww
+                buttonx = ww+1
             else
                 buttonx = buttonPosX
             end
@@ -568,7 +547,11 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 :setPosition(buttonx,1)
                 :setSize(1,1)
                 :setText("\7")
-            if disableHide ~= true then
+            
+                if disableHide then
+                    button2:disable()
+                end
+
                 button2:onClick(function() 
                     local lastw, lasth = frame:getSize()
                     local lastx, lasty = frame:getPosition()
@@ -577,7 +560,6 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                     databaser.setValue("RunningWindows", "hidden", "true", id)
                     loadDock()
                 end)
-            end
 
             buttonx = buttonx - 2
             button3 = frame:addButton() -- fullscreen button
@@ -586,11 +568,12 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
                 :setPosition(buttonx,1)
                 :setSize(1,1)
                 :setText("\7")
-            if disableFullscreen ~= true then
-                button3:onClick(function() 
-                    --basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future")
-                end)
+            if disableFullScreen then
+                button3:disable()
             end
+            button3:onClick(function() 
+                --basalt.debug("It do nothing ¯\92_(bruh)_/¯ but it will do in future"
+            end)
         end
 
         --Creating Program Window
@@ -625,9 +608,9 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         --[[MoveButton = frame:addLabel()
                 :setSize(1,1)
                 :setBackground(colors.gray)
-                :setPosition(1,1)
+                :setPosition(ww.."+1",wh.."+1")
                 :setText("\186")
-                :setForeground(colors.white)]]--
+                :setForeground(colors.white)]]
 
         
         mainFrame:onKeyUp(function(self, event, key)
@@ -639,16 +622,33 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         return frame
 end
 
+        --[[desktop:onClick(function()
+            UwUMenu:hide()
+        end)]]
 
+        UwUButton:onClick(function()
+            UwUMenu:show()
+        end)
+
+        UwUButton:onHover(function()
+            UwUMenu:show()
+        end)
+
+        UwUMenu:onLeave(function()
+            UwUMenu:hide()
+        end)
+
+        
 
 -------------------
 --createWindow("UwUntuCC/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
-createWindow("UwUntuCC/Apps/Terminal/", nil, "Terminal.lua", "Terminal")
+createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", "Terminal")
 --createWindow("UwUntuCC/Apps/Finder", false, "Finder.lua", "Finder")
 --createWindow("UwUntuCC/Apps/Worm/", false, "Worm")
 --createWindow(":", false, "LevelOS.lua", "LevelOS", 119, 50)
 
-loadDock()
 
+
+loadDock()
 
 parallel.waitForAll(Update, RunClock)
