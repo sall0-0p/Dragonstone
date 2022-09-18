@@ -389,8 +389,14 @@ loadDock = function(path)
                         local name = frame:getValue()
                         local ox, oy = Object:getAbsolutePosition()
                         local NameLabel = desktop:addLabel()
-                            :setPosition(ox, oy.."-3")
                             :setText(name)
+                            :setPosition(math.floor(ox - string.len(name)/2 + ), 2oy.."-2")
+                            :setBackground(colors.gray)
+                            :setForeground(colors.white)
+
+
+
+
                         desktop:onHover(function()
                             NameLabel:remove()
                         end)
