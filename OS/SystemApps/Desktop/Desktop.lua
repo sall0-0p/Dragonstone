@@ -11,6 +11,7 @@
 -- API --
 local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+basalt.setMouseMoveThrottle(100)
 
 local mainFrame = basalt.createFrame("mainFrame"):show()   
 mainFrame:setBackground(colors.lightGray)
@@ -124,55 +125,60 @@ local UwUButton = UpMenu:addButton()
     :setPosition(2,1)
 
     local UwUMenu = desktop:addFrame():hide()
-        :setSize(9, 6)
-        :setPosition(2,3)
+        :setSize(11, 8)
+        :setPosition(1,2)
         :setBackground(colors.gray)
-        :setBorder(colors.black)
+        --:setBorder(colors.black)
 
+        local UwUMenuSeparator0 = UwUMenu:addLabel()
+            :setPosition(2,1)
+            :setBackground(colors.gray)
+            :setForeground(colors.lightGray)
+            :setText("---------")
         local myUwU = UwUMenu:addLabel()
-            :setPosition(1,1)
+            :setPosition(2,2)
             :setBackground(colors.gray)
             :setForeground(colors.white)
             :setText("About UwU")
 
         local UwUMenuSeparator1 = UwUMenu:addLabel()
-            :setPosition(1,2)
+            :setPosition(2,3)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText("---------")
 
         local SettingsButton = UwUMenu:addLabel()
-            :setPosition(1,3)
+            :setPosition(2,4)
             :setBackground(colors.gray)
             :setForeground(colors.white)
             :setText("Settings")
 
         local UwUStoreButton = UwUMenu:addLabel()
-            :setPosition(1,4)
+            :setPosition(2,5)
             :setBackground(colors.gray)
             :setForeground(colors.white)
             :setText("UwUStore")
 
         local UwUMenuSeparator2 = UwUMenu:addLabel()
-            :setPosition(1,5)
+            :setPosition(2,6)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText("---------")
 
         local PowerButton = UwUMenu:addLabel()
-            :setPosition(1,6)
+            :setPosition(2,7)
             :setBackground(colors.gray)
             :setForeground(colors.white)
             :setText("Power")
 
 
     local openMyUwU = function()
-        createWindow("UwUntuCC/OS/SystemApps/AboutThisUwU", false, "About.lua", "MyUwU", 39, 14, false, 6, 1, true, true, true)
-    end
+        createWindow("UwUntuCC/OS/SystemApps/AboutThisUwU", "About.lua") --"MyUwU", 39, 14, false, 6, 1, true, true, true
+    end 
     myUwU:onClick(openMyUwU)
 
     local AreYouSure = function()
-        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", false, nil, "Confirm", 26, 7, true, nil, nil, true, true, true)
+        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", nil, "Confirm", 26, 7, true, nil, nil, true, true, true)
     end
     PowerButton:onClick(AreYouSure)
 
@@ -346,6 +352,7 @@ loadDock = function(path)
             ---------- Custom Generated ------------
             local Object = DockPanel:addFrame(n)
                 :setSize(3,3)
+                :setZIndex(10)
                     local ObjectStatus = databaser.getColumn("RunningWindows", "hidden")
                     Object:setPosition("2+"..n.."*4-4", 1)--
                     if fs.exists(path.."/icon.nfp") then
@@ -366,18 +373,31 @@ loadDock = function(path)
                     
                     local ObjectID = Object:getName()
                     local ObjectStatus = databaser.getColumn("RunningWindows", "hidden")
-                    basalt.debug(ObjectStatus[ObjectID])
                     local frame = desktop:getObject(ObjectID)
                     local program = frame:getObject(ObjectID.."p")
-                        basalt.debug(ObjectStatus[ObjectID])
-                        if ObjectStatus[ObjectID] == true then
-                                basalt.debug("DO THIS")
-                                showWindow(frame, program, 51, 19, 5, 5, "Terminal")
-                        else
-                            basalt.debug("Hello there")
-                            frame:setFocus()
+                    local name = frame:getValue()
+                        basalt.debug(name)
+                        if ObjectStatus[ObjectID] == "true" then
+                                showWindow(frame, program, 51, 19, 5, 5, name)
+                        elseif ObjectStatus[ObjectID] == "false" then
+                                frame:setFocus()
                         end
                     end)
+
+                    Object:onHover(function()
+                        local ObjectID = Object:getName()
+                        local frame = desktop:getObject(ObjectID)
+                        local name = frame:getValue()
+                        local ox, oy = Object:getAbsolutePosition()
+                        local NameLabel = desktop:addLabel()
+                            :setPosition(ox, oy.."-3")
+                            :setText(name)
+                        desktop:onHover(function()
+                            NameLabel:remove()
+                        end)
+                    end)
+
+                    
                     
         end
         return DockPanel, Dock
@@ -413,29 +433,42 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
 end
 
 -- CREATING WINDOWS
-createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
+createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
     
     --Getting Settings from file
+    basalt.debug(path.."/UwUsettings")
+    
     if fs.exists(path.."/UwUsettings") then
+        basalt.debug("Loading from file")
         local file = fs.open(path.."/UwUsettings", "r")
         local curSettings = file.readAll()
         curSettings = textutils.unserialize(curSettings)
         file.close()
+        ww = curSettings[1]
+        wh = curSettings[2]
+        executable = curSettings[4]
+        name = curSettings[3]
+        useBar = curSettings[5]
+        buttonPosX = curSettings[6]
+        buttonPosY = curSettings[7]
+        disableFullscreen = curSettings[8]
+        disableHide = curSettings[9]
+        isResizeable = curSettings[10]
+        centered = curSettings[11]
     else
-        curSettings = {}
+        basalt.debug("Loading defaults")
+        ww = ww or 51
+        wh = wh or 19
+        executable = executable or fs.getName(path)
+        name = name or executable
+        useBar = useBar or true
+        buttonPosX = ButtonPosX or nil
+        buttonPosY = buttonPosY or nil
+        disableFullscreen = disableFullscreen or true
+        disableHide = disableHide or false
+        isResizeable = isResizeable or false
+        centered = centered or false
     end
-        ww = ww or curSettings[1] or 51
-        wh = wh or curSettings[2] or 19
-        executable = executable or curSettings[4] or fs.getName(path)
-        name = name or curSettings[3] or executable
-        useBar = useBar or curSettings[5] or true
-        buttonPosX = ButtonPosX or curSettings[6] or nil
-        buttonPosY = buttonPosY or curSettings[7] or nil
-        disableFullscreen = disableFullscreen or curSettings[8] or true
-        disableHide = disableHide or curSettings[9] or false
-        isResizeable = isResizeable or curSettings[10] or false
-        centered = centered or curSettings[11] or false
-
         local ids = databaser.getColumn("RunningWindows", "id")
         if ids ~= nil then
             id = table.getn(ids) + 1
@@ -443,7 +476,7 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
             id = 1
         end
             
-
+       --basalt.debug(name.." "..useBar)
         databaser.addValue("RunningWindows", "id", id)
         databaser.addValue("RunningWindows", "name", name)
         databaser.addValue("RunningWindows", "path", path)
@@ -464,10 +497,11 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         end
     end
 
-    frame = desktop:addFrame(id)
+    frame = desktop:addFrame(id):setValue(name)
         :setPosition(framePosx,framePosy)
         :setMovable(true)
         :setBackground(colors.gray)
+        basalt.debug(useBar)
             if useBar == true then
                 frame:setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
                 frame:setBorder(colors.gray, "left", "right", "bottom")
@@ -580,9 +614,9 @@ createWindow = function(path, fullscreen, executable, name, ww, wh, useBar, butt
         --[[MoveButton = frame:addLabel()
                 :setSize(1,1)
                 :setBackground(colors.gray)
-                :setPosition(1,1)
+                :setPosition(ww.."+1",wh.."+1")
                 :setText("\186")
-                :setForeground(colors.white)]]--
+                :setForeground(colors.white)]]
 
         
         mainFrame:onKeyUp(function(self, event, key)
@@ -610,9 +644,11 @@ end
             UwUMenu:hide()
         end)
 
+        
+
 -------------------
 --createWindow("UwUntuCC/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
-createWindow("UwUntuCC/Apps/Terminal/", nil, "Terminal.lua", "Terminal")
+createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", "Terminal")
 --createWindow("UwUntuCC/Apps/Finder", false, "Finder.lua", "Finder")
 --createWindow("UwUntuCC/Apps/Worm/", false, "Worm")
 --createWindow(":", false, "LevelOS.lua", "LevelOS", 119, 50)
