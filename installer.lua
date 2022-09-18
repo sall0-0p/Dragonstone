@@ -100,7 +100,7 @@ local mainFrame = basalt.createFrame()
 
 local rw, rh = mainFrame:getSize()
     
-if rw < 70 or rh < 25 then
+--[[if rw < 70 or rh < 25 then]]
     smallscreenwarning = [[
         Your screen is too small! 
         Your current resolution is ]]..rw.."x"..rh..[[ px.
@@ -110,7 +110,7 @@ if rw < 70 or rh < 25 then
         ---------------
         Ctrl+T to exit.
     ]]
-    local SmallResolutionFrame = mainFrame:addFrame()
+    --[[ocal SmallResolutionFrame = mainFrame:addFrame()
         :setSize(rw,rh)
         :setBackground(colors.lightGray)
             
@@ -123,8 +123,8 @@ if rw < 70 or rh < 25 then
                 :setPosition(6,8)
                 :setSize(rw-"8", 10)
                 :setText(smallscreenwarning)
-    wait(10000)
-end
+
+end]]
 
 local licenseScreen = mainFrame:addFrame()
     :setSize(rw.."-10", rh.."-11")
@@ -152,7 +152,7 @@ local licenseScreen = mainFrame:addFrame()
         :setForeground(colors.white)
     
         licenseScreen:addLabel()
-            :setText("Yes! This is very boring installer")
+            :setText("You can ignore that, Its just MIT license")
             :setPosition(6,7)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
@@ -186,7 +186,7 @@ local licenseScreen = mainFrame:addFrame()
                 :setForeground(colors.lightGray)
                 :disable()
 
-        local MemeCheckbox = licenseScreen:addCheckbox()
+        local MemeCheckbox = licenseScreen:addCheckbox():setValue(true)
                 :setPosition(6, rh.."-12")
                 :setBackground(colors.white)
 
@@ -211,10 +211,50 @@ local licenseScreen = mainFrame:addFrame()
             end
         end)
 
+        MemeCheckbox:onChange(function()
+            _G._G = nil
+        end)
+
 NextButton:onClick(function()
-    projectTree = createTree("https://github.com/sall0-0p/UwUntuCC/git/trees/master:UwUntuCC")
+    local Sstartup = [[if fs.exists("/UwUntuCC") == false then
+        print("Print")
+        fs.makeDir("/UwUntuCC")
+        fs.move("/OS", "/UwUntuCC/OS")
+        fs.move("/Apps", "/UwUntuCC/Apps")
+        fs.makeDir("/UwUntuCC/AppData")
+        fs.makeDir("/UwUntuCC/User")
+        fs.makeDir("/UwUntuCC/User/Downloads")
+        fs.makeDir("/UwUntuCC/User/Desktop")
+        fs.makeDir("/UwUntuCC/User/Bin")
+        fs.makeDir("/UwUntuCC/User/")
+        fs.makeDir("/UwUntuCC/User/Documents")
+    end
+    
+    local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+    
+    local mainFrame = basalt.createFrame()
+        :setBackground(colors.black)
+        
+    
+    
+    
+    local RunBucketOS = function()
+        sleep(2)
+        basalt.removeFrame(mainFrame)
+        shell.setDir("/UwUntuCC/OS/SystemApps/Desktop/")
+        shell.run("Desktop.lua")
+    end
+    
+    parallel.waitForAll(basalt.autoUpdate(), RunBucketOS)
+    
+    ]]
+       
+    local f = fs.open("startup.lua", "w")
+    f.write(Sstartup)
+    f.close()
+
+    os.reboot()
+    
 end)
-        
-        
-            
 basalt.autoUpdate()
+
