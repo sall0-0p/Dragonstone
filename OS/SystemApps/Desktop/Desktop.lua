@@ -376,7 +376,6 @@ loadDock = function(path)
                     local frame = desktop:getObject(ObjectID)
                     local program = frame:getObject(ObjectID.."p")
                     local name = frame:getValue()
-                        basalt.debug(name)
                         if ObjectStatus[ObjectID] == "true" then
                                 showWindow(frame, program, 51, 19, 5, 5, name)
                         elseif ObjectStatus[ObjectID] == "false" then
@@ -436,10 +435,8 @@ end
 createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
     
     --Getting Settings from file
-    basalt.debug(path.."/UwUsettings")
     
     if fs.exists(path.."/UwUsettings") then
-        basalt.debug("Loading from file")
         local file = fs.open(path.."/UwUsettings", "r")
         local curSettings = file.readAll()
         curSettings = textutils.unserialize(curSettings)
@@ -456,7 +453,6 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
         isResizeable = curSettings[10]
         centered = curSettings[11]
     else
-        basalt.debug("Loading defaults")
         ww = ww or 51
         wh = wh or 19
         executable = executable or fs.getName(path)
@@ -476,7 +472,6 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
             id = 1
         end
             
-       --basalt.debug(name.." "..useBar)
         databaser.addValue("RunningWindows", "id", id)
         databaser.addValue("RunningWindows", "name", name)
         databaser.addValue("RunningWindows", "path", path)
@@ -501,7 +496,6 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
         :setPosition(framePosx,framePosy)
         :setMovable(true)
         :setBackground(colors.gray)
-        basalt.debug(useBar)
             if useBar == true then
                 frame:setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
                 frame:setBorder(colors.gray, "left", "right", "bottom")
