@@ -17,6 +17,7 @@ local mainFrame = basalt.createFrame("mainFrame"):show()
 mainFrame:setBackground(colors.lightGray)
 local rw, rh = mainFrame:getSize()
 
+
 local function Update()
     basalt.autoUpdate()
 end
@@ -81,7 +82,7 @@ desktop:setBackground(false)
 
 if UseDesktopImage then
     local desktopBG = mainFrame:addImage():loadImage(DesktopImage)
-       :setSize(119,71)
+       :setSize(rw,rh)
        :setPosition(1,1)
     else
         desktop:setBackground(DesktopColor)                    
@@ -107,7 +108,7 @@ local Clock = UpMenu:addLabel()
 
     local function RunClock()
       while true do
-        
+        local rw, rh = mainFrame:getSize()
         local time = os.time(TimeType)
         day = os.date("%a %d %b")
         local ClockWidth = rw - Clock:getSize() - 1
@@ -121,53 +122,48 @@ local UwUButton = UpMenu:addButton()
     :setBackground(false)
     :setForeground(colors.white)
     :setText("UwU")
-    :setSize(3,1)
-    :setPosition(2,1)
+    :setSize(5,1)
+    :setPosition(1,1)
 
     local UwUMenu = desktop:addFrame():hide()
         :setSize(11, 8)
         :setPosition(1,2)
-        :setBackground(colors.gray)
+        :setBackground(colors.black)
         --:setBorder(colors.black)
 
-        local UwUMenuSeparator0 = UwUMenu:addLabel()
-            :setPosition(2,1)
-            :setBackground(colors.gray)
-            :setForeground(colors.lightGray)
-            :setText("---------")
         local myUwU = UwUMenu:addLabel()
             :setPosition(2,2)
-            :setBackground(colors.gray)
+            :setBackground(colors.black)
             :setForeground(colors.white)
             :setText("About UwU")
 
         local UwUMenuSeparator1 = UwUMenu:addLabel()
             :setPosition(2,3)
-            :setBackground(colors.gray)
+            :setBackground(colors.black)
             :setForeground(colors.lightGray)
             :setText("---------")
 
         local SettingsButton = UwUMenu:addLabel()
             :setPosition(2,4)
-            :setBackground(colors.gray)
+            :setBackground(colors.black)
             :setForeground(colors.white)
             :setText("Settings")
 
         local UwUStoreButton = UwUMenu:addLabel()
             :setPosition(2,5)
-            :setBackground(colors.gray)
+            :setBackground(colors.black)
             :setForeground(colors.white)
             :setText("UwUStore")
 
         local UwUMenuSeparator2 = UwUMenu:addLabel()
             :setPosition(2,6)
-            :setBackground(colors.gray)
+            :setBackground(colors.black)
             :setForeground(colors.lightGray)
             :setText("---------")
 
         local PowerButton = UwUMenu:addLabel()
             :setPosition(2,7)
-            :setBackground(colors.gray)
+            :setBackground(colors.black)
             :setForeground(colors.white)
             :setText("Power")
 
@@ -317,6 +313,7 @@ local DockPanel = desktop:addFrame()
 local Dock = DockPanel:addFrame():setSize(1,2)
 
 loadDock = function(path)
+    local rw, rh = mainFrame:getSize()
     local DockApps = databaser.getColumn("RunningWindows", "path")
     if DockApps == nil then
         DockApps = {   
@@ -635,13 +632,44 @@ end
 
         UwUButton:onHover(function()
             UwUMenu:show()
+            UwUButton:setBackground(colors.black)
         end)
 
         UwUMenu:onLeave(function()
             UwUMenu:hide()
+            UwUButton:setBackground(colors.gray)
         end)
 
-        
+mainFrame:onResize(function()
+    local rw, rh = mainFrame:getSize()
+    desktop:setSize(rw,rh)
+    UpMenu:setSize(rw,1)
+    LaunchPad:setPosition(nil, rh.."-2")
+    UpMenuBottom:setSize(rw,1)
+    local ClockWidth = rw - Clock:getSize() - 1
+        Clock:setPosition(ClockWidth,1)
+    loadDock()
+    ---DOCK
+        --[[local DockApps = databaser.getColumn("RunningWindows", "path")
+        if DockApps == nil then
+            DockApps = {   
+                "bruh"
+            }
+        end
+
+        local DownPanelSize = table.getn(DockApps)*4 + 1
+            local DownPanelPos = DownPanelSize/2
+            DownPanelPos = rw/2 - DownPanelSize
+                DockPanel
+                    :setSize(DownPanelSize,3)
+                    :setPosition(DownPanelPos.."+4", rh.."-3")
+                    :setBackground(false)]]
+end)
+
+
+
+
+
 
 -------------------
 --createWindow("UwUntuCC/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
