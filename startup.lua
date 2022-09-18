@@ -1,4 +1,5 @@
-if fs.exists("/UwUntuCC") ~= false then
+if fs.exists("/UwUntuCC") == false then
+    print("Print")
     fs.makeDir("/UwUntuCC")
     fs.move("/OS", "/UwUntuCC/OS")
     fs.move("/Apps", "/UwUntuCC/Apps")
