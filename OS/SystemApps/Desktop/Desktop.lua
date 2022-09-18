@@ -13,6 +13,8 @@ local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 basalt.setMouseMoveThrottle(100)
 
+local Host = _HOST
+
 local mainFrame = basalt.createFrame("mainFrame"):show()   
 mainFrame:setBackground(colors.lightGray)
 local rw, rh = mainFrame:getSize()
@@ -162,10 +164,25 @@ local UwUButton = UpMenu:addButton()
             :setText("---------")
 
         local PowerButton = UwUMenu:addLabel()
-            :setPosition(2,7)
+            :setPosition(2,7)            
             :setBackground(colors.black)
             :setForeground(colors.white)
             :setText("Power")
+
+        if Host == "ComputerCraft 1.100.9 (CraftOS-PC v2.7)" then
+            UwUMenu:setSize(11, 9)
+            
+            local ChangePCButton = UwUMenu:addLabel()
+            :setPosition(2,8)
+            :setBackground(colors.black)
+            :setForeground(colors.white)
+            :setText("Change PC")
+
+            :onClick(function() 
+                createWindow("UwUntuCC/OS/SystemApps/ChangePC", nil, "Attach PC", 26, 6, true, nil, nil, true, true, true, true)
+            end)
+        end
+        
 
 
     local openMyUwU = function()
@@ -174,8 +191,11 @@ local UwUButton = UpMenu:addButton()
     myUwU:onClick(openMyUwU)
 
     local AreYouSure = function()
-        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", nil, "Confirm", 26, 7, true, nil, nil, true, true, true)
+        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", nil, "Confirm", 26, 7, true, nil, nil, true, true, true, true)
     end
+
+   
+
     PowerButton:onClick(AreYouSure)
 
 local function centerObject(Object, height, ow, oh, launchpad)
@@ -633,6 +653,7 @@ end
         UwUButton:onHover(function()
             UwUMenu:show()
             UwUButton:setBackground(colors.black)
+            UwUMenu:setFocus()
         end)
 
         UwUMenu:onLeave(function()
