@@ -273,10 +273,10 @@ return function(name)
 
         setSize = function(self, width, height, rel)
             if(type(width)=="number")then
-                self.width = rel and self.width+width or width
+                self.width = rel and self:getWidth()+width or width
             end
             if(type(height)=="number")then
-                self.height = rel and self.height+height or height
+                self.height = rel and self:getHeight()+height or height
             end
             if(self.parent~=nil)then
                 if(type(width)=="string")then
@@ -439,29 +439,29 @@ return function(name)
                         self.parent:drawForegroundBox(x, y, 1, 1, borderColors["left"])
                     end
                     if(borderColors["right"]~=false)then
-                        self.parent:drawTextBox(x+w, y, 1, h, "\149")
-                        if(bgCol~=false)then self.parent:drawForegroundBox(x+w, y, 1, h, self.bgColor) end
-                        self.parent:drawBackgroundBox(x+w, y, 1, h, borderColors["right"])
-                    end
-                    if(borderColors["top"]~=false)and(borderColors["right"]~=false)then
-                        self.parent:drawTextBox(x+w, y, 1, 1, "\148")
-                        if(bgCol~=false)then self.parent:drawForegroundBox(x+w, y, 1, 1, self.bgColor) end
-                        self.parent:drawBackgroundBox(x+w, y, 1, 1, borderColors["right"])
-                    end
-                    if(borderColors["right"]~=false)and(borderColors["bottom"]~=false)then
-                        self.parent:drawTextBox(x+w, y+h, 1, 1, "\133")
-                        if(bgCol~=false)then self.parent:drawForegroundBox(x+w, y+h, 1, 1, self.bgColor) end
-                        self.parent:drawBackgroundBox(x+w, y+h, 1, 1, borderColors["right"])
+                        self.parent:drawTextBox(x+w-1, y, 1, h, "\149")
+                        if(bgCol~=false)then self.parent:drawForegroundBox(x+w-1, y, 1, h, self.bgColor) end
+                        self.parent:drawBackgroundBox(x+w-1, y, 1, h, borderColors["right"])
                     end
                     if(borderColors["bottom"]~=false)then
-                        self.parent:drawTextBox(x, y+h, w, 1, "\143")
-                        if(bgCol~=false)then self.parent:drawForegroundBox(x, y+h, w, 1, self.bgColor) end
-                        self.parent:drawBackgroundBox(x, y+h, w, 1, borderColors["bottom"])
+                        self.parent:drawTextBox(x, y+h-1, w, 1, "\143")
+                        if(bgCol~=false)then self.parent:drawForegroundBox(x, y+h-1, w, 1, self.bgColor) end
+                        self.parent:drawBackgroundBox(x, y+h-1, w, 1, borderColors["bottom"])
+                    end
+                    if(borderColors["top"]~=false)and(borderColors["right"]~=false)then
+                        self.parent:drawTextBox(x+w-1, y, 1, 1, "\148")
+                        if(bgCol~=false)then self.parent:drawForegroundBox(x+w-1, y, 1, 1, self.bgColor) end
+                        self.parent:drawBackgroundBox(x+w-1, y, 1, 1, borderColors["right"])
+                    end
+                    if(borderColors["right"]~=false)and(borderColors["bottom"]~=false)then
+                        self.parent:drawTextBox(x+w-1, y+h-1, 1, 1, "\133")
+                        if(bgCol~=false)then self.parent:drawForegroundBox(x+w-1, y+h-1, 1, 1, self.bgColor) end
+                        self.parent:drawBackgroundBox(x+w-1, y+h-1, 1, 1, borderColors["right"])
                     end
                     if(borderColors["bottom"]~=false)and(borderColors["left"]~=false)then
-                        self.parent:drawTextBox(x, y+h, 1, 1, "\138")
-                        if(bgCol~=false)then self.parent:drawForegroundBox(x-1, y+h, 1, 1, self.bgColor) end
-                        self.parent:drawBackgroundBox(x, y+h, 1, 1, borderColors["left"])
+                        self.parent:drawTextBox(x, y+h-1, 1, 1, "\138")
+                        if(bgCol~=false)then self.parent:drawForegroundBox(x-1, y+h-1, 1, 1, self.bgColor) end
+                        self.parent:drawBackgroundBox(x, y+h-1, 1, 1, borderColors["left"])
                     end
                 end
                 draw = false

@@ -362,9 +362,9 @@ return function(name)
             return self
         end,
 
-        add = function(self, func, wait)
+        add = function(self, func, timer)
             lastFunc = func
-            addAnimationPart((wait or nextWaitTimer) + (animations[#animations]~=nil and animations[#animations].t or 0), func)
+            addAnimationPart((timer or nextWaitTimer) + (animations[#animations]~=nil and animations[#animations].t or 0), func)
             return self
         end;
 
