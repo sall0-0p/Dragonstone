@@ -1,6 +1,8 @@
 --TODO: make Silent Apps (do not appear in dock)
 --TODO: Button for moving unmovable windows
-
+--[[
+    
+]]
 --119 x 50
 
 --  _  _ ___   _   ___  
@@ -12,7 +14,7 @@
 local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 basalt.setMouseMoveThrottle(100)
-
+package.path = "/UwUntuCC/OS/Libraries/?.lua;/UwUntuCC/OS/Libraries/?/init.lua;" .. package.path
 local Host = _HOST
 
 local mainFrame = basalt.createFrame("mainFrame"):show()   
@@ -39,7 +41,7 @@ databaser.addColumn("RunningWindows", "id")
 
 local DesktopColor = colors.lightGray
 
-local DesktopImage = "UwUntuCC/OS/SystemApps/Desktop/Desktop2.nfp"
+local DesktopImage = "UwUntuCC/OS/DesktopBackgrounds/Desktop2.nfp"
 
 local UseDesktopImage = false
 
@@ -452,7 +454,7 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
 end
 
 -- CREATING WINDOWS
-createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fh, id, parentframe, MoveButton)
+createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fw,fh, id, parentframe, MoveButton)
     
     --Getting Settings from file
     
@@ -516,14 +518,15 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
         :setPosition(framePosx,framePosy)
         :setMovable(true)
         :setBackground(colors.gray)
-            if useBar == true then
-                frame:setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
-                frame:setBorder(colors.gray, "left", "right", "bottom")
-                frame:setSize(ww.."+1",wh.."+1")
-            else
-                frame:setBorder(colors.gray, "left", "right", "bottom")
-                frame:setSize(ww.."+1",wh)
-            end
+        frame:setSize(ww.."+2",wh.."+2")
+        if useBar == true then
+            frame:setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
+            --frame:setBorder(colors.gray, "left", "right", "bottom")
+            frame:setSize(ww.."+2",wh.."+2")
+        else
+            --frame:setBorder(colors.gray, "left", "right", "bottom")
+            frame:setSize(ww.."+2",wh.."+2")
+        end
 
     shell.setDir(":")
     program = frame:addProgram(id.."p")
@@ -552,8 +555,8 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
             end
             button1 = frame:addButton() -- close button
                 :setForeground(colors.lightGray)
-                :setBackground(false) --colors.red
-                :setPosition(buttonx, buttony)
+                :setBackground(colors.gray) --colors.red
+                :setPosition(buttonx,1)
                 :setSize(1,1)
                 :setText("\7")
             button1:onClick(function()
@@ -625,12 +628,12 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
             end)
         end
 
-        --[[MoveButton = frame:addLabel()
+        MoveButton = frame:addLabel()
                 :setSize(1,1)
                 :setBackground(colors.gray)
-                :setPosition(ww.."+1",wh.."+1")
-                :setText("\186")
-                :setForeground(colors.white)]]
+                :setPosition(ww.."+2",wh.."+2")
+                :setText("/")
+                :setForeground(colors.black)
 
         
         mainFrame:onKeyUp(function(self, event, key)
@@ -639,7 +642,26 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
                 loadDock()
             end
         end)
-        return frame
+        MoveButton:onDrag(function(self, event, button, x, y, xOffset, yOffset)
+            frame:setSize(-xOffset, -yOffset, true)
+        end)
+
+        frame:onResize(function()
+            local ww, wh = frame:getSize()
+            program:setSize(ww.."-2", wh.."-2")
+            MoveButton:setPosition(ww,wh)
+            if buttonPosX == nil then
+                buttonx = ww-1
+                button1:setPosition(buttonx, 1)
+                buttonx = buttonx - 2
+                button2:setPosition(buttonx, 1)
+                buttonx = buttonx - 2
+                button3:setPosition(buttonx, 1)
+            end
+            if ww < 15 then
+                frame:setBar(" ", colors.gray, colors.gray)
+            end
+        end)
 end
 
         --[[desktop:onClick(function()
@@ -661,6 +683,7 @@ end
             UwUButton:setBackground(colors.gray)
         end)
 
+--TODO: term.resize() event?       
 mainFrame:onResize(function()
     local rw, rh = mainFrame:getSize()
     desktop:setSize(rw,rh)
@@ -670,6 +693,7 @@ mainFrame:onResize(function()
     local ClockWidth = rw - Clock:getSize() - 1
         Clock:setPosition(ClockWidth,1)
     loadDock()
+
     ---DOCK
         --[[local DockApps = databaser.getColumn("RunningWindows", "path")
         if DockApps == nil then
