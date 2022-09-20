@@ -525,7 +525,7 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
             frame:setSize(ww.."+2",wh.."+2")
         else
             --frame:setBorder(colors.gray, "left", "right", "bottom")
-            frame:setSize(ww.."+2",wh.."+2")
+            frame:setSize(ww.."+2",wh.."+1")
         end
 
     shell.setDir(":")
@@ -633,7 +633,7 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
                 :setBackground(colors.gray)
                 :setPosition(ww.."+2",wh.."+2")
                 :setText("/")
-                :setForeground(colors.black)
+                :setForeground(colors.lightGray)
 
         
         mainFrame:onKeyUp(function(self, event, key)
@@ -658,8 +658,25 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
                 buttonx = buttonx - 2
                 button3:setPosition(buttonx, 1)
             end
-            if ww < 15 then
-                frame:setBar(" ", colors.gray, colors.gray)
+            if ww < 20 then
+                if useBar == true then
+                    frame:setBar(" ", colors.gray, colors.gray)
+                end   
+            else
+                if useBar == true then
+                    frame:setBar(name, colors.gray, colors.lightGray)
+                        :showBar()
+                        :setBarTextAlign("center")
+                else
+                end
+            end
+
+            if ww < 51 then
+                frame:setSize(51, nil)
+            end
+
+            if wh < 19 then
+                frame:setSize(nil, 19)
             end
         end)
 end

@@ -277,7 +277,7 @@ local UpdatesWindow = Overview:addFrame():hide()
         :setPosition(2,12)
         :setForeground(colors.magenta)
         :setBackground(false)
-
+            
 
 basalt.autoUpdate()
 
