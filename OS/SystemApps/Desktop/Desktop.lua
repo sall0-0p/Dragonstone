@@ -375,9 +375,9 @@ loadDock = function(path)
                     local ObjectStatus = databaser.getColumn("RunningWindows", "hidden")
                     Object:setPosition("2+"..n.."*4-4", 1)--
                     if fs.exists(path.."/icon.nfp") then
-                        Object:addImage():loadImage(path.."/icon.nfp"):setSize(4,2):shrink()
+                        Object:addImage():loadImage(path.."/icon.nfp"):setSize(4,2)
                     else
-                        Object:addImage():loadImage("UwUntuCC/OS/Icons/app.nfp"):setSize(3,2):shrink()
+                        Object:addImage():loadImage("UwUntuCC/OS/Icons/app.nfp"):setSize(3,2)
                     end
                     if ObjectStatus[n] == "false" then
                     Object:addLabel():setForeground(colors.lightGray):setBackground(colors.gray):setText("\0".."\7"):setPosition(1,3):setSize(3,1)
