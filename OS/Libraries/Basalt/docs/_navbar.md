@@ -1,4 +1,0 @@
-- Getting Started
-  - [Home](Home.md)
-  - [Quick Start](home/Quick-Start.md)
-  - [Installer](home/installer)
