@@ -424,17 +424,11 @@ loadDock = function(path)
         return DockPanel, Dock
 end
 
+local LoadPanel = function(path)
 
---[[local desktopIcon = desktop:addFrame()
-    :setSize(5,5)
-    :setPosition(3,3)
-    :setBackground(colors.lightGray)
-    
-    local desktopIconImage = desktopIcon:addImage()
-        :setPosition(2,1)
-        :loadImage("UwUntuCC/OS/Icons/folder.nfp")
-        :setSize(3,2)
-        :shrink()]]--
+
+
+end
 
 
 
@@ -711,21 +705,6 @@ mainFrame:onResize(function()
         Clock:setPosition(ClockWidth,1)
     loadDock()
 
-    ---DOCK
-        --[[local DockApps = databaser.getColumn("RunningWindows", "path")
-        if DockApps == nil then
-            DockApps = {   
-                "bruh"
-            }
-        end
-
-        local DownPanelSize = table.getn(DockApps)*4 + 1
-            local DownPanelPos = DownPanelSize/2
-            DownPanelPos = rw/2 - DownPanelSize
-                DockPanel
-                    :setSize(DownPanelSize,3)
-                    :setPosition(DownPanelPos.."+4", rh.."-3")
-                    :setBackground(false)]]
 end)
 
 
@@ -734,11 +713,7 @@ end)
 
 
 -------------------
---createWindow("UwUntuCC/Apps/ASCII/", false, "ASCII", nil, nil, nil, false)
 createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", "Terminal")
---createWindow("UwUntuCC/Apps/Finder", false, "Finder.lua", "Finder")
---createWindow("UwUntuCC/Apps/Worm/", false, "Worm")
---createWindow(":", false, "LevelOS.lua", "LevelOS", 119, 50)
 
 
 

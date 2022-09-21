@@ -1055,13 +1055,20 @@ return function(name, parent, pTerm, basalt)
             end
         end;
 
-        blit = function (self, x, y, t, b, f)
+        blit = function (self, x, y, t, f, b)
             local obx, oby = self:getAnchorPosition()
             if (y >= 1) and (y <= self:getHeight()) then
+                local w = self:getWidth()
                 if (self.parent ~= nil) then
-                    self.parent:blit(max(x + (obx - 1), obx), oby + y - 1, sub(text, max(1 - x + 1, 1), self:getWidth() - x + 1), bgCol, fgCol)
+                    t = sub(t, max(1 - x + 1, 1), w - x + 1)
+                    f = sub(f, max(1 - x + 1, 1), w - x + 1)
+                    b = sub(b, max(1 - x + 1, 1), w - x + 1)
+                    self.parent:blit(max(x + (obx - 1), obx), oby + y - 1, t, f, b)
                 else
-                    basaltDraw.blit(max(x + (obx - 1), obx), oby + y - 1, sub(text, max(1 - x + 1, 1), max(self:getWidth() - x + 1,1)), bgCol, fgCol)
+                    t = sub(t, max(1 - x + 1, 1), max(w - x + 1,1))
+                    f = sub(f, max(1 - x + 1, 1), max(w - x + 1,1))
+                    b = sub(b, max(1 - x + 1, 1), max(w - x + 1,1))
+                    basaltDraw.blit(max(x + (obx - 1), obx), oby + y - 1, t, f, b)
                 end
             end
         end,

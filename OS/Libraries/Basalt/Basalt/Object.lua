@@ -784,16 +784,9 @@ return function(name)
 
         dragHandler = function(self, button, x, y)
             if(isDragging)then 
-                local xO, yO, parentX, parentY = 0, 0, 1, 1
-                if (self.parent ~= nil) then
-                    xO, yO = self.parent:getOffsetInternal()
-                    xO = xO < 0 and math.abs(xO) or -xO
-                    yO = yO < 0 and math.abs(yO) or -yO
-                    parentX, parentY = self.parent:getAbsolutePosition(self.parent:getAnchorPosition())
-                end
-                local dX, dY = x + dragXOffset - (parentX - 1) + xO, y + dragYOffset - (parentY - 1) + yO
-                local val = eventSystem:sendEvent("mouse_drag", self, "mouse_drag", button, dX, dY, dragStartX-x, dragStartY-y, x, y)
                 local objX, objY = self:getAbsolutePosition(self:getAnchorPosition())
+                local dX, dY = x - objX + 1, y - objY + 1
+                local val = eventSystem:sendEvent("mouse_drag", self, "mouse_drag", button, dX, dY, dragStartX-x, dragStartY-y, x, y)
                 dragStartX, dragStartY = x, y 
                 if(val~=nil)then return val end
                 if(self.parent~=nil)then
