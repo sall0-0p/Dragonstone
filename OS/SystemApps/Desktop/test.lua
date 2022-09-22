@@ -1,7 +1,2 @@
-local NText = [[
-    File Saved!
-]]
 
-
-
-os.queueEvent("notification", "Error")
+os.queueEvent("notification", "Error", "hellcooltext")

@@ -781,11 +781,16 @@ local NShow = Notification:addAnimation()
 
 
 mainFrame:onEvent(function(self, event, arg1, arg2, arg3) 
+
     if event == "notification" then
         NShow:play()
-        
-        NotificationLabel:setText(arg1)
-        NotificationText:setText(arg2)
+        if arg == nil or arg2 == nil then
+            NotificationLabel:setText("Notification")
+            NotificationText:setText(NExampleText)
+        end
+            NotificationLabel:setText(arg1)
+            NotificationText:setText(arg2)
+        else
         --NHideTimer:start()
         Notification:onClick(function() 
             --NHideTimer:cancel()
