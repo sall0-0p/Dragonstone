@@ -646,6 +646,14 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
         if isResizeable == true then
             MoveButton:onDrag(function(self, event, button, x, y, xOffset, yOffset)
                 frame:setSize(-xOffset, -yOffset, true)
+                local ww, wh = frame:getSize()
+                if ww < sw then
+                    frame:setSize(sw, nil)
+                end
+    
+                if wh < sh then
+                    frame:setSize(nil, sh)
+                end
             end)
         end
         frame:onResize(function()
@@ -663,13 +671,7 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
                 button3:setPosition(buttonx, 1)
             end
 
-            if ww < sw then
-                frame:setSize(sw, nil)
-            end
-
-            if wh < sh then
-                frame:setSize(nil, sh)
-            end
+            
         end)
 end
 
@@ -781,7 +783,7 @@ local NShow = Notification:addAnimation()
 mainFrame:onEvent(function(self, event, arg1, arg2, arg3) 
     if event == "notification" then
         NShow:play()
-        basalt.debug(event, arg1, arg2, arg3)
+        
         NotificationLabel:setText(arg1)
         NotificationText:setText(arg2)
         --NHideTimer:start()
