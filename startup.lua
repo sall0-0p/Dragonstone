@@ -12,6 +12,12 @@ if fs.exists("/UwUntuCC") == false then
     fs.makeDir("/UwUntuCC/User/Documents")
 end
 
+local OSLabel = os.getComputerLabel()
+
+if OSLabel == nil then
+        os.setComputerLabel("UwU")
+end
+
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
 local mainFrame = basalt.createFrame("main")
