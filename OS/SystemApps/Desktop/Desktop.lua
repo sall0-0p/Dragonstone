@@ -21,7 +21,6 @@ local mainFrame = basalt.createFrame("mainFrame"):show()
 mainFrame:setBackground(colors.lightGray)
 local rw, rh = mainFrame:getSize()
 
-
 local function Update()
     basalt.autoUpdate()
 end
@@ -41,9 +40,9 @@ databaser.addColumn("RunningWindows", "id")
 
 local DesktopColor = colors.lightGray
 
-local DesktopImage = "UwUntuCC/OS/DesktopBackgrounds/Desktop2.nfp"
+local DesktopImage = "UwUntuCC/OS/DesktopBackgrounds/Desktop4.bimg"
 
-local UseDesktopImage = false
+local UseDesktopImage = true
 
 local TimeFormat = true
 
@@ -54,6 +53,12 @@ local ShowWindowF
 local LoadDock
 
 local TimeType = "local"
+
+local useScreensaver = true
+
+local Screensaver = "UwUntuCC/OS/SystemApps/ScreenSavers/fireworks.lua"
+
+local ScreenSaverTimeOut = 600
 
 if TimeType == "ingame" then
     local TimeTimeOut = 0.8
@@ -448,8 +453,7 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
 end
 
 -- CREATING WINDOWS
-createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fw,fh, id, parentframe, MoveButton)
-    
+createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fw,fh, id, parentframe, MoveButton, sw, sh)    
     --Getting Settings from file
     
     if fs.exists(path.."/UwUsettings") then
@@ -461,12 +465,12 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
         wh = curSettings[2]
         executable = curSettings[4]
         name = curSettings[3]
-        useBar = curSettings[5]
-        buttonPosX = curSettings[6]
-        buttonPosY = curSettings[7]
-        disableFullscreen = curSettings[8]
-        disableHide = curSettings[9]
-        isResizeable = curSettings[10]
+        useBar = curSettings[6]
+        buttonPosX = curSettings[7]
+        buttonPosY = curSettings[8]
+        disableFullscreen = curSettings[9]
+        disableHide = curSettings[10]
+        isResizeable = curSettings[5]
         centered = curSettings[11]
     else
         ww = ww or 51
@@ -481,6 +485,8 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
         isResizeable = isResizeable or false
         centered = centered or false
     end
+        sw = ww + 2
+        sh = wh + 2
         local ids = databaser.getColumn("RunningWindows", "id")
         if ids ~= nil then
             id = table.getn(ids) + 1
@@ -531,7 +537,7 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
             program:setPosition(2,2)
         end
         program:execute(path.."/"..executable) -- running program
-        shell.setDir("UwUntuCC/OS/SystemApps/Desktop")
+
 
         --Creating Buttons
         if useBar == false and buttonPosX == nil then
@@ -621,14 +627,15 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
 
             end)
         end
-
-        MoveButton = frame:addLabel()
-                :setSize(1,1)
-                :setBackground(colors.gray)
-                :setPosition(ww.."+2",wh.."+2")
-                :setText("/")
-                :setForeground(colors.lightGray)
-
+        
+        if isResizeable == true then
+            MoveButton = frame:addLabel()
+                    :setSize(1,1)
+                    :setBackground(colors.gray)
+                    :setPosition(ww.."+2",wh.."+2")
+                    :setText("/")
+                    :setForeground(colors.lightGray)
+        end
         
         mainFrame:onKeyUp(function(self, event, key)
             if(key==keys.k)and(basalt.isKeyDown(keys.leftCtrl))then
@@ -636,14 +643,17 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
                 loadDock()
             end
         end)
-        MoveButton:onDrag(function(self, event, button, x, y, xOffset, yOffset)
-            frame:setSize(-xOffset, -yOffset, true)
-        end)
-
+        if isResizeable == true then
+            MoveButton:onDrag(function(self, event, button, x, y, xOffset, yOffset)
+                frame:setSize(-xOffset, -yOffset, true)
+            end)
+        end
         frame:onResize(function()
             local ww, wh = frame:getSize()
             program:setSize(ww.."-2", wh.."-2")
-            MoveButton:setPosition(ww,wh)
+            if isResizeable == true then
+                MoveButton:setPosition(ww,wh)
+            end
             if buttonPosX == nil then
                 buttonx = ww-1
                 button1:setPosition(buttonx, 1)
@@ -652,25 +662,13 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
                 buttonx = buttonx - 2
                 button3:setPosition(buttonx, 1)
             end
-            if ww < 20 then
-                if useBar == true then
-                    frame:setBar(" ", colors.gray, colors.gray)
-                end   
-            else
-                if useBar == true then
-                    frame:setBar(name, colors.gray, colors.lightGray)
-                        :showBar()
-                        :setBarTextAlign("center")
-                else
-                end
+
+            if ww < sw then
+                frame:setSize(sw, nil)
             end
 
-            if ww < 51 then
-                frame:setSize(51, nil)
-            end
-
-            if wh < 19 then
-                frame:setSize(nil, 19)
+            if wh < sh then
+                frame:setSize(nil, sh)
             end
         end)
 end
@@ -707,15 +705,95 @@ mainFrame:onResize(function()
 
 end)
 
+local scTimer
+
+local launchScreensaver = function()
+    shell.setDir(":")
+    local ScreensaverProgram = mainFrame:addProgram()
+        :setSize(rw,rh)
+        :setFocus()
+        :execute(Screensaver)
+    desktop:hide()
+    
+    mainFrame:onClick(function()
+        ScreensaverProgram:remove()
+        desktop:show()
+        scTimer:start()
+    end)
+    mainFrame:onKey(function()
+        ScreensaverProgram:remove()
+        desktop:show()
+        scTimer:start()
+    end)
+end
 
 
+if useScreensaver then
+    scTimer = desktop:addTimer()
+        :onCall(launchScreensaver)
+        :setTime(ScreenSaverTimeOut)
+        desktop:onClickUp(function()
+            scTimer:cancel()
+            scTimer:start()
+
+        end)
+        scTimer:start()
+end
+
+local NExampleText = 
+[[
+    This is example text.
+    If you see this, smth went wrong.
+]]
+
+local Notification = mainFrame:addFrame()
+    :setSize(31,6)
+    :setPosition(rw.."+2", 3)
+    :setBackground(colors.gray)
+
+    local NotificationLabel = Notification:addLabel()
+        :setPosition(3,2)
+        :setText("Notification")
+        :setForeground(colors.white)
+    
+    local NotificationText = Notification:addLabel()
+        :setSize(27,4)
+        :setPosition(2,3)
+        :setText(NExampleText)
+        :setForeground(colors.white)
+
+local aw = rw + 2
+local aww = rw - 29
+
+local NHide = Notification:addAnimation()
+    :setObject(Notification)
+    :move(aw, 3, 1)     
+
+local NShow = Notification:addAnimation()
+    :setObject(Notification)
+    :move(aww, 3, 1)    
+
+--[[local NHideTimer = mainFrame:addTimer()
+    :onCall(NHide)
+    :setTime(15)]]
 
 
+mainFrame:onEvent(function(self, event, arg1, arg2, arg3) 
+    if event == "notification" then
+        NShow:play()
+        basalt.debug(event, arg1, arg2, arg3)
+        NotificationLabel:setText(arg1)
+        NotificationText:setText(arg2)
+        --NHideTimer:start()
+        Notification:onClick(function() 
+            --NHideTimer:cancel()
+            NHide:play()
+        end)
+    end
+end)
 
 -------------------
 createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", "Terminal")
-
-
 
 loadDock()
 
