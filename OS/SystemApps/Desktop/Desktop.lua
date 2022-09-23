@@ -13,6 +13,7 @@
 -- API --
 local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+local versions = require(".UwUntuCC.OS.Libraries.UwUVersions")
 basalt.setMouseMoveThrottle(100)
 package.path = "/UwUntuCC/OS/Libraries/?.lua;/UwUntuCC/OS/Libraries/?/init.lua;" .. package.path
 local Host = _HOST
@@ -453,7 +454,7 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
 end
 
 -- CREATING WINDOWS
-createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fw,fh, id, parentframe, MoveButton, sw, sh)    
+createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fw,fh, id, parentframe, MoveButton, sw, sh, DoneTimer)    
     --Getting Settings from file
     
     if fs.exists(path.."/UwUsettings") then
@@ -670,9 +671,11 @@ createWindow = function(path, executable, name, ww, wh, useBar, buttonPosX, butt
                 buttonx = buttonx - 2
                 button3:setPosition(buttonx, 1)
             end
-
-            
         end)
+        program:onDone(function() 
+            deleteWindow(name, frame, id)  
+        end)
+
 end
 
         --[[desktop:onClick(function()
@@ -752,6 +755,14 @@ local Notification = mainFrame:addFrame()
     :setSize(31,6)
     :setPosition(rw.."+2", 3)
     :setBackground(colors.gray)
+    Notification:addFrame()
+        :setBackground(colors.gray, "\149", colors.lightGray)
+        :setPosition(2,3)
+        :setSize(1,3)
+    Notification:addFrame()
+        :setBackground(colors.gray, "\132", colors.white)
+        :setPosition(2,2)
+        :setSize(1,1)
 
     local NotificationLabel = Notification:addLabel()
         :setPosition(3,2)
@@ -759,10 +770,10 @@ local Notification = mainFrame:addFrame()
         :setForeground(colors.white)
     
     local NotificationText = Notification:addLabel()
-        :setSize(27,4)
-        :setPosition(2,3)
+        :setSize(27,3)
+        :setPosition(3,3)
         :setText(NExampleText)
-        :setForeground(colors.white)
+        :setForeground(colors.lightGray)
 
 local aw = rw + 2
 local aww = rw - 29
@@ -775,33 +786,44 @@ local NShow = Notification:addAnimation()
     :setObject(Notification)
     :move(aww, 3, 1)    
 
---[[local NHideTimer = mainFrame:addTimer()
-    :onCall(NHide)
-    :setTime(15)]]
+local NHideTimer = mainFrame:addTimer()
+    :onCall(function()
+        NHide:play()
+    end)
+    :setTime(10)
 
 
 mainFrame:onEvent(function(self, event, arg1, arg2, arg3) 
 
     if event == "notification" then
         NShow:play()
-        if arg == nil or arg2 == nil then
+        NHideTimer:start()
+        if arg1 == nil or arg2 == nil then
             NotificationLabel:setText("Notification")
             NotificationText:setText(NExampleText)
         end
             NotificationLabel:setText(arg1)
             NotificationText:setText(arg2)
         else
-        --NHideTimer:start()
         Notification:onClick(function() 
-            --NHideTimer:cancel()
+            NHideTimer:cancel()
             NHide:play()
         end)
+    end
+
+    if event == "launch_screensaver" then
+        launchScreensaver()
+    end
+
+    if event == "clean_notifications" then
+        NHide:play()
     end
 end)
 
 -------------------
 createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", "Terminal")
 
+versions.checkVersion()
 loadDock()
 
 parallel.waitForAll(Update, RunClock)
