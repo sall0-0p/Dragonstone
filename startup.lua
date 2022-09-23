@@ -12,8 +12,16 @@ if fs.exists("/UwUntuCC") == false then
     fs.makeDir("/UwUntuCC/User/Documents")
 end
 
+
 shell.setDir("/UwUntuCC/OS/SystemApps/Desktop")
 shell.run("Desktop.lua")
+
+local OSLabel = os.getComputerLabel()
+
+if OSLabel == nil then
+        os.setComputerLabel("UwU")
+end
+
 
 local function checkVersion(version)
     local request = http.get("https://raw.githubusercontent.com/sall0-0p/UwUntuCC/master/OS/Version.md")
