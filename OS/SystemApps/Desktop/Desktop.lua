@@ -543,9 +543,9 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             program:setPosition(2,2)
         end
 
-        program:onError(function()
-            os.queueEvent("program_crashed", name)
-            --basalt.debug(errormsg)
+        program:onError(function(self, errormsg)
+            --os.queueEvent("program_crashed", name)
+            basalt.debug(errormsg)
         end)
 
         program:execute(path.."/"..executable, args) -- running program
