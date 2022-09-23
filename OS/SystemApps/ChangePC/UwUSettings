@@ -1,0 +1,13 @@
+{
+    26, -- number value
+    6, -- number value
+    "Attach PC", -- string
+    "ChangePC.lua", -- string, filename (not path)
+    false, -- boolean
+    true, -- boolean
+    nil, -- number value
+    nil, -- number value
+    true, -- boolean
+    true, -- boolean
+    true -- boolean
+}

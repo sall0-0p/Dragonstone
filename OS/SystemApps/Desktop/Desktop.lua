@@ -199,7 +199,7 @@ local UwUButton = UpMenu:addButton()
     myUwU:onClick(openMyUwU)
 
     local AreYouSure = function()
-        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", nil, nil, "Confirm", 26, 7, true, nil, nil, true, true, true, true)
+        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", nil, nil, "Confirm", 26, 7, true, true, nil, nil, true, true, true, true)
     end
 
    

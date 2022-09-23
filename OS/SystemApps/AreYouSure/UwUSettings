@@ -1,0 +1,13 @@
+{
+    26, -- number value
+    7, -- number value
+    "Confirm", -- string
+    "AreYouSure.lua", -- string, filename (not path)
+    false, -- boolean
+    true, -- boolean
+    nil, -- number value
+    nil, -- number value
+    true, -- boolean
+    true, -- boolean
+    true -- boolean
+}
