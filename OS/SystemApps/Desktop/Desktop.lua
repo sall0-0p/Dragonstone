@@ -187,7 +187,7 @@ local UwUButton = UpMenu:addButton()
             :setText("Change PC")
 
             :onClick(function() 
-                createWindow("UwUntuCC/OS/SystemApps/ChangePC", nil, "Attach PC", 26, 6, true, nil, nil, true, true, true, true)
+                createWindow("UwUntuCC/OS/SystemApps/ChangePC", nil, nil, "Attach PC", 26, 6, true, nil, nil, true, true, true, true)
             end)
         end
         
@@ -199,7 +199,7 @@ local UwUButton = UpMenu:addButton()
     myUwU:onClick(openMyUwU)
 
     local AreYouSure = function()
-        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", nil, "Confirm", 26, 7, true, nil, nil, true, true, true, true)
+        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", nil, nil, "Confirm", 26, 7, true, nil, nil, true, true, true, true)
     end
 
    
@@ -503,6 +503,11 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         loadDock()
     --Creating Frame
 
+    if args == nil then
+        args = {}
+    end
+
+
     if framePosx == nil or framePosy == nil then
         if centered == false then
             framePosx = math.random(5,10)
@@ -537,7 +542,13 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         else
             program:setPosition(2,2)
         end
-        program:execute(path.."/"..executable) -- running program
+        
+        program:onError(function(self, msg)
+            basalt.debug("Error")
+            return false
+        end)
+
+        program:execute(path.."/"..executable, args) -- running program
 
 
         --Creating Buttons
@@ -676,6 +687,8 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             deleteWindow(name, frame, id)  
         end)
 
+        
+
 end
 
         --[[desktop:onClick(function()
@@ -793,8 +806,7 @@ local NHideTimer = mainFrame:addTimer()
     :setTime(10)
 
 
-mainFrame:onEvent(function(self, event, arg1, arg2, arg3) 
-
+mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5) 
     if event == "notification" then
         NShow:play()
         NHideTimer:start()
@@ -818,10 +830,19 @@ mainFrame:onEvent(function(self, event, arg1, arg2, arg3)
     if event == "clean_notifications" then
         NHide:play()
     end
+
+    --[[if event == "program_crashed" then
+
+        local bgargs = {}
+        table.insert(bgargs, arg1)
+        table.insert(bgargs, arg2)
+
+        createWindow("UwUntuCC/OS/SystemApps/BugReport/", "BugReport.lua", bgargs)
+    end]]
 end)
 
 -------------------
-createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", "Terminal")
+createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", nil, "Terminal")
 
 versions.checkVersion()
 loadDock()
