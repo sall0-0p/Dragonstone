@@ -1,0 +1,1 @@
+os.queueEvent("launch_screensaver")

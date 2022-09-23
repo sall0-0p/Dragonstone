@@ -223,7 +223,7 @@ local UpdatesWindow = Overview:addFrame():hide()
         if fs.getFreeSpace("UwUntuCC") < 1000000 then
             local Load = fs.getFreeSpace("UwUntuCC")/1000000 * 100
         end
-        local DiskIcon = DiskFrame:addImage():loadImage("UwUntuCC/OS/Icons/Disks/Blue.nfp"):shrink()
+        local DiskIcon = DiskFrame:addImage():loadImage("UwUntuCC/OS/Icons/Disks/Blue.nfp")
             :setPosition(2,2)
             :setSize(3,3)
 

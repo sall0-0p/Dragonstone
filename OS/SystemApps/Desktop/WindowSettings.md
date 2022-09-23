@@ -19,16 +19,20 @@ When user runs program, UwU calls config file, where developer can state some se
 
 "disableHide" - for programs where folding/unfolding works incorrectly, you can just turn this ability off.
 
+"isResizeable" - allows to change window size. if you need that
+
 ## Template
 
 {
-    width,
-    height,
-    "name",
-    executable,
-    bar,
-    buttonPosX,
-    buttonPosY,
-    disableFullScreen,
-    disableHide,
+    width, -- number value
+    height, -- number value
+    "name", -- string
+    executable, -- string, filename (not path)
+    isResizeable, -- boolean
+    bar, -- boolean
+    buttonPosX, -- number value
+    buttonPosY, -- number value
+    disableFullScreen, -- boolean
+    disableHide, -- boolean
+    centered -- boolean
 }
