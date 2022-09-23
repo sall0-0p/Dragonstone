@@ -542,10 +542,10 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         else
             program:setPosition(2,2)
         end
-        
-        program:onError(function(self, msg)
-            basalt.debug("Error")
-            return false
+
+        program:onError(function()
+            os.queueEvent("program_crashed", name)
+            --basalt.debug(errormsg)
         end)
 
         program:execute(path.."/"..executable, args) -- running program
@@ -831,14 +831,14 @@ mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5)
         NHide:play()
     end
 
-    --[[if event == "program_crashed" then
+    if event == "program_crashed" then
 
         local bgargs = {}
         table.insert(bgargs, arg1)
         table.insert(bgargs, arg2)
 
         createWindow("UwUntuCC/OS/SystemApps/BugReport/", "BugReport.lua", bgargs)
-    end]]
+    end
 end)
 
 -------------------
