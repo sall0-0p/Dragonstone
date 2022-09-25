@@ -1,2 +1,7 @@
 .DS_Store
-.BucketOS.OS.Data
+OS/Data/RunningWindows/executable.json
+OS/Data/RunningWindows/hidden.json
+OS/Data/RunningWindows/id.json
+OS/Data/RunningWindows/name.json
+OS/Data/RunningWindows/path.json
+

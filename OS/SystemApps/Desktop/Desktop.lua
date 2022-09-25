@@ -187,7 +187,7 @@ local UwUButton = UpMenu:addButton()
             :setText("Change PC")
 
             :onClick(function() 
-                createWindow("UwUntuCC/OS/SystemApps/ChangePC", nil, "Attach PC", 26, 6, true, nil, nil, true, true, true, true)
+                createWindow("UwUntuCC/OS/SystemApps/ChangePC", nil, nil, "Attach PC", 26, 6, true, nil, nil, true, true, true, true)
             end)
         end
         
@@ -199,7 +199,7 @@ local UwUButton = UpMenu:addButton()
     myUwU:onClick(openMyUwU)
 
     local AreYouSure = function()
-        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", nil, "Confirm", 26, 7, true, nil, nil, true, true, true, true)
+        createWindow("UwUntuCC/OS/SystemApps/AreYouSure", nil, nil, "Confirm", 26, 7, true, true, nil, nil, true, true, true, true)
     end
 
    
@@ -235,12 +235,12 @@ local function hideWindow(frame, program, ah, aw)
     basalt.update()
     local hideWAnimation = mainFrame:addAnimation()
         :setObject(frame)
-        :size(1,1,1)
+        --:size(1,1,1)
         ah = rh + 5
         aw = rw + 5
         hideWAnimation:move(aw, ah, 1)
     
-        program:pause()
+        program:pause(true)
 
     hideWAnimation:play()
     end
@@ -249,17 +249,18 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     lastx = math.random(5,15)
     lasty = math.random(5,10)
     lastw = lastw+1
-    lasty = lasty+1
+    lasth = lasth+1
     local id = databaser.search("RunningWindows", "name", name)
     local frameStatus = databaser.getColumn("RunningWindows", "hidden")
     local showWAnimation = mainFrame:addAnimation()
         :setObject(frame)
-        :size(lastw,lasth,1)
+        --:size(lastw,lasth,1)
         :move(lastx,lasty,1)
     if frameStatus[id] == "true" then
     showWAnimation:play()
     frame:setBar(name, colors.gray, colors.lightGray)
     frame:setBarTextAlign("center")
+    program:pause(false)
     end
     
     if id ~= nil then
@@ -441,7 +442,8 @@ end
   --  \    /||\ | / \    /||\ /__ 
    --  \/\/_|| \|_\_/\/\/_|| \\_| 
 
-deleteWindow = function(name, frame, id) -- REWRITE THIS
+local deleteWindow = function(frame, id, name) -- REWRITE THIS
+        name = frame:getValue()
         id = databaser.search("RunningWindows", "name", name)
         databaser.removeValue("RunningWindows", "name", id)
         databaser.removeValue("RunningWindows", "path", id)
@@ -452,6 +454,12 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
         loadDock()
         frame:remove()
 end
+
+local BugReportWindow = function(name, errorcode)
+    createWindow("UwUntuCC/OS/SystemApps/BugReport/", "BugReport.lua")
+end
+
+
 
 -- CREATING WINDOWS
 createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fw,fh, id, parentframe, MoveButton, sw, sh, DoneTimer)    
@@ -494,7 +502,6 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         else
             id = 1
         end
-            
         databaser.addValue("RunningWindows", "id", id)
         databaser.addValue("RunningWindows", "name", name)
         databaser.addValue("RunningWindows", "path", path)
@@ -502,6 +509,11 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         databaser.addValue("RunningWindows", "executable", executable)
         loadDock()
     --Creating Frame
+
+    if args == nil then
+        args = {}
+    end
+
 
     if framePosx == nil or framePosy == nil then
         if centered == false then
@@ -537,7 +549,33 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         else
             program:setPosition(2,2)
         end
-        program:execute(path.."/"..executable) -- running program
+
+        program:onError(function(self, errormsg)
+            if errormsg == nil then
+                errormsg = { "value" }
+            end
+            
+            local logDate = os.date()
+            local logLabel = os.getComputerLabel()
+            local logHOST = _HOST
+            local log = fs.open("UwUntuCC/log.txt", "w")
+            --errormsg = textutils.serialize(errormsg)
+            local BugReportArgumets = {}
+            table.insert(BugReportArgumets, name)
+            table.insert(BugReportArgumets, logDate)
+            table.insert(BugReportArgumets, logLabel)
+            table.insert(BugReportArgumets, logHOST)
+            table.insert(BugReportArgumets, errormsg)
+
+            local log = fs.open("UwUntuCC/log.txt", "w")
+            log.write(textutils.serialize(BugReportArgumets))
+            log.close()
+
+            program:execute("UwUntuCC/OS/SystemApps/BugReport/BugReport.lua", name, logErrorMSG)
+            return false
+        end)
+
+        program:execute(path.."/"..executable, name) -- running program
 
 
         --Creating Buttons
@@ -561,7 +599,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
                 :setSize(1,1)
                 :setText("\7")
             button1:onClick(function()
-                deleteWindow(name, frame)
+                deleteWindow(frame)
 
             end)
             buttonx = buttonx - 2
@@ -580,7 +618,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
                     local lastw, lasth = frame:getSize()
                     local lastx, lasty = frame:getPosition()
                     hideWindow(frame, program)
-                    local id = databaser.search("RunningWindows", "name", name)
+                    id = databaser.search("RunningWindows", "name", name)
                     databaser.setValue("RunningWindows", "hidden", "true", id)
                     loadDock()
                 end)
@@ -673,8 +711,10 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             end
         end)
         program:onDone(function() 
-            deleteWindow(name, frame, id)  
+            deleteWindow(frame)  
         end)
+
+        
 
 end
 
@@ -792,9 +832,7 @@ local NHideTimer = mainFrame:addTimer()
     end)
     :setTime(10)
 
-
-mainFrame:onEvent(function(self, event, arg1, arg2, arg3) 
-
+mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5) 
     if event == "notification" then
         NShow:play()
         NHideTimer:start()
@@ -818,10 +856,15 @@ mainFrame:onEvent(function(self, event, arg1, arg2, arg3)
     if event == "clean_notifications" then
         NHide:play()
     end
+
+    if event == "program_crashed" then
+        
+    end
+
 end)
 
 -------------------
-createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", "Terminal")
+createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", nil, "Terminal")
 
 versions.checkVersion()
 loadDock()
