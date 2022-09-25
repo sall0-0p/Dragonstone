@@ -235,12 +235,12 @@ local function hideWindow(frame, program, ah, aw)
     basalt.update()
     local hideWAnimation = mainFrame:addAnimation()
         :setObject(frame)
-        :size(1,1,1)
+        --:size(1,1,1)
         ah = rh + 5
         aw = rw + 5
         hideWAnimation:move(aw, ah, 1)
     
-        program:pause()
+        program:pause(true)
 
     hideWAnimation:play()
     end
@@ -249,17 +249,18 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     lastx = math.random(5,15)
     lasty = math.random(5,10)
     lastw = lastw+1
-    lasty = lasty+1
-    local idd = databaser.search("RunningWindows", "name", name)
+    lasth = lasth+1
+    local id = databaser.search("RunningWindows", "name", name)
     local frameStatus = databaser.getColumn("RunningWindows", "hidden")
     local showWAnimation = mainFrame:addAnimation()
         :setObject(frame)
-        :size(lastw,lasth,1)
+        --:size(lastw,lasth,1)
         :move(lastx,lasty,1)
-    if frameStatus[idd] == "true" then
+    if frameStatus[id] == "true" then
     showWAnimation:play()
     frame:setBar(name, colors.gray, colors.lightGray)
     frame:setBarTextAlign("center")
+    program:pause(false)
     end
     
     if id ~= nil then
@@ -549,7 +550,6 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             program:setPosition(2,2)
         end
 
-        -- ! RETURNS TABLE THAT IS NOT EMPTY BUT DONT WORKS
         program:onError(function(self, errormsg)
             if errormsg == nil then
                 errormsg = { "value" }
@@ -558,26 +558,20 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             local logDate = os.date()
             local logLabel = os.getComputerLabel()
             local logHOST = _HOST
-            local log = fs.open("log.txt", "w")
-            log.writeLine(name)
-            log.writeLine(textutils.serialise(errormsg))
-            log.writeLine(logDate)
-            log.writeLine(Label)
-            log.writeLine(logHost)
-            log.close()
-
-
+            local log = fs.open("UwUntuCC/log.txt", "w")
+            --errormsg = textutils.serialize(errormsg)
             local BugReportArgumets = {}
             table.insert(BugReportArgumets, name)
             table.insert(BugReportArgumets, logDate)
             table.insert(BugReportArgumets, logLabel)
             table.insert(BugReportArgumets, logHOST)
-            table.insert(BugReportArgumets, logErrorMSG)
-            basalt.debug(textutils.serialize(BugReportArgumets))
-            createWindow("UwUntuCC/OS/SystemApps/BugReport", "BugReport.lua", BugReportArgumets)
-            deleteWindow(frame)
-            
+            table.insert(BugReportArgumets, errormsg)
 
+            local log = fs.open("UwUntuCC/log.txt", "w")
+            log.write(textutils.serialize(BugReportArgumets))
+            log.close()
+
+            program:execute("UwUntuCC/OS/SystemApps/BugReport/BugReport.lua", name, logErrorMSG)
             return false
         end)
 
