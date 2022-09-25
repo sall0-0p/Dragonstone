@@ -2,7 +2,7 @@
     51,
     19,
     "Program crashed",
-    nil,
+    "BugReport.lua",
     false,
     true,
     nil,

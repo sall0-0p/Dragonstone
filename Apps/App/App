@@ -1,1 +1,6 @@
-error("random error")
+local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+
+basalt.createFrame()
+    :setText("Text")
+
+basalt.autoUpdate()

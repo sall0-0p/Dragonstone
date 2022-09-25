@@ -250,13 +250,13 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     lasty = math.random(5,10)
     lastw = lastw+1
     lasty = lasty+1
-    local id = databaser.search("RunningWindows", "name", name)
+    local idd = databaser.search("RunningWindows", "name", name)
     local frameStatus = databaser.getColumn("RunningWindows", "hidden")
     local showWAnimation = mainFrame:addAnimation()
         :setObject(frame)
         :size(lastw,lasth,1)
         :move(lastx,lasty,1)
-    if frameStatus[id] == "true" then
+    if frameStatus[idd] == "true" then
     showWAnimation:play()
     frame:setBar(name, colors.gray, colors.lightGray)
     frame:setBarTextAlign("center")
@@ -441,7 +441,8 @@ end
   --  \    /||\ | / \    /||\ /__ 
    --  \/\/_|| \|_\_/\/\/_|| \\_| 
 
-deleteWindow = function(name, frame, id) -- REWRITE THIS
+local deleteWindow = function(frame, id, name) -- REWRITE THIS
+        name = frame:getValue()
         id = databaser.search("RunningWindows", "name", name)
         databaser.removeValue("RunningWindows", "name", id)
         databaser.removeValue("RunningWindows", "path", id)
@@ -452,6 +453,12 @@ deleteWindow = function(name, frame, id) -- REWRITE THIS
         loadDock()
         frame:remove()
 end
+
+local BugReportWindow = function(name, errorcode)
+    createWindow("UwUntuCC/OS/SystemApps/BugReport/", "BugReport.lua")
+end
+
+
 
 -- CREATING WINDOWS
 createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX, buttonPosY, disableFullscreeen, disableHide, isResizeable, centered, pageBackground, framePosx, framePosy, frame, program, button1, button2, button3, buttonx, fw,fh, id, parentframe, MoveButton, sw, sh, DoneTimer)    
@@ -494,7 +501,6 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         else
             id = 1
         end
-            
         databaser.addValue("RunningWindows", "id", id)
         databaser.addValue("RunningWindows", "name", name)
         databaser.addValue("RunningWindows", "path", path)
@@ -543,12 +549,39 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             program:setPosition(2,2)
         end
 
-        --[[program:onError(function(self, errormsg)
-            --os.queueEvent("program_crashed", name)
-            basalt.debug(errormsg)
-        end)]]
+        -- ! RETURNS TABLE THAT IS NOT EMPTY BUT DONT WORKS
+        program:onError(function(self, errormsg)
+            if errormsg == nil then
+                errormsg = { "value" }
+            end
+            
+            local logDate = os.date()
+            local logLabel = os.getComputerLabel()
+            local logHOST = _HOST
+            local log = fs.open("log.txt", "w")
+            log.writeLine(name)
+            log.writeLine(textutils.serialise(errormsg))
+            log.writeLine(logDate)
+            log.writeLine(Label)
+            log.writeLine(logHost)
+            log.close()
 
-        program:execute(path.."/"..executable, args) -- running program
+
+            local BugReportArgumets = {}
+            table.insert(BugReportArgumets, name)
+            table.insert(BugReportArgumets, logDate)
+            table.insert(BugReportArgumets, logLabel)
+            table.insert(BugReportArgumets, logHOST)
+            table.insert(BugReportArgumets, logErrorMSG)
+            basalt.debug(textutils.serialize(BugReportArgumets))
+            createWindow("UwUntuCC/OS/SystemApps/BugReport", "BugReport.lua", BugReportArgumets)
+            deleteWindow(frame)
+            
+
+            return false
+        end)
+
+        program:execute(path.."/"..executable, name) -- running program
 
 
         --Creating Buttons
@@ -572,7 +605,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
                 :setSize(1,1)
                 :setText("\7")
             button1:onClick(function()
-                deleteWindow(name, frame)
+                deleteWindow(frame)
 
             end)
             buttonx = buttonx - 2
@@ -591,7 +624,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
                     local lastw, lasth = frame:getSize()
                     local lastx, lasty = frame:getPosition()
                     hideWindow(frame, program)
-                    local id = databaser.search("RunningWindows", "name", name)
+                    id = databaser.search("RunningWindows", "name", name)
                     databaser.setValue("RunningWindows", "hidden", "true", id)
                     loadDock()
                 end)
@@ -684,7 +717,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             end
         end)
         program:onDone(function() 
-            deleteWindow(name, frame, id)  
+            deleteWindow(frame)  
         end)
 
         
@@ -805,7 +838,6 @@ local NHideTimer = mainFrame:addTimer()
     end)
     :setTime(10)
 
-
 mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5) 
     if event == "notification" then
         NShow:play()
@@ -832,13 +864,9 @@ mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5)
     end
 
     if event == "program_crashed" then
-
-        local bgargs = {}
-        table.insert(bgargs, arg1)
-        table.insert(bgargs, arg2)
-
-        createWindow("UwUntuCC/OS/SystemApps/BugReport/", "BugReport.lua", bgargs)
+        
     end
+
 end)
 
 -------------------
