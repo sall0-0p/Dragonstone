@@ -1,7 +1,0 @@
-{
-  "App",
-  "Sat Nov 26 15:27:53 2022",
-  "Bucket",
-  "ComputerCraft 1.100.9 (CraftOS-PC v2.7)",
-  "/UwUntuCC/OS/Libraries/Basalt.lua:797: attempt to compare number with nil",
-}

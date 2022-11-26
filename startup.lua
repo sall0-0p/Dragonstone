@@ -12,6 +12,7 @@ if fs.exists("/UwUntuCC") == false then
     fs.makeDir("/UwUntuCC/User/Documents")
 end
 
+package.path = "/UwUntuCC/OS/Libraries/?.lua;/UwUntuCC/OS/Libraries/?/init.lua;" .. package.path
 
 shell.setDir("/UwUntuCC/OS/SystemApps/Desktop")
 shell.run("Desktop.lua")

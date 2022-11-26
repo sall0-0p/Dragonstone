@@ -9,7 +9,7 @@
 -- |_||_|___/_/ \_\___/ 
 
 -- API --
-local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
+local databaser = require(".UwUntuCC.OS.Libraries.Databaser")
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 local versions = require(".UwUntuCC.OS.Libraries.UwUVersions")
 basalt.setMouseMoveThrottle(100)
@@ -856,14 +856,16 @@ mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5)
         NHide:play()
     end
 
-    if event == "program_crashed" then
-        
+    if event == "run_program" then 
+        basalt.debug(arg1, arg2, arg3, arg4)
+        createWindow(arg1, arg2, arg3, arg4)
     end
-
+    
 end)
 
 -------------------
 createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", nil, "Terminal")
+
 
 versions.checkVersion()
 loadDock()
