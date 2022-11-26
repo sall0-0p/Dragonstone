@@ -11,6 +11,8 @@
 
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt") -- importing Basalt file into our document.
 local databaser = require(".UwUntuCC.OS.Libraries.Databaser") -- importing database management API that included with UwUntu.
+local fss = require(".UwUntuCC.OS.Libraries.FileSystem")
+
 
 -- creating Main Frame of an app.
 local mainFrame = basalt.createFrame()
@@ -67,8 +69,6 @@ local function open(path)
 
     loadList()
 end
-
-edit("/UwUntuCC/Apps/Fimber", "Fimber.lua")
 
 -- This function shout be placed at the end of code, or inside of thread (coroutine).
 basalt.autoUpdate()

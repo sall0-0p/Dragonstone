@@ -829,10 +829,10 @@ local NHideTimer = mainFrame:addTimer()
 mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5) 
     if event == "notification" then
         local NOTlength = string.len(arg2)
-        local NOTrows = math.floor(NOTlength/27)
-        Notification:setSize(31, NOTrows.."+4")
-        NotificationText:setSize(27, NOTrows.."+1")
-        NotificationPanel:setSize(1, NOTrows.."+1")
+        local NOTrows = math.ceil(NOTlength/27)
+        Notification:setSize(31, NOTrows.."+3")
+        NotificationText:setSize(27, NOTrows)
+        NotificationPanel:setSize(1, NOTrows)
         NShow:play()
         NHideTimer:start()
         if arg1 == nil or arg2 == nil then
@@ -857,7 +857,6 @@ mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5)
     end
 
     if event == "run_program" then 
-        basalt.debug(arg1, arg2, arg3, arg4)
         createWindow(arg1, arg2, arg3, arg4)
     end
     

@@ -1,4 +1,6 @@
-local perm = require("PermissionService")
-local fss = require("FileSystem")
+local perm = require(".UwUntuCC.OS.Libraries.PermissionService")
+local fss = require(".UwUntuCC.OS.Libraries.FileSystem")
 
-perm.notifyFail()
+--perm.notifyFail()
+
+perm.notifyLocked()

@@ -609,7 +609,7 @@ else
     term.setCursorPos(1,1)
     write(os.version())
     term.setCursorPos(1,2)
-    write("This is standart terminal from CraftOS. Use in your own risk")
+    write("This is standard terminal from CraftOS. Use at your own risk (it might bite)")
     term.setTextColour(textColour)
     term.setCursorPos(1,5)
 
