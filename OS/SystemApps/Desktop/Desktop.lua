@@ -1,5 +1,5 @@
 --TODO: make Silent Apps (do not appear in dock)
---TODO: Button for moving unmovable windows
+--TODO: Button for moving unmovable windows (canceled)
 
 --119 x 50
 
@@ -789,7 +789,7 @@ local Notification = mainFrame:addFrame()
     :setSize(31,6)
     :setPosition(rw.."+2", 3)
     :setBackground(colors.gray)
-    Notification:addFrame()
+    local NotificationPanel = Notification:addFrame()
         :setBackground(colors.gray, "\149", colors.lightGray)
         :setPosition(2,3)
         :setSize(1,3)
@@ -828,6 +828,11 @@ local NHideTimer = mainFrame:addTimer()
 
 mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5) 
     if event == "notification" then
+        local NOTlength = string.len(arg2)
+        local NOTrows = math.floor(NOTlength/27)
+        Notification:setSize(31, NOTrows.."+4")
+        NotificationText:setSize(27, NOTrows.."+1")
+        NotificationPanel:setSize(1, NOTrows.."+1")
         NShow:play()
         NHideTimer:start()
         if arg1 == nil or arg2 == nil then

@@ -17,6 +17,17 @@ local multishell = multishell
 local parentShell = shell
 local parentTerm = term.current()
 
+local version
+
+if fs.exists("UwUntuCC/OS/Version.md") then
+    local file = fs.open("UwUntuCC/OS/Version.md", "r")
+        version = file.readAll()
+        file.close()
+end
+if version == nil then
+   version = "???"
+end
+
 if multishell then
     multishell.setTitle(multishell.getCurrent(), "shell")
 end
@@ -594,9 +605,13 @@ else
     -- "shell"
     -- Print the header
     term.setBackgroundColor(bgColour)
-    term.setTextColour(promptColour)
-    print(os.version())
+    term.setTextColour(colors.magenta)
+    term.setCursorPos(1,1)
+    write(os.version())
+    term.setCursorPos(1,2)
+    write("This is standart terminal from CraftOS. Use in your own risk")
     term.setTextColour(textColour)
+    term.setCursorPos(1,5)
 
     -- Run the startup program
     if parentShell == nil then
