@@ -1,8 +1,6 @@
 --TODO: make Silent Apps (do not appear in dock)
 --TODO: Button for moving unmovable windows
---[[
-    
-]]
+
 --119 x 50
 
 --  _  _ ___   _   ___  
@@ -240,7 +238,6 @@ local function hideWindow(frame, program, ah, aw)
         aw = rw + 5
         hideWAnimation:move(aw, ah, 1)
     
-        program:pause(true)
 
     hideWAnimation:play()
     end
@@ -260,7 +257,7 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     showWAnimation:play()
     frame:setBar(name, colors.gray, colors.lightGray)
     frame:setBarTextAlign("center")
-    program:pause(false)
+    --program:pause(false)
     end
     
     if id ~= nil then
@@ -268,7 +265,7 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     loadDock()
     end
     
-    program:pause(false)
+    
     end
 
 
@@ -527,17 +524,15 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         end
     end
 
-    frame = desktop:addFrame(id):setValue(name)
+    frame = desktop:addFrame(id):setValue(name) -- ! PROBLEM WITH DATABASES =)
         :setPosition(framePosx,framePosy)
         :setMovable(true)
         :setBackground(colors.gray)
         frame:setSize(ww.."+2",wh.."+2")
         if useBar == true then
             frame:setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
-            --frame:setBorder(colors.gray, "left", "right", "bottom")
             frame:setSize(ww.."+2",wh.."+2")
         else
-            --frame:setBorder(colors.gray, "left", "right", "bottom")
             frame:setSize(ww.."+2",wh.."+1")
         end
 
@@ -559,7 +554,6 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             local logLabel = os.getComputerLabel()
             local logHOST = _HOST
             local log = fs.open("UwUntuCC/log.txt", "w")
-            --errormsg = textutils.serialize(errormsg)
             local BugReportArgumets = {}
             table.insert(BugReportArgumets, name)
             table.insert(BugReportArgumets, logDate)
