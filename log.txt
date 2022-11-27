@@ -1,7 +1,7 @@
 {
-  "Fimber",
-  "Sat Nov 26 23:23:41 2022",
+  "Finder",
+  "Sun Nov 27 18:21:57 2022",
   "Bucket",
   "ComputerCraft 1.100.9 (CraftOS-PC v2.7)",
-  "[string \"UwUntuCC/Apps/Fimber/Fimber\"]:71: attempt to call global 'edit' (a nil value)",
+  "[string \"UwUntuCC/Apps/Fimber/Fimber.lua\"]:106: attempt to call method 'setBackround' (a nil value)",
 }

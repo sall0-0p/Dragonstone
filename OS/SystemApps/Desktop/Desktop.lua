@@ -11,7 +11,7 @@
 -- API --
 local databaser = require(".UwUntuCC.OS.Libraries.Databaser")
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
-local versions = require(".UwUntuCC.OS.Libraries.UwUVersions")
+
 basalt.setMouseMoveThrottle(100)
 package.path = "/UwUntuCC/OS/Libraries/?.lua;/UwUntuCC/OS/Libraries/?/init.lua;" .. package.path
 local Host = _HOST
@@ -39,7 +39,7 @@ databaser.addColumn("RunningWindows", "id")
 
 local DesktopColor = colors.lightGray
 
-local DesktopImage = "UwUntuCC/OS/DesktopBackgrounds/Desktop4.bimg"
+local DesktopImage = "UwUntuCC/OS/DesktopBackgrounds/Desktop3.bimg"
 
 local UseDesktopImage = true
 
@@ -175,7 +175,9 @@ local UwUButton = UpMenu:addButton()
             :setForeground(colors.white)
             :setText("Power")
 
-        if Host == "ComputerCraft 1.100.9 (CraftOS-PC v2.7)" then
+        basalt.debug(Host)
+        basalt.debug(string.match(Host, "CraftOS-PC"))
+        if string.match(Host, "CraftOS-PC") then 
             UwUMenu:setSize(11, 9)
             
             local ChangePCButton = UwUMenu:addLabel()
@@ -378,10 +380,10 @@ loadDock = function(path)
                 :setZIndex(10)
                     local ObjectStatus = databaser.getColumn("RunningWindows", "hidden")
                     Object:setPosition("2+"..n.."*4-4", 1)--
-                    if fs.exists(path.."/icon.nfp") then
-                        Object:addImage():loadImage(path.."/icon.nfp"):setSize(4,2)
+                    if fs.exists(path.."/icon.bimg") then
+                        Object:addImage():loadImage(path.."/icon.bimg"):setSize(4,2)
                     else
-                        Object:addImage():loadImage("UwUntuCC/OS/Icons/app.nfp"):setSize(3,2)
+                        Object:addImage():loadImage("UwUntuCC/OS/Icons/app.bimg"):setSize(3,2)
                     end
                     if ObjectStatus[n] == "false" then
                     Object:addLabel():setForeground(colors.lightGray):setBackground(colors.gray):setText("\0".."\7"):setPosition(1,3):setSize(3,1)
@@ -639,6 +641,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         --Focus change
     if button1 ~= nil and button2 ~= nil and button3 ~= nil then
             frame:onGetFocus(function() 
+                program:injectEvent("gained_focus")
                 frame:setBar(name, colors.gray, colors.white)
 
                 button1:setForeground(colors.red)
@@ -653,6 +656,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             end)
 
             frame:onLoseFocus(function() 
+                program:injectEvent("losed_focus")
                 frame:setBar(name, colors.gray, colors.lightGray)
                 button1:setForeground(colors.lightGray)
                 button2:setForeground(colors.lightGray)
@@ -862,11 +866,12 @@ mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5)
     
 end)
 
+
 -------------------
 createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", nil, "Terminal")
 
 
-versions.checkVersion()
+
 loadDock()
 
 parallel.waitForAll(Update, RunClock)
