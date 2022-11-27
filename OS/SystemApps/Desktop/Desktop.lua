@@ -175,9 +175,7 @@ local UwUButton = UpMenu:addButton()
             :setForeground(colors.white)
             :setText("Power")
 
-        basalt.debug(Host)
-        basalt.debug(string.match(Host, "CraftOS-PC"))
-        if string.match(Host, "CraftOS-PC") then 
+        if string.find(Host, "CraftOS-PC", 1, true) ~= nil then 
             UwUMenu:setSize(11, 9)
             
             local ChangePCButton = UwUMenu:addLabel()
