@@ -92,6 +92,14 @@ if UseDesktopImage then
     local desktopBG = mainFrame:addImage():loadImage(DesktopImage)
        :setSize(rw,rh)
        :setPosition(1,1)
+
+       mainFrame:onResize(function()
+    
+        local desktopBG = mainFrame:addImage():loadImage(DesktopImage)
+            :setSize(rw,rh)
+            :setPosition(1,1)
+            
+       end)
     else
         desktop:setBackground(DesktopColor)                    
     end

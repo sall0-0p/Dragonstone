@@ -205,6 +205,9 @@ local sidePanel = mainFrame:addFrame()
     
     end)
 
--- This function shout be placed at the end of code, or inside of thread (coroutine).
+    
+
+
+    -- This function shout be placed at the end of code, or inside of thread (coroutine).
 -- It makes your workspace update after some changes automatically. In fact this is automatical render of your program and UI.
 basalt.autoUpdate()
