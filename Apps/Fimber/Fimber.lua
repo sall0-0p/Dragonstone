@@ -230,9 +230,9 @@ local sidePanel = mainFrame:addFrame()
 
 local fileListFrame = mainFrame:addFrame()
     :setPosition(15, 3)
-    :setSize(rw.."-14", table.maxn(fileList).."+5")
+    :setSize(rw.."-14", table.maxn(fileList).."+20")
     :setBackground(colors.black)
-    
+    :setScrollable()
 
     local sortPanel = fileListFrame:addFrame()
         :setPosition(1,1)
@@ -244,7 +244,7 @@ local fileListFrame = mainFrame:addFrame()
         :setSize(rw.."-14", table.maxn(fileList))
         :setBackground(colors.black)
         :setSelectedItem(colors.magenta, colors.black)
-        :setScrollable(true)
+        
 
     local fileListI = fileListFrame:addList()
         :setPosition(1,2)
@@ -295,9 +295,6 @@ local fileListFrame = mainFrame:addFrame()
     end)
 
 -- Connecting scrollbar to frame
-    fileListFrame:onScroll(function(self, event, direction, x, y) 
-        local ScrollMax
-    end)
 
 -- Some Events:
     fileListL:onChange(function() 
@@ -307,16 +304,24 @@ local fileListFrame = mainFrame:addFrame()
     end)
 
     mainFrame:onKey(function(self, event, key)
-        local i = FileListL:getItemIndex()
+        local lastID = fileListL:getItemIndex()
+
         if key == keys.down then
-
-            if i ~= FileListL:getItemCount() then
-                FileListL:selectItem(i+1)
+            if lastID < table.maxn(fileList) then
+                lastID = lastID + 1
+                fileListL:selectItem(lastID)
+                fileListI:selectItem(lastID)
             end
-
-        elseif key == keys.up then
-
         end
+
+        if key == keys.up then
+            if lastID > 1 then
+                lastID = lastID - 1 
+                fileListL:selectItem(lastID)
+                fileListI:selectItem(lastID)
+            end
+        end
+        
     end)
 
 
