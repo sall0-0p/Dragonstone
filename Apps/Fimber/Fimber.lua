@@ -10,7 +10,7 @@
 -- Basalt github: https://github.com/Pyroxenium/Basalt
 
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt") -- importing Basalt file into our document.
-local databaser = require(".UwUntuCC.OS.Libraries.Databaser") -- importing database management API that included with UwUntu.
+local db = require(".UwUntuCC.OS.Libraries.Databaser") -- importing database management API that included with UwUntu.
 local fss = require(".UwUntuCC.OS.Libraries.FileSystem")
 
 -- getting platform where user launches UwU
@@ -23,7 +23,7 @@ local mainFrame = basalt.createFrame()
 local args = { ... }
 
 -- this value is directory the user is currently in. By default it is root directory of computer. Or the first argument of a launch command can be used.
-local Directory = ":/UwUntuCC"
+local Directory = "UwUntuCC/OS/Libraries"
 
 if args[1] ~= nil then
     Directory = args[1]
@@ -37,10 +37,29 @@ local Path = "/"..fs.getName(fs.getDir(Directory)).."/"..fs.getName(Directory)
 
 local debug = true
 local redstonePerms = false --! THIS SETTINGS REMOVES RESTRICIONS (LIKE EDITING OR CHANGINS SOME "OS" FILES.) !!!USE ON YOUR OWN RISK!!!
-local showHidden = true 
+local showHidden = false 
 
 -- This function will be needed later.
 local loadList
+
+local fileList = fs.list(Directory)
+
+local filtermode = "name"
+
+
+
+-- Setting up some databases;
+
+    db.setDir("/UwUntuCC/Apps/Fimber/Data")
+
+
+    local defaultFavourites
+
+
+
+
+
+
 
 --___             _   _             
 --| __|  _ _ _  __| |_(_)___ _ _  ___
@@ -72,6 +91,16 @@ local function open(path)
     loadList()
 end
 
+local function makeFavourite(path)
+    
+end
+
+
+
+
+
+
+
 
 --_   _ ___   _ _           _  __ 
 --| | | |_ _| (_) |_ ___ ___| |/ _|
@@ -96,11 +125,15 @@ local footer = mainFrame:addFrame()
     local footerPane1 = footer:addFrame()
         :setSize(rw.."-14",1)
         :setPosition(15,2)
-        :setBackground(colors.lightGray, "\131", colors.gray)
+        :setBackground(colors.gray, "\140", colors.black)
     local footerPane2 = footer:addFrame()
         :setSize(1, 2)
         :setPosition(14,1)
         :setBackground(colors.gray, "\149", colors.black)
+    local footerCorner1 = footer:addFrame()
+        :setSize(1,1)
+        :setPosition(rw, 2)
+        :setBackground(colors.black, "\131", colors.gray)
 
         -- This search bar uses Input object.
         local searchBar = footer:addInput()
@@ -115,6 +148,7 @@ local footer = mainFrame:addFrame()
                 :setPosition(rw.."-11", 1)
                 :setBackground(colors.black, "\149", colors.gray)
 
+        -- Menu
         local menuButton = footer:addButton()
             :setSize(1,1)
             :setPosition(rw.."-12", 1)
@@ -122,6 +156,7 @@ local footer = mainFrame:addFrame()
             :setForeground(colors.lightGray)
             :setText("=")
 
+        -- Tags
         local tagsButton = footer:addButton()
             :setSize(1,1)
             :setPosition(rw.."-14", 1)
@@ -129,6 +164,7 @@ local footer = mainFrame:addFrame()
             :setForeground(colors.lightGray)
             :setText("\4")
 
+        -- Cloud
         local cloudButton = footer:addButton()
             :setSize(1,1)
             :setPosition(rw.."-16", 1)
@@ -136,6 +172,7 @@ local footer = mainFrame:addFrame()
             :setForeground(colors.lightGray)
             :setText("\24")
         
+        -- Sorting
         local sortingButton = footer:addButton()
             :setSize(1,1)
             :setPosition(rw.."-18", 1)
@@ -143,6 +180,7 @@ local footer = mainFrame:addFrame()
             :setForeground(colors.lightGray)
             :setText("\31")
 
+        -- type?
         local typeButton = footer:addButton()
             :setSize(1,1)
             :setPosition(rw.."-21", 1)
@@ -150,6 +188,7 @@ local footer = mainFrame:addFrame()
             :setForeground(colors.lightGray)
             :setText("\182")
 
+        -- undo
         local undoButton = footer:addButton()
             :setSize(1,1)
             :setPosition(rw.."-35", 1)
@@ -157,6 +196,7 @@ local footer = mainFrame:addFrame()
             :setForeground(colors.lightGray)
             :setText("\171")
         
+        -- folder title
         local folderTitle = footer:addLabel()
             :setSize(11,1)
             :setPosition(rw.."-33")
@@ -165,7 +205,7 @@ local footer = mainFrame:addFrame()
             :setText(fs.getName(Directory))
             
         
-        
+
 
 
 
@@ -185,9 +225,58 @@ local sidePanel = mainFrame:addFrame()
         :setPosition(14,1)
         :setBackground(colors.black, "\149", colors.gray)
     
+    --local favourited = sidePanel:addFrame()
+        
+
+local fileListFrame = mainFrame:addFrame()
+    :setPosition(15, 3)
+    :setSize(rw.."-14", table.maxn(fileList).."+5")
+    :setBackground(colors.black)
+    
+
+    local sortPanel = fileListFrame:addFrame()
+        :setPosition(1,1)
+        :setSize(rw, 1)
+        :setBackground(colors.black)
+
+    local fileListL = fileListFrame:addList()
+        :setPosition(2,2)
+        :setSize(rw.."-14", table.maxn(fileList))
+        :setBackground(colors.black)
+        :setSelectedItem(colors.magenta, colors.black)
+        :setScrollable(true)
+
+    local fileListI = fileListFrame:addList()
+        :setPosition(1,2)
+        :setSize(1, table.maxn(fileList))
+        :setBackground(colors.black)
+        :setSelectedItem(colors.magenta, colors.magenta)
+        :disable()
+    
 
 
 
+
+
+
+
+
+    local FLScrollBarFrame = fileListFrame:addFrame()
+        :setPosition(rw.."-14", 1)
+        :setSize(1, rh.."-2")
+        :setBackground(colors.black)
+
+        local FLScrollBar = FLScrollBarFrame:addScrollbar()
+            :setPosition(1,1)
+            :setSize(1, rh.."-3")
+            :setBackground(colors.black)
+        
+        local GTTbutton = FLScrollBarFrame:addButton()
+            :setPosition(1, rh.."-2")
+            :setSize(1,1)
+            :setBackground(colors.black)
+            :setForeground(colors.gray)
+            :setText("\30")
 
 -- Making some onFocus event code.
 
@@ -205,8 +294,86 @@ local sidePanel = mainFrame:addFrame()
     
     end)
 
-    
+-- Connecting scrollbar to frame
+    fileListFrame:onScroll(function(self, event, direction, x, y) 
+        local ScrollMax
+    end)
 
+-- Some Events:
+    fileListL:onChange(function() 
+        fileListI:disable()
+        fileListI:selectItem(fileListL:getItemIndex())
+        fileListI:enable()
+    end)
+
+    mainFrame:onKey(function(self, event, key)
+        local i = FileListL:getItemIndex()
+        if key == keys.down then
+
+            if i ~= FileListL:getItemCount() then
+                FileListL:selectItem(i+1)
+            end
+
+        elseif key == keys.up then
+
+        end
+    end)
+
+
+
+
+
+
+
+
+    -- List reloading function
+    loadList = function()
+        fileList = fs.list(Directory)
+        fileListL:clear()
+        
+        for i, v in pairs(fileList) do
+            local type
+        
+            if fs.isDir(Directory.."/"..v) then
+                type = "folder"
+            else
+                type = "other"
+            end
+
+
+            if i%2 == 0 then
+                if string.match(v, ".") ~= "." then
+                    fileListL:addItem(" "..v, colors.gray, colors.white)
+                    if type == "folder" then
+                        fileListI:addItem("\131", colors.lightBlue, colors.gray)
+                    else
+                        fileListI:addItem("\131", colors.white, colors.gray)
+                    end
+                else
+                    if showHidden then
+                        fileListL:addItem(" "..v, colors.gray, colors.white)
+                        fileListI:addItem("\131", colors.magenta, colors.gray)
+                    end
+                end
+            else
+                if string.match(v, ".") ~= "." then
+                    fileListL:addItem(" "..v, colors.black, colors.white)
+                    if type == "folder" then
+                        fileListI:addItem("\131", colors.lightBlue, colors.black)
+                    else
+                        fileListI:addItem("\131", colors.white, colors.black)
+                    end
+                else
+                    if showHidden then
+                        fileListL:addItem(" "..v, colors.black, colors.white)
+                        fileListI:addItem("\131", colors.magenta, colors.black)
+                    end
+                end
+            end
+        end
+    end
+    
+    loadList()
 
     -- This function shout be placed at the end of code, or inside of thread (coroutine).
 -- It makes your workspace update after some changes automatically. In fact this is automatical render of your program and UI.
