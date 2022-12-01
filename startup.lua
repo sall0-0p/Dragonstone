@@ -14,8 +14,16 @@ end
 
 package.path = "/UwUntuCC/OS/Libraries/?.lua;/UwUntuCC/OS/Libraries/?/init.lua;" .. package.path
 
-shell.setDir("/UwUntuCC/OS/SystemApps/Desktop")
-shell.run("Desktop.lua")
+local desktop = read()
+
+if desktop ~= 1 then
+    shell.setDir("/UwUntuCC/OS/SystemApps/Desktop")
+    shell.run("Desktop.lua")
+else
+    shell.setDir("/UwUntuCC/OS/Desktop")
+    shell.run("main.lua")
+end
+
 
 local OSLabel = os.getComputerLabel()
 

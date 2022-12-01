@@ -12,7 +12,7 @@
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt") -- importing Basalt file into our document.
 local db = require(".UwUntuCC.OS.Libraries.Databaser") -- importing database management API that included with UwUntu.
 local fss = require(".UwUntuCC.OS.Libraries.FileSystem")
-
+local ext = require(".UwUntuCC.OS.Libraries.ExtensionsService")
 -- getting platform where user launches UwU
 local Host = _HOST
 
@@ -39,8 +39,10 @@ local debug = true
 local redstonePerms = false --! THIS SETTINGS REMOVES RESTRICIONS (LIKE EDITING OR CHANGINS SOME "OS" FILES.) !!!USE ON YOUR OWN RISK!!!
 local showHidden = false 
 
--- This function will be needed later.
+-- This functions will be needed later.
 local loadList
+local select
+local getSelected
 
 local fileList = fs.list(Directory)
 
@@ -191,7 +193,7 @@ local footer = mainFrame:addFrame()
         -- undo
         local undoButton = footer:addButton()
             :setSize(1,1)
-            :setPosition(rw.."-35", 1)
+            :setPosition(17, 1)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText("\171")
@@ -199,7 +201,7 @@ local footer = mainFrame:addFrame()
         -- folder title
         local folderTitle = footer:addLabel()
             :setSize(11,1)
-            :setPosition(rw.."-33")
+            :setPosition(19)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText(fs.getName(Directory))
@@ -233,33 +235,6 @@ local fileListFrame = mainFrame:addFrame()
     :setSize(rw.."-14", table.maxn(fileList).."+20")
     :setBackground(colors.black)
     :setScrollable()
-
-    local sortPanel = fileListFrame:addFrame()
-        :setPosition(1,1)
-        :setSize(rw, 1)
-        :setBackground(colors.black)
-
-    local fileListL = fileListFrame:addList()
-        :setPosition(2,2)
-        :setSize(rw.."-14", table.maxn(fileList))
-        :setBackground(colors.black)
-        :setSelectedItem(colors.magenta, colors.black)
-        
-
-    local fileListI = fileListFrame:addList()
-        :setPosition(1,2)
-        :setSize(1, table.maxn(fileList))
-        :setBackground(colors.black)
-        :setSelectedItem(colors.magenta, colors.magenta)
-        :disable()
-    
-
-
-
-
-
-
-
 
     local FLScrollBarFrame = fileListFrame:addFrame()
         :setPosition(rw.."-14", 1)
@@ -296,89 +271,89 @@ local fileListFrame = mainFrame:addFrame()
 
 -- Connecting scrollbar to frame
 
--- Some Events:
-    fileListL:onChange(function() 
-        fileListI:disable()
-        fileListI:selectItem(fileListL:getItemIndex())
-        fileListI:enable()
-    end)
-
-    mainFrame:onKey(function(self, event, key)
-        local lastID = fileListL:getItemIndex()
-
-        if key == keys.down then
-            if lastID < table.maxn(fileList) then
-                lastID = lastID + 1
-                fileListL:selectItem(lastID)
-                fileListI:selectItem(lastID)
-            end
-        end
-
-        if key == keys.up then
-            if lastID > 1 then
-                lastID = lastID - 1 
-                fileListL:selectItem(lastID)
-                fileListI:selectItem(lastID)
-            end
-        end
-        
-    end)
 
 
 
 
 
-
-
-
+    local fileObjects = {}
+    local selectedItem = 0
     -- List reloading function
     loadList = function()
-        fileList = fs.list(Directory)
-        fileListL:clear()
+        local fileList = fs.list(Directory)
         
+        for i,v in pairs(fileObjects) do
+            v.frame:remove()
+            v.label:remove()
+            v.icon:remove()
+            v.extLabel:remove()
+        end
+        local rColoring = true
+        local y = 1
+
         for i, v in pairs(fileList) do
-            local type
-        
-            if fs.isDir(Directory.."/"..v) then
-                type = "folder"
-            else
-                type = "other"
+            local group = {}
+            local itemGB
+            local extension = v:match "[^%.]+$"
+
+            if extension ~= v then
+                extension = "."..extension
+                local typeFile = ext.get(extension)
+                --basalt.debug(v.." : "..typeFile)
+            end
+            
+            local isSelected = false
+            if selectedItem == i then
+                isSelected = true
             end
 
+            group.path = Directory.."/"..v
+            group.index = i
+            basalt.debug(i..": "..group.path)
 
-            if i%2 == 0 then
-                if string.match(v, ".") ~= "." then
-                    fileListL:addItem(" "..v, colors.gray, colors.white)
-                    if type == "folder" then
-                        fileListI:addItem("\131", colors.lightBlue, colors.gray)
-                    else
-                        fileListI:addItem("\131", colors.white, colors.gray)
-                    end
-                else
-                    if showHidden then
-                        fileListL:addItem(" "..v, colors.gray, colors.white)
-                        fileListI:addItem("\131", colors.magenta, colors.gray)
-                    end
-                end
-            else
-                if string.match(v, ".") ~= "." then
-                    fileListL:addItem(" "..v, colors.black, colors.white)
-                    if type == "folder" then
-                        fileListI:addItem("\131", colors.lightBlue, colors.black)
-                    else
-                        fileListI:addItem("\131", colors.white, colors.black)
-                    end
-                else
-                    if showHidden then
-                        fileListL:addItem(" "..v, colors.black, colors.white)
-                        fileListI:addItem("\131", colors.magenta, colors.black)
-                    end
-                end
-            end
+            group.frame = fileListFrame:addPane()
+                :setSize("parent.w", 1)
+                :setPosition(1, y)
+                :setBackground(isSelected and colors.magenta or rColoring and colors.black or colors.gray)
+
+            group.label = fileListFrame:addLabel()
+                :setSize(20, 1)
+                :setPosition(3, y)
+                :setBackground(false)
+                :setForeground(isSelected and colors.black or colors.white)
+                :setText(v)
+            
+            group.icon = fileListFrame:addLabel()
+                :setSize(1,1)
+                :setPosition(2,y)
+                :setBackground(false)
+            
+            group.extLabel = fileListFrame:addLabel()
+                :setSize(11, 1)
+                :setPosition(23, y)
+                :setBackground(false)
+                :setForeground(isSelected and colors.black or colors.white)
+                :setText(ext.get(extension) or "")
+
+
+            group.frame:onClick(function()
+                select(i)
+            end)
+            
+
+            y = y+1
+            rColoring = not rColoring
         end
     end
-    
+
+    select = function(index)
+        selectedItem = index
+        loadList()
+    end
+
     loadList()
+    select(3)
+
 
     -- This function shout be placed at the end of code, or inside of thread (coroutine).
 -- It makes your workspace update after some changes automatically. In fact this is automatical render of your program and UI.
