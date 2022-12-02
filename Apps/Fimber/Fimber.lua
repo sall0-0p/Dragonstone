@@ -279,14 +279,74 @@ local fileListFrame = mainFrame:addFrame()
     local fileObjects = {}
     local selectedItem = 0
     -- List reloading function
-    loadList = function()
+
+    local fileObjects = {}
+    --local fileList = main:addFrame():setSize(35, 12):setScrollable()
+
+    loadList = function(selected)
+        selectedItem = selected
+        for k,v in pairs(fileObjects)do
+            v.label:setPosition(1,1):hide()
+            v.pane:setPosition(1,1):hide()
+        end
+        local rColoring = false
+        local y = 1
+
+        local function updateItem(group, text, bg, fg)
+            if(selected==y)then
+                group.pane
+                    :setPosition(1, y)
+                    :setBackground(colors.magenta)
+                    :show()
+                group.label
+                    :setText(text)
+                    :setPosition(3, y)
+                    :setBackground(colors.magenta)
+                    :setForeground(colors.black)
+                    :show()
+            else
+                group.pane
+                    :setPosition(1, y)
+                    :setBackground(bg):show()
+                group.label
+                    :setText(text)
+                    :setPosition(3, y)
+                    :setBackground(bg)
+                    :setForeground(fg)
+                    :show()
+            end
+            y = y + 1
+        end
+
+        for k,v in pairs(fileList)do
+            if(fileObjects[y]~=nil)then
+                updateItem(fileObjects[y], v, rColoring and colors.gray or colors.black, colors.white)
+            else
+                local group = {}
+                group.pane = fileListFrame:addPane():setSize("parent.w", 1)
+                group.label = fileListFrame:addLabel()
+                updateItem(group, v, rColoring and colors.gray or colors.black, colors.white)
+                group.pane:onClick(function()
+                    loadList(group.pane:getY())
+                end)
+                table.insert(fileObjects, group)
+            end
+            rColoring = not rColoring
+        end
+    end
+
+
+
+
+
+    --[[loadList = function()
         local fileList = fs.list(Directory)
         
         for i,v in pairs(fileObjects) do
-            v.frame:remove()
-            v.label:remove()
-            v.icon:remove()
-            v.extLabel:remove()
+            v.frame:hide()
+            v.label:hide():setPosition(150,150)
+            v.icon:hide():setPosition(150,150)
+            v.extLabel:hide():setPosition(150,150)
         end
         local rColoring = true
         local y = 1
@@ -344,15 +404,15 @@ local fileListFrame = mainFrame:addFrame()
             y = y+1
             rColoring = not rColoring
         end
-    end
+    end]]
 
     select = function(index)
         selectedItem = index
-        loadList()
+        loadList(selectedItem)
     end
 
     loadList()
-    select(3)
+    --select(3)
 
 
     -- This function shout be placed at the end of code, or inside of thread (coroutine).
