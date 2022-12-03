@@ -1,7 +1,7 @@
 {
   "Finder",
-  "Fri Dec  2 09:53:35 2022",
+  "Sat Dec  3 09:53:39 2022",
   "Bucket",
   "ComputerCraft 1.100.9 (CraftOS-PC v2.7)",
-  "[string \"UwUntuCC/Apps/Fimber/Fimber.lua\"]:320: bad argument #1 (expected table, got nil)",
+  "[string \"UwUntuCC/Apps/Fimber/Fimber.lua\"]:337: attempt to index field 'typeLabel' (a nil value)",
 }

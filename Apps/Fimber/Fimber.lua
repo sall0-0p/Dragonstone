@@ -283,49 +283,115 @@ local fileListFrame = mainFrame:addFrame()
     local fileObjects = {}
     --local fileList = main:addFrame():setSize(35, 12):setScrollable()
 
+
+
+    -- weird code. I wont describe it. Thats too scary :<
     loadList = function(selected)
         selectedItem = selected
         for k,v in pairs(fileObjects)do
             v.label:setPosition(1,1):hide()
             v.pane:setPosition(1,1):hide()
+            v.icon:setPosition(1,1):hide()
+            v.typeLabel:setPosition(1,1):hide()
         end
         local rColoring = false
         local y = 1
 
-        local function updateItem(group, text, bg, fg)
+        local function updateItem(group, text, isDir, fileType, bg, fg)
             if(selected==y)then
                 group.pane
                     :setPosition(1, y)
                     :setBackground(colors.magenta)
                     :show()
                 group.label
-                    :setText(text)
+                    :setText(" "..text)
                     :setPosition(3, y)
                     :setBackground(colors.magenta)
                     :setForeground(colors.black)
                     :show()
+                group.icon
+                    :setText("\131")
+                    :setPosition(2 ,y)
+                    :setBackground(colors.magenta)
+                    :setForeground(colors.magenta)
+                    :show()
+                group.typeLabel
+                    :setText(fileType)
+                    :setPosition(23,y)
+                    :setBackground(colors.magenta)
+                    :setForeground(colors.black)
+                    :show()
+
+                if isDir then
+                    group.typeLabel
+                        :setText("Directory")
+                else
+                    group.typeLabel
+                        :setText(fileType)
+                end
             else
                 group.pane
                     :setPosition(1, y)
-                    :setBackground(bg):show()
+                    :setBackground(bg)
+                    :show()
                 group.label
-                    :setText(text)
+                    :setText(" "..text)
                     :setPosition(3, y)
                     :setBackground(bg)
                     :setForeground(fg)
                     :show()
+                group.icon
+                    :setText("\131")
+                    :setPosition(2, y)
+                    :show()
+                group.typeLabel
+                    :setText(fileType)
+                    :setPosition(23,y)
+                    :setBackground(bg)
+                    :setForeground(fg)
+                    :show()
+
+                if isDir then
+                    group.icon
+                        :setBackground(colors.lightBlue)
+                        :setForeground(rColoring and colors.gray or colors.black)
+                    group.typeLabel
+                        :setText("Directory")
+                else
+                    group.icon
+                        :setBackground(colors.white)
+                        :setForeground(rColoring and colors.gray or colors.black) 
+                    group.typeLabel
+                        :setText(fileType)
+                end
             end
             y = y + 1
         end
 
         for k,v in pairs(fileList)do
             if(fileObjects[y]~=nil)then
-                updateItem(fileObjects[y], v, rColoring and colors.gray or colors.black, colors.white)
+                local isDir = fs.isDir(Directory.."/"..v)
+                
+                local extension = v:match "[^%.]+$"
+
+                --if extension ~= v then
+                    extension = "."..extension
+                    local fileType = ext.get(extension)
+                --end
+                updateItem(fileObjects[y], v, isDir, fileType, rColoring and colors.gray or colors.black, colors.white)
             else
+                local extension = v:match "[^%.]+$"
+                    extension = "."..extension
+                    local fileType = ext.get(extension)
+
                 local group = {}
-                group.pane = fileListFrame:addPane():setSize("parent.w", 1)
-                group.label = fileListFrame:addLabel()
-                updateItem(group, v, rColoring and colors.gray or colors.black, colors.white)
+                group.pane = fileListFrame:addPane():hide()
+                    :setSize("parent.w", 1)
+                group.label = fileListFrame:addLabel():hide()
+                group.icon = fileListFrame:addLabel():hide()
+                group.typeLabel = fileListFrame:addLabel():hide()
+                local isDir = fs.isDir(Directory.."/"..v)
+                updateItem(group, v, isDir, fileType, rColoring and colors.gray or colors.black, colors.white)
                 group.pane:onClick(function()
                     loadList(group.pane:getY())
                 end)
@@ -334,77 +400,6 @@ local fileListFrame = mainFrame:addFrame()
             rColoring = not rColoring
         end
     end
-
-
-
-
-
-    --[[loadList = function()
-        local fileList = fs.list(Directory)
-        
-        for i,v in pairs(fileObjects) do
-            v.frame:hide()
-            v.label:hide():setPosition(150,150)
-            v.icon:hide():setPosition(150,150)
-            v.extLabel:hide():setPosition(150,150)
-        end
-        local rColoring = true
-        local y = 1
-
-        for i, v in pairs(fileList) do
-            local group = {}
-            local itemGB
-            local extension = v:match "[^%.]+$"
-
-            if extension ~= v then
-                extension = "."..extension
-                local typeFile = ext.get(extension)
-                --basalt.debug(v.." : "..typeFile)
-            end
-            
-            local isSelected = false
-            if selectedItem == i then
-                isSelected = true
-            end
-
-            group.path = Directory.."/"..v
-            group.index = i
-            basalt.debug(i..": "..group.path)
-
-            group.frame = fileListFrame:addPane()
-                :setSize("parent.w", 1)
-                :setPosition(1, y)
-                :setBackground(isSelected and colors.magenta or rColoring and colors.black or colors.gray)
-
-            group.label = fileListFrame:addLabel()
-                :setSize(20, 1)
-                :setPosition(3, y)
-                :setBackground(false)
-                :setForeground(isSelected and colors.black or colors.white)
-                :setText(v)
-            
-            group.icon = fileListFrame:addLabel()
-                :setSize(1,1)
-                :setPosition(2,y)
-                :setBackground(false)
-            
-            group.extLabel = fileListFrame:addLabel()
-                :setSize(11, 1)
-                :setPosition(23, y)
-                :setBackground(false)
-                :setForeground(isSelected and colors.black or colors.white)
-                :setText(ext.get(extension) or "")
-
-
-            group.frame:onClick(function()
-                select(i)
-            end)
-            
-
-            y = y+1
-            rColoring = not rColoring
-        end
-    end]]
 
     select = function(index)
         selectedItem = index
