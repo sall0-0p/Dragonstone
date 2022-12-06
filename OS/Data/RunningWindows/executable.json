@@ -1,3 +1,5 @@
 {
   "Terminal.lua",
+  "ASCII",
+  "ChangePC.lua",
 }

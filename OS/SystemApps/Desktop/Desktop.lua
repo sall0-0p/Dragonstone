@@ -688,6 +688,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         end)
         if isResizeable == true then
             MoveButton:onDrag(function(self, event, button, x, y, xOffset, yOffset)
+                program:injectEvent("resized")
                 frame:setSize(-xOffset, -yOffset, true)
                 local ww, wh = frame:getSize()
                 if ww < sw then

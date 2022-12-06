@@ -1,9 +1,9 @@
 {
     51,
-    35,
+    19,
     "System Preferences",
     "Settings.lua",
-    true,
+    false,
     true,
     nil,
     nil,

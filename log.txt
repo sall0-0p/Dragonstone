@@ -1,7 +1,7 @@
 {
-  "Finder",
-  "Sat Dec  3 09:53:39 2022",
+  "System Preferences",
+  "Mon Dec  5 09:07:15 2022",
   "Bucket",
   "ComputerCraft 1.100.9 (CraftOS-PC v2.7)",
-  "[string \"UwUntuCC/Apps/Fimber/Fimber.lua\"]:337: attempt to index field 'typeLabel' (a nil value)",
+  "[string \"UwUntuCC/Apps/Settings/Settings.lua\"]:31: attempt to call method 'addInput' (a nil value)",
 }
