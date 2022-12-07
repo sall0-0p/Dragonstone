@@ -1,7 +1,7 @@
 {
   "System Preferences",
-  "Mon Dec  5 09:07:15 2022",
+  "Wed Dec  7 11:52:23 2022",
   "Bucket",
   "ComputerCraft 1.100.9 (CraftOS-PC v2.7)",
-  "[string \"UwUntuCC/Apps/Settings/Settings.lua\"]:31: attempt to call method 'addInput' (a nil value)",
+  "/UwUntuCC/Apps/Settings/assets/pages/appearance.lua:4: attempt to index local 'appearanceSettings' (a nil value)",
 }
