@@ -12,38 +12,32 @@ if fs.exists("/UwUntuCC") == false then
     fs.makeDir("/UwUntuCC/User/Documents")
 end
 
+print("Print legacy to launch legacy Desktop")
+print("Print new to launch desktop that currently in dev")
+print("Print exit to stop launching and stay in terminal")
 
-shell.setDir("/UwUntuCC/OS/SystemApps/Desktop")
-shell.run("Desktop.lua")
+local desktop = read()
 
-local OSLabel = os.getComputerLabel()
+if desktop == "legacy" then
+    print("Launching Legacy...")
+    term.setTextColor(colors.red)
+    print("If you encounter any bugs, contact me via discord")
+    sleep(0.3)
+    shell.setDir("UwUntuCC/OS/SystemApps/Desktop/")
+    shell.run("Desktop.lua")
+elseif desktop == "new" then
+    print("Launching New...")
+    term.setTextColor(colors.red)
+    print("If you encounter any bugs contact me via discord")
+    sleep(0.3)
+    shell.setDir("UwUntuCC/OS/Desktop/")
+    shell.run("main.lua")
+else
+    print("Exiting...")
+    print("You can speedup levelOS beating progress by joining my team.")
+    print("Contact _lordBucket")
+end
 
-if OSLabel == nil then
+if not os.getComputerLabel then
         os.setComputerLabel("UwU")
-end
-
-
-local function checkVersion(version)
-    local request = http.get("https://raw.githubusercontent.com/sall0-0p/UwUntuCC/master/OS/Version.md")
-            
-        local content = request.readAll()
-        request.close()
-        return content
-end
-
-if fs.exists("UwUntuCC/OS/Version.md") then
-    local file = fs.open("UwUntuCC/OS/Version.md", "r")
-        version = file.readAll()
-        file.close()
-end
-if version == nil then
-   version = "???"
-end
-
-local serverVersion = checkVersion(version)
-
-if serverVersion ~= version then
-
-    os.queueEvent("notification", "Update found!", serverVersion.." is out! Try it now!")
-
 end

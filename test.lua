@@ -1,4 +1,4 @@
-local LoremIpsum = [[
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer viverra.
-]]
-os.queueEvent("notification", "Notification", LoremIpsum)
+local search = require(".UwUntuCC.OS.Libraries.SearchEngine")
+
+local result = search("*.lua")
+textutils.pagedPrint(textutils.serialise(result))

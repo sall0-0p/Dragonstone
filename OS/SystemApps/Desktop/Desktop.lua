@@ -1,8 +1,6 @@
 --TODO: make Silent Apps (do not appear in dock)
---TODO: Button for moving unmovable windows
---[[
-    
-]]
+--TODO: Button for moving unmovable windows (canceled)
+
 --119 x 50
 
 --  _  _ ___   _   ___  
@@ -11,9 +9,9 @@
 -- |_||_|___/_/ \_\___/ 
 
 -- API --
-local databaser = require(".UwUntuCC.OS.Libraries.Databaser.main")
+local databaser = require(".UwUntuCC.OS.Libraries.Databaser")
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
-local versions = require(".UwUntuCC.OS.Libraries.UwUVersions")
+
 basalt.setMouseMoveThrottle(100)
 package.path = "/UwUntuCC/OS/Libraries/?.lua;/UwUntuCC/OS/Libraries/?/init.lua;" .. package.path
 local Host = _HOST
@@ -41,7 +39,7 @@ databaser.addColumn("RunningWindows", "id")
 
 local DesktopColor = colors.lightGray
 
-local DesktopImage = "UwUntuCC/OS/DesktopBackgrounds/Desktop4.bimg"
+local DesktopImage = "UwUntuCC/OS/DesktopBackgrounds/Desktop3.bimg"
 
 local UseDesktopImage = true
 
@@ -94,6 +92,14 @@ if UseDesktopImage then
     local desktopBG = mainFrame:addImage():loadImage(DesktopImage)
        :setSize(rw,rh)
        :setPosition(1,1)
+
+       mainFrame:onResize(function()
+    
+        local desktopBG = mainFrame:addImage():loadImage(DesktopImage)
+            :setSize(rw,rh)
+            :setPosition(1,1)
+            
+       end)
     else
         desktop:setBackground(DesktopColor)                    
     end
@@ -177,7 +183,7 @@ local UwUButton = UpMenu:addButton()
             :setForeground(colors.white)
             :setText("Power")
 
-        if Host == "ComputerCraft 1.100.9 (CraftOS-PC v2.7)" then
+        if string.find(Host, "CraftOS-PC", 1, true) ~= nil then 
             UwUMenu:setSize(11, 9)
             
             local ChangePCButton = UwUMenu:addLabel()
@@ -240,7 +246,6 @@ local function hideWindow(frame, program, ah, aw)
         aw = rw + 5
         hideWAnimation:move(aw, ah, 1)
     
-        program:pause(true)
 
     hideWAnimation:play()
     end
@@ -260,7 +265,7 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     showWAnimation:play()
     frame:setBar(name, colors.gray, colors.lightGray)
     frame:setBarTextAlign("center")
-    program:pause(false)
+    --program:pause(false)
     end
     
     if id ~= nil then
@@ -268,7 +273,7 @@ local function showWindow(frame, program, lastw, lasth, lastx, lasty, name)
     loadDock()
     end
     
-    program:pause(false)
+    
     end
 
 
@@ -381,10 +386,10 @@ loadDock = function(path)
                 :setZIndex(10)
                     local ObjectStatus = databaser.getColumn("RunningWindows", "hidden")
                     Object:setPosition("2+"..n.."*4-4", 1)--
-                    if fs.exists(path.."/icon.nfp") then
-                        Object:addImage():loadImage(path.."/icon.nfp"):setSize(4,2)
+                    if fs.exists(path.."/icon.bimg") then
+                        Object:addImage():loadImage(path.."/icon.bimg"):setSize(4,2)
                     else
-                        Object:addImage():loadImage("UwUntuCC/OS/Icons/app.nfp"):setSize(3,2)
+                        Object:addImage():loadImage("UwUntuCC/OS/Icons/app.bimg"):setSize(3,2)
                     end
                     if ObjectStatus[n] == "false" then
                     Object:addLabel():setForeground(colors.lightGray):setBackground(colors.gray):setText("\0".."\7"):setPosition(1,3):setSize(3,1)
@@ -527,17 +532,15 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         end
     end
 
-    frame = desktop:addFrame(id):setValue(name)
+    frame = desktop:addFrame(id):setValue(name) -- ! PROBLEM WITH DATABASES =)
         :setPosition(framePosx,framePosy)
         :setMovable(true)
         :setBackground(colors.gray)
         frame:setSize(ww.."+2",wh.."+2")
         if useBar == true then
             frame:setBar(name, colors.gray, colors.lightGray):showBar():setBarTextAlign("center")
-            --frame:setBorder(colors.gray, "left", "right", "bottom")
             frame:setSize(ww.."+2",wh.."+2")
         else
-            --frame:setBorder(colors.gray, "left", "right", "bottom")
             frame:setSize(ww.."+2",wh.."+1")
         end
 
@@ -559,7 +562,6 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             local logLabel = os.getComputerLabel()
             local logHOST = _HOST
             local log = fs.open("UwUntuCC/log.txt", "w")
-            --errormsg = textutils.serialize(errormsg)
             local BugReportArgumets = {}
             table.insert(BugReportArgumets, name)
             table.insert(BugReportArgumets, logDate)
@@ -645,6 +647,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         --Focus change
     if button1 ~= nil and button2 ~= nil and button3 ~= nil then
             frame:onGetFocus(function() 
+                program:injectEvent("gained_focus")
                 frame:setBar(name, colors.gray, colors.white)
 
                 button1:setForeground(colors.red)
@@ -659,6 +662,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
             end)
 
             frame:onLoseFocus(function() 
+                program:injectEvent("losed_focus")
                 frame:setBar(name, colors.gray, colors.lightGray)
                 button1:setForeground(colors.lightGray)
                 button2:setForeground(colors.lightGray)
@@ -684,6 +688,7 @@ createWindow = function(path, executable, args, name, ww, wh, useBar, buttonPosX
         end)
         if isResizeable == true then
             MoveButton:onDrag(function(self, event, button, x, y, xOffset, yOffset)
+                program:injectEvent("resized")
                 frame:setSize(-xOffset, -yOffset, true)
                 local ww, wh = frame:getSize()
                 if ww < sw then
@@ -795,7 +800,7 @@ local Notification = mainFrame:addFrame()
     :setSize(31,6)
     :setPosition(rw.."+2", 3)
     :setBackground(colors.gray)
-    Notification:addFrame()
+    local NotificationPanel = Notification:addFrame()
         :setBackground(colors.gray, "\149", colors.lightGray)
         :setPosition(2,3)
         :setSize(1,3)
@@ -834,6 +839,11 @@ local NHideTimer = mainFrame:addTimer()
 
 mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5) 
     if event == "notification" then
+        local NOTlength = string.len(arg2)
+        local NOTrows = math.ceil(NOTlength/27)
+        Notification:setSize(31, NOTrows.."+3")
+        NotificationText:setSize(27, NOTrows)
+        NotificationPanel:setSize(1, NOTrows)
         NShow:play()
         NHideTimer:start()
         if arg1 == nil or arg2 == nil then
@@ -857,16 +867,18 @@ mainFrame:onEvent(function(self, event, arg1, arg2, arg3, arg4, arg5)
         NHide:play()
     end
 
-    if event == "program_crashed" then
-        
+    if event == "run_program" then 
+        createWindow(arg1, arg2, arg3, arg4)
     end
-
+    
 end)
+
 
 -------------------
 createWindow("UwUntuCC/Apps/Terminal/", "Terminal.lua", nil, "Terminal")
 
-versions.checkVersion()
+
+
 loadDock()
 
 parallel.waitForAll(Update, RunClock)
