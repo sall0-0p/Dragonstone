@@ -12,27 +12,32 @@ if fs.exists("/UwUntuCC") == false then
     fs.makeDir("/UwUntuCC/User/Documents")
 end
 
-local desktop = read()
-
 print("Print legacy to launch legacy Desktop")
 print("Print new to launch desktop that currently in dev")
+print("Print exit to stop launching and stay in terminal")
 
+local desktop = read()
 
 if desktop == "legacy" then
-    print("Launching Legacy")
+    print("Launching Legacy...")
+    term.setTextColor(colors.red)
+    print("If you encounter any bugs, contact me via discord")
     sleep(0.3)
     shell.setDir("UwUntuCC/OS/SystemApps/Desktop/")
     shell.run("Desktop.lua")
-else
-    print("Launching New")
+elseif desktop == "new" then
+    print("Launching New...")
+    term.setTextColor(colors.red)
+    print("If you encounter any bugs contact me via discord")
     sleep(0.3)
     shell.setDir("UwUntuCC/OS/Desktop/")
     shell.run("main.lua")
+else
+    print("Exiting...")
+    print("You can speedup levelOS beating progress by joining my team.")
+    print("Contact _lordBucket")
 end
 
-
-local OSLabel = os.getComputerLabel()
-
-if OSLabel == nil then
+if not os.getComputerLabel then
         os.setComputerLabel("UwU")
 end

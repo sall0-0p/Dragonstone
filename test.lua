@@ -1,8 +1,4 @@
-local text = [[
-    Your mum asks you
-    for permission to
-    send notifications
-]]
+local search = require(".UwUntuCC.OS.Libraries.SearchEngine")
 
-
-os.queueEvent("notification", "Notifications", text) --, "allow", "reject"
+local result = search("*.lua")
+textutils.pagedPrint(textutils.serialise(result))

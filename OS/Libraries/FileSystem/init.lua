@@ -21,7 +21,7 @@ FileSystem = {
     
     edit = function(path)
         if checkPerms(path, file) then
-            os.queueEvent("run_program", "/UwUntuCC/Apps/Edit", "edit.lua", nil, "Editor")
+            os.queueEvent("run_program", "/UwUntuCC/OS/SystemApps/Edit", "edit.lua", nil, "Editor")
             sleep(0.1)
             os.queueEvent("3210050775", path)
             return success

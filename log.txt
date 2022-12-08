@@ -1,7 +1,7 @@
 {
-  "System Preferences",
-  "Wed Dec  7 11:52:23 2022",
+  "Finder",
+  "Thu Dec  8 17:15:48 2022",
   "Bucket",
   "ComputerCraft 1.100.9 (CraftOS-PC v2.7)",
-  "/UwUntuCC/Apps/Settings/assets/pages/appearance.lua:4: attempt to index local 'appearanceSettings' (a nil value)",
+  "[string \"UwUntuCC/Apps/Fimber/Fimber.lua\"]:382: bad argument #1 (expected table, got number)",
 }

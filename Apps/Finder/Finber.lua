@@ -13,6 +13,7 @@ local basalt = require(".UwUntuCC.OS.Libraries.Basalt") -- importing Basalt file
 local db = require(".UwUntuCC.OS.Libraries.Databaser") -- importing database management API that included with UwUntu.
 local fss = require(".UwUntuCC.OS.Libraries.FileSystem")
 local ext = require(".UwUntuCC.OS.Libraries.ExtensionsService")
+local search = require(".UwUntuCC.OS.Libraries.SearchEngine")
 -- getting platform where user launches UwU
 local Host = _HOST
 
@@ -44,7 +45,7 @@ local loadList
 local select
 local getSelected
 
-local fileList = fs.list(Directory)
+local files = fs.list(Directory)
 
 local filtermode = "name"
 
@@ -93,7 +94,7 @@ local function open(path)
         table.insert(history, Directory)
         Directory = path
         Path = "/"..fs.getName(fs.getDir(Directory)).."/"..fs.getName(Directory)
-        loadList(0)
+        loadList(files,0)
     else
         fss.edit(path)
     end
@@ -121,43 +122,42 @@ end
 local rw, rh = mainFrame:getSize()
 
 
--- This is footer :D
+-- This is header :D
 
-local footer = mainFrame:addFrame()
+local header = mainFrame:addFrame()
     :setSize(rw, 2)
     :setPosition(1,1)
     :setBackground(colors.gray)
 
 
     -- This is another border. As you see Im adding some panels with symbols. Try changing some of the colors and you will see the UI changing after restart.
-    local footerPane1 = footer:addFrame()
+    local headerPane1 = header:addFrame()
         :setSize(rw.."-14",1)
         :setPosition(15,2)
         :setBackground(colors.gray, "\140", colors.black)
-    local footerPane2 = footer:addFrame()
+    local headerPane2 = header:addFrame()
         :setSize(1, 2)
         :setPosition(14,1)
         :setBackground(colors.gray, "\149", colors.black)
-    local footerCorner1 = footer:addFrame()
+    local headerCorner1 = header:addFrame()
         :setSize(1,1)
         :setPosition(rw, 2)
         :setBackground(colors.black, "\131", colors.gray)
 
         -- This search bar uses Input object.
-        local searchBar = footer:addInput()
+        local searchBar = header:addInput()
             :setSize(11, 1)
             :setPosition(rw.."-10", 1)
             :setBackground(colors.black)
             :setForeground(colors.white)
             :setDefaultText(" ", colors.lightGray, colors.black)
         
-            local searhBarBorder = footer:addFrame()
+            local searhBarBorder = header:addFrame()
                 :setSize(1, 1)
                 :setPosition(rw.."-11", 1)
                 :setBackground(colors.black, "\149", colors.gray)
-
         -- Menu
-        local menuButton = footer:addButton()
+        local menuButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-12", 1)
             :setBackground(colors.gray)
@@ -165,7 +165,7 @@ local footer = mainFrame:addFrame()
             :setText("=")
 
         -- Tags
-        local tagsButton = footer:addButton()
+        local tagsButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-14", 1)
             :setBackground(colors.gray)
@@ -173,7 +173,7 @@ local footer = mainFrame:addFrame()
             :setText("\4")
 
         -- Cloud
-        local cloudButton = footer:addButton()
+        local cloudButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-16", 1)
             :setBackground(colors.gray)
@@ -181,7 +181,7 @@ local footer = mainFrame:addFrame()
             :setText("\24")
         
         -- Sorting
-        local sortingButton = footer:addButton()
+        local sortingButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-18", 1)
             :setBackground(colors.gray)
@@ -189,15 +189,15 @@ local footer = mainFrame:addFrame()
             :setText("\31")
 
         -- type?
-        local typeButton = footer:addButton()
+        local createButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-21", 1)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
-            :setText("\182")
+            :setText("+")
 
         -- undo
-        local undoButton = footer:addButton()
+        local undoButton = header:addButton()
             :setSize(1,1)
             :setPosition(17, 1)
             :setBackground(colors.gray)
@@ -209,7 +209,7 @@ local footer = mainFrame:addFrame()
             end)
         
         -- folder title
-        local folderTitle = footer:addLabel()
+        local folderTitle = header:addLabel()
             :setSize(11,1)
             :setPosition(19)
             :setBackground(colors.gray)
@@ -242,7 +242,7 @@ local sidePanel = mainFrame:addFrame()
 
 local fileListFrame = mainFrame:addFrame()
     :setPosition(15, 3)
-    :setSize(rw.."-14", table.maxn(fileList).."+20")
+    :setSize(rw.."-14", table.maxn(files).."+20")
     :setBackground(colors.black)
     :setScrollable()
 
@@ -295,8 +295,8 @@ local fileListFrame = mainFrame:addFrame()
 
 
     -- weird code. I wont describe it. Thats too scary :<
-    loadList = function(selected)
-        local fileList = fs.list(Directory)
+    loadList = function(fileList, selected)
+        
         folderTitle:setText(fs.getName(Directory))
         selectedItem = selected
         for k,v in pairs(fileObjects)do
@@ -378,8 +378,8 @@ local fileListFrame = mainFrame:addFrame()
             end
             y = y + 1
         end
-
-        for k,v in pairs(fileList)do
+        
+        for k,v in pairs(files) do
             if(fileObjects[y]~=nil)then
                 local isDir = fs.isDir(Directory.."/"..v)
                 
@@ -424,9 +424,79 @@ local fileListFrame = mainFrame:addFrame()
             open(fileObjects[selectedItem].path)
         end
     end, 1)
-    loadList()
-    select(3)
+    
 
+local searchModeFrame = mainFrame:addFrame():hide()
+    :setSize(rw.."-14",1)
+    :setPosition(15,2)
+    :setBackground(colors.gray)
+
+local searchFrame = mainFrame:addFrame():hide()
+    :setSize(11,11)
+    :setPosition(rw.."-14",2)
+    :setBackground(colors.gray)
+
+local searchList = searchFrame:addList()
+    :setSize(15,11)
+    :setPosition(1,1)
+    :setBackground(colors.gray)
+    :setForeground(colors.white)
+    :setSelectedItem(colors.magenta, colors.black)
+
+
+    mainFrame:onKey(function(self, event, key) 
+        local searchResult = nil
+        if key == keys.enter then
+            searchFrame:show()
+            local value = searchBar:getValue()
+            
+            if string.len(value) >= 3 then
+                local searchResult = search("*"..value.."*")
+                
+                if searchResult ~= nil then
+                    local lh = table.maxn(searchResult)
+                        if lh <= 11 then 
+                            searchFrame:setSize(15,lh)
+                            searchList:setSize(15,lh)
+                        else
+                            searchList:setSize(15,11)
+                            searchFrame:setSize(15,11)
+                        end
+                else
+                    searchList:clear()
+                    searchList:addItem("Nothing =(")
+                    searchFrame:setSize(15,1)
+                    searchList:setSize(15,1)
+                end
+                searchList:clear()
+                    for i, v in pairs(searchResult) do
+                        searchList:addItem(" "..fs.getName(v))
+                    end
+            end
+        end
+    end)
+
+    searchBar:onChange(function() 
+        searchModeFrame:show()
+        local value = searchBar:getValue()
+        
+        if value == "" then
+            searchModeFrame:hide()
+            searchFrame:hide()
+            searchResult = nil
+        else
+            if searchResult ~= nil then
+                
+                if string.len(value) >= 3 then
+                    searchFrame:show()
+                    searchModeFrame:show()
+                end
+            end
+        end
+    end)
+    
+    loadList(files)
+    select(3)
 
     -- This function shout be placed at the end of code, or inside of thread (coroutine).
 -- It makes your workspace update after some changes automatically. In fact this is automatical render of your program and UI.
