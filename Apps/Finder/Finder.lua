@@ -57,15 +57,6 @@ table.insert(history, Directory)
 
     db.setDir("/UwUntuCC/Apps/Fimber/Data")
 
-
-    local defaultFavourites
-
-
-
-
-
-
-
 --___             _   _             
 --| __|  _ _ _  __| |_(_)___ _ _  ___
 --| _| || | ' \/ _|  _| / _ \ ' \(_-<
@@ -91,13 +82,15 @@ end
 
 local function open(path)
     if fs.isDir(path) then
+        local files = fs.list(path)
         table.insert(history, Directory)
         Directory = path
         Path = "/"..fs.getName(fs.getDir(Directory)).."/"..fs.getName(Directory)
-        loadList(files,0)
+        loadList(files, 0)
     else
         fss.edit(path)
     end
+    os.queueEvent("notification", "Debug", path)
 end
 
 local function makeFavourite(path)
@@ -295,7 +288,7 @@ local fileListFrame = mainFrame:addFrame()
 
 
     -- weird code. I wont describe it. Thats too scary :<
-    loadList = function(fileList, selected)
+    loadList = function(files, selected)
         
         folderTitle:setText(fs.getName(Directory))
         selectedItem = selected
@@ -405,7 +398,7 @@ local fileListFrame = mainFrame:addFrame()
                 local isDir = fs.isDir(Directory.."/"..v)
                 updateItem(group, v, isDir, fileType, rColoring and colors.gray or colors.black, colors.white)
                 group.pane:onClick(function()
-                    loadList(group.pane:getY())
+                    loadList(files, group.pane:getY())
                 end)
                 table.insert(fileObjects, group)
             end
@@ -415,7 +408,7 @@ local fileListFrame = mainFrame:addFrame()
 
     select = function(index)
         selectedItem = index
-        loadList(selectedItem)
+        loadList(files, selectedItem)
     end
 
     DoubleClick(fileListFrame, function(self, event, key)
@@ -423,7 +416,16 @@ local fileListFrame = mainFrame:addFrame()
         if selectedItem ~= 0 then
             open(fileObjects[selectedItem].path)
         end
+
     end, 1)
+
+    mainFrame:onKey(function(self, event, key)
+        if key == keys.enter then
+            if selectedItem ~= 0 then
+                open(fileObjects[selectedItem].path) --
+            end
+        end
+    end)
     
 
 local searchModeFrame = mainFrame:addFrame():hide()
@@ -444,9 +446,9 @@ local searchList = searchFrame:addList()
     :setSelectedItem(colors.magenta, colors.black)
 
 
-    mainFrame:onKey(function(self, event, key) 
+    searchBar:onKey(function(self, event, key) 
         local searchResult = nil
-        if key == keys.enter then
+        if key == keys.rightShift then
             searchFrame:show()
             local value = searchBar:getValue()
             
@@ -495,7 +497,7 @@ local searchList = searchFrame:addList()
         end
     end)
     
-    loadList(files)
+    loadList(files, 0)
     select(3)
 
     -- This function shout be placed at the end of code, or inside of thread (coroutine).
