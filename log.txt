@@ -1,7 +1,7 @@
 {
   "Finder",
-  "Thu Dec  8 17:15:48 2022",
+  "Thu Dec  8 22:24:33 2022",
   "Bucket",
   "ComputerCraft 1.100.9 (CraftOS-PC v2.7)",
-  "[string \"UwUntuCC/Apps/Fimber/Fimber.lua\"]:382: bad argument #1 (expected table, got number)",
+  "/UwUntuCC/OS/Libraries/Basalt.lua:2918: bad argument #1 (expected string, got nil)",
 }
