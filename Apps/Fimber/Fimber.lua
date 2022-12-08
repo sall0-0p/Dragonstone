@@ -48,7 +48,9 @@ local fileList = fs.list(Directory)
 
 local filtermode = "name"
 
+local history = {}
 
+table.insert(history, Directory)
 
 -- Setting up some databases;
 
@@ -87,10 +89,14 @@ end
 -- Now file changing functions will come. They are quite simple anyways. Also most of FileSystem manipulations are contained in separate API. It not accessible for users :<
 
 local function open(path)
-    Directory = path
-    Path = "/"..fs.getName(fs.getDir(Directory)).."/"..fs.getName(Directory)
-
-    loadList()
+    if fs.isDir(path) then
+        table.insert(history, Directory)
+        Directory = path
+        Path = "/"..fs.getName(fs.getDir(Directory)).."/"..fs.getName(Directory)
+        loadList(0)
+    else
+        fss.edit(path)
+    end
 end
 
 local function makeFavourite(path)
@@ -197,6 +203,10 @@ local footer = mainFrame:addFrame()
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText("\171")
+
+            :onClick(function() 
+                    open(history[table.maxn(history)])
+            end)
         
         -- folder title
         local folderTitle = footer:addLabel()
@@ -276,7 +286,6 @@ local fileListFrame = mainFrame:addFrame()
 
 
 
-    local fileObjects = {}
     local selectedItem = 0
     -- List reloading function
 
@@ -287,6 +296,8 @@ local fileListFrame = mainFrame:addFrame()
 
     -- weird code. I wont describe it. Thats too scary :<
     loadList = function(selected)
+        local fileList = fs.list(Directory)
+        folderTitle:setText(fs.getName(Directory))
         selectedItem = selected
         for k,v in pairs(fileObjects)do
             v.label:setPosition(1,1):hide()
@@ -385,6 +396,7 @@ local fileListFrame = mainFrame:addFrame()
                     local fileType = ext.get(extension)
 
                 local group = {}
+                group.path = Directory.."/"..v
                 group.pane = fileListFrame:addPane():hide()
                     :setSize("parent.w", 1)
                 group.label = fileListFrame:addLabel():hide()
@@ -406,8 +418,14 @@ local fileListFrame = mainFrame:addFrame()
         loadList(selectedItem)
     end
 
+    DoubleClick(fileListFrame, function(self, event, key)
+
+        if selectedItem ~= 0 then
+            open(fileObjects[selectedItem].path)
+        end
+    end, 1)
     loadList()
-    --select(3)
+    select(3)
 
 
     -- This function shout be placed at the end of code, or inside of thread (coroutine).
