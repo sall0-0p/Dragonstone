@@ -6,7 +6,7 @@ local TimeFormat = true
 local TimeType = "local"
 local rw, rh = mainFrame:getSize()
 
-basalt.debug(rw, rh)
+
 
 local header = mainFrame:addFrame()
     :setSize(rw,1)

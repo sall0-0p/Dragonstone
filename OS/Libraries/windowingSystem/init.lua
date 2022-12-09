@@ -71,7 +71,6 @@ return {
 
             run = function(self, path)
                 if not args then
-                    basalt.debug(path)
                     program:execute(path)
                 else
                     --program:execute(path, args)
