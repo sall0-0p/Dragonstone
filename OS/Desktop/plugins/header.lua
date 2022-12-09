@@ -8,12 +8,12 @@ local rw, rh = mainFrame:getSize()
 
 basalt.debug(rw, rh)
 
-local footer = mainFrame:addFrame()
+local header = mainFrame:addFrame()
     :setSize(rw,1)
     :setPosition(1,1)
     :setBackground(colors.gray)
 
-    local footerPanel1 = mainFrame:addFrame()
+    local headerPanel1 = mainFrame:addFrame()
         :setSize(rw,1)
         :setPosition(1,2)
         :setBackground(false, "\131", colors.gray)
@@ -27,7 +27,7 @@ local footer = mainFrame:addFrame()
     
     
     -- Clock services located here.
-    local clock = footer:addLabel()
+    local clock = header:addLabel()
         :setBackground(false)
         :setText("")
         :setForeground(colors.white)
