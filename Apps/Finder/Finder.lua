@@ -158,33 +158,33 @@ local header = mainFrame:addFrame()
             :setText("=")
 
         -- Tags
-        local tagsButton = header:addButton()
+        --[[local tagsButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-14", 1)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
-            :setText("\4")
+            :setText("\4")]]
 
         -- Cloud
         local cloudButton = header:addButton()
             :setSize(1,1)
-            :setPosition(rw.."-16", 1)
+            :setPosition(rw.."-14", 1)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText("\24")
         
         -- Sorting
-        local sortingButton = header:addButton()
+        --[[local sortingButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-18", 1)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
-            :setText("\31")
+            :setText("\31")]]
 
         -- type?
         local createButton = header:addButton()
             :setSize(1,1)
-            :setPosition(rw.."-21", 1)
+            :setPosition(rw.."-16", 1)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText("+")

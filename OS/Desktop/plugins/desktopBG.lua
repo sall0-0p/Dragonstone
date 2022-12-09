@@ -2,7 +2,12 @@ local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
 return function(mainFrame) 
     
-
+-- TODO: Update on 1.6.4
+--[[
+    local desktop = mainFrame:addFrame()
+        :setSize(rw,rh)
+        :setTexture(DesktopImage, "stretch")
+]]
 
 local rw, rh = mainFrame:getSize()
 
