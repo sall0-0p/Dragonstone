@@ -1,6 +1,6 @@
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
-return function(mainFrame)
+return function(mainFrame, p1, p2, p3, p4, p5)
     
 local TimeFormat = true
 local TimeType = "local"
@@ -8,12 +8,12 @@ local rw, rh = mainFrame:getSize()
 
 
 
-local header = mainFrame:addFrame()
+local header = p2:addFrame()
     :setSize(rw,1)
     :setPosition(1,1)
     :setBackground(colors.gray)
 
-    local headerPanel1 = mainFrame:addFrame()
+    local headerPanel1 = p2:addFrame()
         :setSize(rw,1)
         :setPosition(1,2)
         :setBackground(false, "\131", colors.gray)

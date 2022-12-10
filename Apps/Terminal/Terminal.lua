@@ -17,6 +17,8 @@ local multishell = multishell
 local parentShell = shell
 local parentTerm = term.current()
 
+shell.setDir(":")
+
 local version
 
 if fs.exists("UwUntuCC/OS/Version.md") then
@@ -605,7 +607,7 @@ else
     -- "shell"
     -- Print the header
     term.setBackgroundColor(bgColour)
-    term.setTextColour(colors.magenta)
+    term.setTextColor(colors.magenta)
     term.setCursorPos(1,1)
     write(os.version())
     term.setCursorPos(1,2)

@@ -2,7 +2,7 @@ local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
 os.queueEvent("8495532365")
 
-local event, mainFrame = os.pullEvent("6771818008")
+local event, mainFrame, p1, p2, p3, p4, p5 = os.pullEvent("6771818008")
 
 local function createToken()
     return math.random(1000000, 9999999)
@@ -18,19 +18,47 @@ return {
 
     create = function()
         local token = createToken()
-        local frame = mainFrame:addFrame()
+        local frame = p3:addFrame()
             :setSize(53,21)
             :setMovable()
+            :setPosition(5,5)
         local bar = frame:addFrame()
             :setSize(53,1)
         local label = bar:addLabel()
             :setPosition(22, 1)
             :setText("Window")
+            :setForeground(colors.lightGray)
             centerText(label)
         local program = frame:addProgram()
             :setSize(51,19)
             :setPosition(2,2)
-        local resizableButton
+        local buttons = bar:addFrame()
+            :setSize(5,1)
+            :setPosition(2,1)
+            :setBackground(false)
+
+            local closeButton = buttons:addButton()
+                :setSize(1,1)
+                :setPosition(1,1)
+                :setBackground(false)
+                :setForeground(colors.lightGray)
+                :setText("\7")
+            
+            local hideButton = buttons:addButton()
+                :setSize(1,1)
+                :setPosition(3,1)
+                :setBackground(false)
+                :setForeground(colors.lightGray)
+                :setText("\7")
+
+            local fullScreenButton = buttons:addButton()
+                :setSize(1,1)
+                :setPosition(5,1)
+                :setBackground(false)
+                :setForeground(colors.lightGray)
+                :setText("\7")
+        
+            local resizableButton
 
         local minW = minW or 4
         local minH = minH or 4
@@ -69,11 +97,11 @@ return {
                 return self
             end,
 
-            run = function(self, path)
+            run = function(self, path, args)
                 if not args then
                     program:execute(path)
                 else
-                    --program:execute(path, args)
+                    program:execute(path, args)
                 end
                 return true
             end, 
@@ -82,9 +110,43 @@ return {
                 frame:remove()
                 return self
             end,
+
+            hide = function(self)
+                -- function to hide window
+                return self
+            end,
+
+            show = function(self)
+                return self
+
+            end,
+
+            fullscreen = function(self)
+
+                return self
+            end,
         }
         windows[token] = instance
+
+        frame:onGetFocus(function() 
+            program:injectEvent("gained_focus")
+            label:setForeground(colors.white)
+            closeButton:setForeground(colors.red)
+            hideButton:setForeground(colors.orange)
+            fullScreenButton:setForeground(colors.lime)
+        end)
+
+        frame:onLoseFocus(function()
+            program:injectEvent("loosed_focus")
+            label:setForeground(colors.lightGray)
+            closeButton:setForeground(colors.lightGray)
+            hideButton:setForeground(colors.lightGray)
+            fullScreenButton:setForeground(colors.lightGray)
+        
+        end)
+
         return instance
+
     end,
 
     getWindow = function(token)

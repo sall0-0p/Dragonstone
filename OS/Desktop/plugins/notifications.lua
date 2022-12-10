@@ -1,6 +1,6 @@
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
-return function(mainFrame)
+return function(mainFrame, p1, p2, p3, p4, p5)
     local rw, rh = mainFrame:getSize()
     local currentNotif = {}
 
@@ -61,7 +61,7 @@ return function(mainFrame)
                 group.body = desc
                 group.title = title
 
-                group.frame = mainFrame:addFrame()
+                group.frame = p5:addFrame()
                     :setSize(31,6)
                     :setPosition(rw.."-31", 3)
                     :setBackground(colors.gray)
