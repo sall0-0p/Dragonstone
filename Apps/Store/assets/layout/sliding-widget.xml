@@ -1,0 +1,11 @@
+<frame id="sliding-widget" width="parent.w" heigh="parent.h" bg="gray">
+    <image id="trumbnail" width="parent.w" height="9" bg="black" />
+    
+    <image id="icon" width="3" height="2" x="2" y="11" bg="red" />
+
+    <label id="title" width="11" height="1" x="6" y="11" bg="false" fg="white" text="Title" />
+    <label id="author" width="11" height="1" x="7" y="12" bg="false" fg="lightGray" text="Author" />
+
+    <button id="open" width="1" height="1" x="parent.w-1" y="parent.h-1" bg="false" fg="orange" text="&#16;" onClick="openPage"/>
+    
+</frame>

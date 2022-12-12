@@ -1,5 +1,5 @@
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
-
+local db = require(".UwUntuCC.OS.Libraries.Databaser")
 os.queueEvent("8495532365")
 
 local event, mainFrame, p1, p2, p3, p4, p5 = os.pullEvent("6771818008")
@@ -18,6 +18,11 @@ return {
 
     create = function()
         local token = createToken()
+        local index = table.maxn(db.getColumn("RunningApps", "token")) + 1
+ 
+        basalt.debug(index)
+        db.setValue("RunningApps", "token", token, index)
+        db.setValue("RunningApps", "hidden", "false", index)
         local frame = p3:addFrame()
             :setSize(53,21)
             :setMovable()
@@ -73,6 +78,7 @@ return {
             
             setBar = function(self, text)
                 label:setText(text)
+                db.setValue("RunningApps", "name", text, index)
                 return self
             end,
 
@@ -149,8 +155,21 @@ return {
 
     end,
 
-    getWindow = function(token)
+    setup = function()
+        db.setDir("UwUntuCC/OS/Data")
+        fs.delete("UwUntuCC/OS/Data/RunningApps/name.json")
+        fs.delete("UwUntuCC/OS/Data/RunningApps/path.json")
+        fs.delete("UwUntuCC/OS/Data/RunningApps/hidden.json")
+        fs.delete("UwUntuCC/OS/Data/RunningApps/token.json")
 
+        db.addColumn("RunningApps", "name")
+        db.addColumn("RunningApps", "path")
+        db.addColumn("RunningApps", "hidden")
+        db.addColumn("RunningApps", "token")
+    end,
+
+    getWindow = function(token)
+        
     end,
 
 }

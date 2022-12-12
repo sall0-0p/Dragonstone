@@ -1,0 +1,27 @@
+<frame id="main" x="1" y="1" width="parent.w" height="parent.h" bg="lightGray">
+    <frame id="categories" x="1" y="1" width="4" height="parent.h">
+        <frame id="category_home" x="1" y="1" width="parent.w+1" height="parent.w-1" bg="lightGray">
+            <label id="icon_1" x="1" y="1" text="/=\" />
+            <label id="icon_2" x="1" y="2" text="|-|" />
+            <label id="name" x="1" y="3" text="Home" />
+        </frame>
+        <frame id="category_account" x="1" y="parent.h-6" width="parent.w+1" height="parent.w-1" bg="gray">
+            <label id="icon_1" x="1" y="1" text=" /\" />
+            <label id="icon_2" x="1" y="2" text=" \/" />
+            <label id="name" x="1" y="3" text="Acc." />
+        </frame>
+        <frame id="category_settings" x="1" y="parent.h-2" width="parent.w+1" height="parent.w-1" bg="gray">
+            <label id="icon_1" x="1" y="1" text=" /\" />
+            <label id="icon_2" x="1" y="2" text=" \/" />
+            <label id="name" x="1" y="3" text="Opt." />
+        </frame>
+    </frame>
+    <frame id="header" x="5" y="1" width="parent.w-4" height="3" bg="lightGray">
+        <progressbar id="disk_used_space" x="2" y="2" width="(parent.w-4)/4" progressColor="lightGray" progressSymbol="" backgroundSymbol="" progressSymbolColor="blue" bg="lightGray" />
+        <label x="2" y="1" text="Disk Space" />
+
+        <input x="parent.w-(parent.w/3)" y="2" width="parent.w/3" height="1" fg="black" bg="white" />
+        <label x="parent.w-(parent.w/3)" y="1" text="Search" />
+    </frame>
+    <frame id="content" x="5" y="3" width="parent.w-4" height="parent.h-2" bg="lightGray" />
+</frame>

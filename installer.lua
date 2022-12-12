@@ -1,106 +1,4 @@
-if fs.exists("/Basalt") == false then
-
-    local githubPath = "https://raw.githubusercontent.com/sall0-0p/UwUntuCC/"
-    local treePath = "https://api.github.com/repos/sall0-0p/UwUntuCC/git/trees"
-    
-    local function createUwuntuTree(page, branch, dirName)
-        dirName = dirName or ""
-        local tree = {}
-        local request, err = http.get(page, _G._GIT_API_KEY and {Authorization = "token ".._G._GIT_API_KEY})
-        print("Creating file tree for "..(dirName~="" and "root/"..dirName or "root"))
-        if(request==nil)then error("API rate limit exceeded. It will be available again in one hour.") end
-        for _,v in pairs(textutils.unserialiseJSON(request.readAll()).tree)do
-            if(v.type=="blob")then
-                table.insert(tree, {name = v.path, path=fs.combine(dirName, v.path), url=githubPath..(branch or "master")..fs.combine(dirName, v.path), size=v.size})
-            elseif(v.type=="tree")then
-                tree[v.path] = createUwuntuTree(v.url, (branch or "master"), fs.combine(dirName, v.path))
-            end
-        end
-        return tree
-    end
-    
-    --local tree = createUwuntuTree(treePath.."/master", "master")
-    
-    --for k,v in pairs(tree)do
-        --print(k, v)
-    --end
-
-local function splitString(str, sep)
-    if sep == nil then
-            sep = "%s"
-    end
-    local t={}
-    for v in string.gmatch(str, "([^"..sep.."]+)") do
-            table.insert(t, v)
-    end
-    return t
-end
-
-local function download(url, file)
-    print("Downloading "..url)
-    local httpReq = http.get(url, _G._GIT_API_KEY and {Authorization = "token ".._G._GIT_API_KEY})
-        if(httpReq~=nil)then
-        local content = httpReq.readAll()
-        if not content then
-            error("Could not connect to website")
-        end
-        local f = fs.open(file, "w")
-        f.write(content)
-        f.close()
-    end
-end
-
-local function downloadBasalt(dir, ignoreList, link)
-    local projTree = createTree("https://api.github.com/repos/Pyroxenium/Basalt/git/trees/master:Basalt")
-    local projectFiles = {base={}}
-
-    local function isFileInIgnoreList(folder, file)
-        if(ignoreList~=nil)then
-            if(ignoreList[folder]~=nil)then
-                for k,v in pairs(ignoreList[folder])do
-                    if(v==file)then
-                        return true
-                    end
-                end
-            end
-        end
-        return false
-    end
-    for k,v in pairs(projTree)do
-        if(k=="objects")then
-            projectFiles.objects = {}
-            for a,b in pairs(v)do
-                if not(isFileInIgnoreList("objects", b))then
-                    table.insert(projectFiles.objects, b)
-                end
-            end
-        elseif(k=="libraries")then
-            projectFiles.libraries = {}
-            for a,b in pairs(v)do
-                if not(isFileInIgnoreList("libraries", b))then
-                    table.insert(projectFiles.libraries, b)
-                end
-            end
-        else
-            table.insert(projectFiles.base, v)
-        end
-    end
-
-    
-    for _,v in pairs(projectFiles["objects"])do
-        download("https://raw.githubusercontent.com/Pyroxenium/Basalt/master/Basalt/objects/"..v, dir.."/objects/"..v)
-    end
-    for _,v in pairs(projectFiles["libraries"])do
-        download("https://raw.githubusercontent.com/Pyroxenium/Basalt/master/Basalt/libraries/"..v, dir.."/libraries/"..v)
-    end
-    for _,v in pairs(projectFiles["base"])do
-        download("https://raw.githubusercontent.com/Pyroxenium/Basalt/master/Basalt/"..v, dir.."/"..v)
-    end
-end
-
-downloadBasalt("Basalt")
-
-end
+shell.run("wget", "run", "https://basalt.madefor.cc/install.lua", "packed")
 
 basalt = require(".Basalt")
 
@@ -155,7 +53,7 @@ local licenseScreen = mainFrame:addFrame()
     licenseScreen:addLabel()
         :setText("Welcome to UwUntu")
         :setFontSize(2)
-        :setPosition(5,5)
+        :setPosition(5,4)
         :setBackground(colors.gray)
         :setForeground(colors.white)
     
@@ -165,7 +63,7 @@ local licenseScreen = mainFrame:addFrame()
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
     
-        licenseScreen:addFrame()
+        local LicenseText = licenseScreen:addFrame()
             :setPosition(5,9)
             :setSize(rw.."-20", rh.."-24")
             :setBackground(colors.lightGray)
@@ -224,42 +122,19 @@ local licenseScreen = mainFrame:addFrame()
         end)
 
 NextButton:onClick(function()
-    local Sstartup = [[if fs.exists("/UwUntuCC") == false then
-        print("Print")
-        fs.makeDir("/UwUntuCC")
-        fs.move("/OS", "/UwUntuCC/OS")
-        fs.move("/Apps", "/UwUntuCC/Apps")
-        fs.makeDir("/UwUntuCC/AppData")
-        fs.makeDir("/UwUntuCC/User")
-        fs.makeDir("/UwUntuCC/User/Downloads")
-        fs.makeDir("/UwUntuCC/User/Desktop")
-        fs.makeDir("/UwUntuCC/User/Bin")
-        fs.makeDir("/UwUntuCC/User/")
-        fs.makeDir("/UwUntuCC/User/Documents")
-    end
+    local request = http.get("https://raw.githubusercontent.com/sall0-0p/UwUntuCC/master/UwU.lua")
     
-    local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
-    
-    local mainFrame = basalt.createFrame()
-        :setBackground(colors.black)
-        
-    
-    
-    
-    local RunBucketOS = function()
-        sleep(2)
-        basalt.removeFrame(mainFrame)
-        shell.setDir("/UwUntuCC/OS/SystemApps/Desktop/")
-        shell.run("Desktop.lua")
-    end
-    
-    parallel.waitForAll(basalt.autoUpdate(), RunBucketOS)
-    
-    ]]
-       
-    local f = fs.open("startup.lua", "w")
-    f.write(Sstartup)
-    f.close()
+    basalt.stop()
+    term.clear()
+    term.setCursorPos(1,1)
+    shell.run("wget", "https://raw.githubusercontent.com/sall0-0p/UwUntuCC/master/UwU.lua")
+
+    shell.run("UwU.lua")
+
+    shell.run("startup.lua")
+
+    fs.delete("UwU.lua")
+    --fs.delete("installer.lua")
 
     os.reboot()
     

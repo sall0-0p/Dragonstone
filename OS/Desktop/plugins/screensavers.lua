@@ -8,6 +8,8 @@ return function(mainFrame, p1, p2, p3, p4, p5)
     local ScreenSaverTimeOut = 600
     local function launchScreensaver()
         shell.setDir(":")
+        basalt.debugLabel
+            :setBackground(colors.black)
         local ScreensaverProgram = p5:addProgram()
             :setSize(rw,rh)
             :setFocus()
@@ -17,10 +19,14 @@ return function(mainFrame, p1, p2, p3, p4, p5)
         mainFrame:onClick(function()
             ScreensaverProgram:remove()
             scTimer:start()
+            basalt.debugLabel
+                :setBackground(colors.gray)
         end)
         mainFrame:onKey(function()
             ScreensaverProgram:remove()
             scTimer:start()
+            basalt.debugLabel
+                :setBackground(colors.gray)
         end)
     end
 

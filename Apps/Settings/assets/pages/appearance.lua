@@ -1,5 +1,6 @@
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
-local highlightColor = colors.orange
+
+local accentColor = settings.get("uwuntucc.accent_color")
 
 return function(frame)
     local rw, rh = frame:getSize()
@@ -11,7 +12,7 @@ return function(frame)
     local selectedThemePane = frame:addPane()
         :setPosition(rw.."-9", 5)
         :setSize(9,1)
-        :setBackground(colors.lightGray, "\131", highlightColor)
+        :setBackground(colors.lightGray, "\131", accentColor)
 
     local darkThemeImage = frame:addImage()
         :setPosition(rw.."-9", 2)
@@ -62,6 +63,10 @@ return function(frame)
         local selectedColorPane = accentColor3:addPane()
             :setPosition(2,1)
             :setBackground(false, "\130", colors.gray)
+
+        --local buttonsSideLabel = frame:addLabel()
+        --    :setSize()
+            
 
 
 end
