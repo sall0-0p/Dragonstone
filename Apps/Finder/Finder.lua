@@ -14,6 +14,8 @@ local db = require(".UwUntuCC.OS.Libraries.Databaser") -- importing database man
 local fss = require(".UwUntuCC.OS.Libraries.FileSystem")
 local ext = require(".UwUntuCC.OS.Libraries.ExtensionsService")
 local search = require(".UwUntuCC.OS.Libraries.SearchEngine")
+
+local accentColor = settings.get("uwuntucc.accent_color")
 -- getting platform where user launches UwU
 local Host = _HOST
 
@@ -158,33 +160,33 @@ local header = mainFrame:addFrame()
             :setText("=")
 
         -- Tags
-        local tagsButton = header:addButton()
+        --[[local tagsButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-14", 1)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
-            :setText("\4")
+            :setText("\4")]]
 
         -- Cloud
         local cloudButton = header:addButton()
             :setSize(1,1)
-            :setPosition(rw.."-16", 1)
+            :setPosition(rw.."-14", 1)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText("\24")
         
         -- Sorting
-        local sortingButton = header:addButton()
+        --[[local sortingButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-18", 1)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
-            :setText("\31")
+            :setText("\31")]]
 
         -- type?
         local createButton = header:addButton()
             :setSize(1,1)
-            :setPosition(rw.."-21", 1)
+            :setPosition(rw.."-16", 1)
             :setBackground(colors.gray)
             :setForeground(colors.lightGray)
             :setText("+")
@@ -305,24 +307,24 @@ local fileListFrame = mainFrame:addFrame()
             if(selected==y)then
                 group.pane
                     :setPosition(1, y)
-                    :setBackground(colors.magenta)
+                    :setBackground(accentColor)
                     :show()
                 group.label
                     :setText(" "..text)
                     :setPosition(3, y)
-                    :setBackground(colors.magenta)
+                    :setBackground(accentColor)
                     :setForeground(colors.black)
                     :show()
                 group.icon
                     :setText("\131")
                     :setPosition(2 ,y)
-                    :setBackground(colors.magenta)
-                    :setForeground(colors.magenta)
+                    :setBackground(accentColor)
+                    :setForeground(accentColor)
                     :show()
                 group.typeLabel
                     :setText(fileType)
                     :setPosition(23,y)
-                    :setBackground(colors.magenta)
+                    :setBackground(accentColor)
                     :setForeground(colors.black)
                     :show()
 
@@ -443,7 +445,7 @@ local searchList = searchFrame:addList()
     :setPosition(1,1)
     :setBackground(colors.gray)
     :setForeground(colors.white)
-    :setSelectedItem(colors.magenta, colors.black)
+    :setSelectedItem(accentColor, colors.black)
 
 
     searchBar:onKey(function(self, event, key) 

@@ -10,6 +10,10 @@ if fs.exists("/UwUntuCC") == false then
     fs.makeDir("/UwUntuCC/User/Bin")
     fs.makeDir("/UwUntuCC/User/")
     fs.makeDir("/UwUntuCC/User/Documents")
+    
+    settings.define("uwuntucc.accent_color")
+    settings.set("uwuntucc.accent_color", colors.magenta)
+    settings.save()
 end
 
 print("Print legacy to launch legacy Desktop")
@@ -41,3 +45,4 @@ end
 if not os.getComputerLabel then
         os.setComputerLabel("UwU")
 end
+

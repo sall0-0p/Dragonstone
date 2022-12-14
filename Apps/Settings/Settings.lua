@@ -2,6 +2,8 @@ local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
 local mainFrame = basalt.createFrame()
 
+local accentColor = settings.get("uwuntucc.accent_color")
+
 local rw, rh = mainFrame:getSize() -- getting resolution
 
 local sidebar = mainFrame:addFrame()

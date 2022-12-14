@@ -1,13 +1,13 @@
 # UwUntuCC
 
-UwUntuCC - is operative system that include some cool features, it allows you launch different programs and do other cool things. It inspirated by MacOS UI design and functionality. 
+UwUntuCC - is an operating system that includes some cool features, it allows you to launch different programs and do other cool things. It is inspired by the design and functionality of macOS.
 
 Installer in not active right now!!!!
 
 # How to install
 
-1. Download Apps and OS folder. Download startup file and put all files into root directory of advanced computer.
+1. ``wget run https://github.com/sall0-0p/UwUntuCC/raw/main/installer.lua``
 
-2. reboot computer or launch startup file
+2. Reboot the computer or run the ``startup.lua`` file.
 
 Discord: https://discord.gg/gh6pXpdb6j

@@ -175,7 +175,10 @@ databaser = {
     end,
 
     addValue = function(name, columnName, value, index)
-
+        if columnName == nil or name == nil then
+            error("State columnName and name "..name.." "..columnName)
+            return true
+        end
         if index == nil then
             local file = fs.open(directory.."/"..name.."/"..columnName..".json", "r")
             local info = file.readAll()

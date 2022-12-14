@@ -13,9 +13,13 @@
 local expect = dofile("rom/modules/main/cc/expect.lua").expect
 local make_package = dofile("rom/modules/main/cc/require.lua").make
 
+local accentColor = settings.get("uwuntucc.accent_color")
+
 local multishell = multishell
 local parentShell = shell
 local parentTerm = term.current()
+
+shell.setDir(":")
 
 local version
 
@@ -604,8 +608,9 @@ if #tArgs > 0 then
 else
     -- "shell"
     -- Print the header
+    
     term.setBackgroundColor(bgColour)
-    term.setTextColour(colors.magenta)
+    term.setTextColor(accentColor)
     term.setCursorPos(1,1)
     write(os.version())
     term.setCursorPos(1,2)
