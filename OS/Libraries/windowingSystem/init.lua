@@ -18,9 +18,18 @@ return {
 
     create = function()
         local token = createToken()
-        local index = table.maxn(db.getColumn("RunningApps", "token")) + 1
- 
-        basalt.debug(index)
+        local tokens = db.getColumn("RunningApps", "token")
+        local index
+        if tokens == nil then
+            index = 1
+        else
+            index = #tokens+1
+        end
+        if index == nil then
+            index = 1
+        end
+
+        db.setDir("/UwUntuCC/OS/Data/")
         db.setValue("RunningApps", "token", token, index)
         db.setValue("RunningApps", "hidden", "false", index)
         local frame = p3:addFrame()
@@ -109,10 +118,25 @@ return {
                 else
                     program:execute(path, args)
                 end
+                db.setValue("RunningApps", "path", path, index)
+                db.setValue("RunningApps", "icon", fs.getDir(path).."/icon.bimg", index)
+
+                os.queueEvent("updateDock")
+
                 return true
             end, 
 
             close = function(self)
+                
+                local index = db.search("RunningApps", "token", token)
+                    db.removeValue("RunningApps", "hidden", index)
+                    db.removeValue("RunningApps", "icon", index)
+                    db.removeValue("RunningApps", "name", index)
+                    db.removeValue("RunningApps", "path", index)
+                    db.removeValue("RunningApps", "token", index)
+
+                os.queueEvent("updateDock")
+
                 frame:remove()
                 return self
             end,
@@ -151,21 +175,35 @@ return {
         
         end)
 
+        closeButton:onClick(function() 
+            os.queueEvent("updateDock")
+            local index = db.search("RunningApps", "token", token)
+                db.removeValue("RunningApps", "hidden", index)
+                db.removeValue("RunningApps", "icon", index)
+                db.removeValue("RunningApps", "name", index)
+                db.removeValue("RunningApps", "path", index)
+                db.removeValue("RunningApps", "token", index)
+            frame:remove()
+            --basalt.debug("HELLO THERE")
+        end)
+        
+        program:onDone(function()
+            os.queueEvent("updateDock")
+            local index = db.search("RunningApps", "token", token)
+                db.removeValue("RunningApps", "hidden", index)
+                db.removeValue("RunningApps", "icon", index)
+                db.removeValue("RunningApps", "name", index)
+                db.removeValue("RunningApps", "path", index)
+                db.removeValue("RunningApps", "token", index)
+            frame:remove()
+        end)
+        
         return instance
 
     end,
 
     setup = function()
-        db.setDir("UwUntuCC/OS/Data")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/name.json")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/path.json")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/hidden.json")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/token.json")
-
-        db.addColumn("RunningApps", "name")
-        db.addColumn("RunningApps", "path")
-        db.addColumn("RunningApps", "hidden")
-        db.addColumn("RunningApps", "token")
+        
     end,
 
     getWindow = function(token)

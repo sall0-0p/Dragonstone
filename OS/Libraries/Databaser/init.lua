@@ -1,6 +1,7 @@
 
 -- Change this if you want to set custom directory for saving local Databases
 local directory = "UwUntuCC/OS/Data/"
+local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
 local databaser = {}
 
@@ -158,15 +159,20 @@ databaser = {
         for _, col in pairs(columns) do
             local file = fs.open(directory.."/"..name.."/"..columns[n], "r")
             local info = file.readAll()
-
-            if file == nil then
-                error("Column "..columns[n].." is empty or do not have data for this request.")
+            if info == nil or info == "" then
+                file.close()
+                return "FAILED"
+            else
+                if file == nil then
+                    file.close()
+                    return "FAILED"
+                end
+                
+                info = textutils.unserialise(info)
+                table.insert(data, info[index])
+                file.close()
+                n = n+1
             end
-
-            info = textutils.unserialize(info)
-            table.insert(data, info[index])
-            file.close()
-            n = n+1
         end
 
         local success = true
@@ -218,6 +224,9 @@ databaser = {
         local file = fs.open(directory.."/"..name.."/"..columnName..".json", "r")
         local info = file.readAll()
         info = textutils.unserialize(info)
+        if info == nil then
+            info = {}
+        end
         file.close()
         table.remove(info, index)
         table.insert(info, index, value)
@@ -247,6 +256,10 @@ databaser = {
         local file = fs.open(directory.."/"..name.."/"..columnName..".json", "r")
         local info = file.readAll()
         info = textutils.unserialize(info)
+        if info == nil then 
+            file.close()
+            return "NO DATA FOUND"
+        end
         file.close()
 
         local n = 1

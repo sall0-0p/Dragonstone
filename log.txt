@@ -1,7 +1,7 @@
 {
-  "Store",
-  "Mon Dec 12 17:27:55 2022",
+  "App Store",
+  "Tue Dec 13 21:11:40 2022",
   "Bucket",
   "ComputerCraft 1.100.9 (CraftOS-PC v2.7)",
-  "/UwUntuCC/OS/Libraries/Basalt.lua:2903: attempt to concatenate field 'name' (a function value)",
+  "[string \"UwUntuCC/Apps/Store/Store.lua\"]:15: attempt to index local 'contents' (a nil value)",
 }

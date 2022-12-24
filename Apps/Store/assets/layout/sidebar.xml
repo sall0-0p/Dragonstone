@@ -1,0 +1,36 @@
+<frame id="sidebar" width="parent.w" height="parent.h" bg="gray">
+    <frame id="searchFrame" width="parent.w" height="2" bg="false">
+        <input id="search" width="12" height="1" x="2" bg="black" fg="lightGray" default="Search" />
+        <label id="pane" x="1" bg="black" fg="gray" text="&#149;"/> 
+
+    </frame>
+    <list id="list" width="parent.w-1" height="6" y="3" bg="false" fg="lightGray" selectionFG="white" selectionBG="gray">
+        <item>
+            <text>&#7; Home</text>
+        </item>
+        <item>
+            <text>&#7; Libraries</text>
+        </item>
+        <item>
+            <text>&#7; Games</text>
+        </item>
+        <item>
+            <text>&#7; Apps</text>
+        </item>
+        <item>
+            <text>&#7; Categories</text>
+        </item>
+        <item>
+            <text>&#7; Updates</text>
+        </item>
+    </list>
+
+    <frame id="account" width="parent.w" height="3" y="parent.h-2" bg="gray">
+        <label id="separator" text="&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;"/>
+        
+        <image id="avatar" width="3" height="2" y="2" bg="red"/>
+        <label id="nickname" width="10" height="1" x="5" y="2" bg="false" fg="white" text="Bucket &#3;"/>
+        <label id="tag" width="10" height="1" x="6" y="3" bg="false" fg="lightGray" text="#5412" />
+        
+    </frame>
+</frame>

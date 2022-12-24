@@ -99,12 +99,13 @@ local function makeFavourite(path)
     
 end
 
+local function getPath()
+    local pathItems = {}
 
 
 
 
-
-
+end
 
 --_   _ ___   _ _           _  __ 
 --| | | |_ _| (_) |_ ___ ___| |/ _|
@@ -275,7 +276,6 @@ local fileListFrame = mainFrame:addFrame()
     end)
 
 -- Connecting scrollbar to frame
-
 
 
 
