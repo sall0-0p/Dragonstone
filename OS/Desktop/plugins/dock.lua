@@ -1,20 +1,22 @@
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 local db = require(".UwUntuCC.OS.Libraries.Databaser")
 
-return function(mainFrame, p1, p2, p3, p4, p5) 
 
+return function(mainFrame) 
+
+    local mainFrame = require(".UwUntuCC.OS.Desktop.values")
         local rw, rh = mainFrame:getSize()
-        local trFrame = p2:addFrame()
+        local trFrame = mainFrame:addFrame()
             :setSize(rw, 8)
             :setPosition(1, rh.."-7")
             :setBackground(false)
-            :setZIndex(1)
+            :setZIndex(2)
 
         local duckFrame = trFrame:addFrame()
             :setSize(math.floor(rw/2), 2)
             :setPosition(math.floor(rw/4), 7)
             :setBackground(colors.gray)
-            :setZIndex(2)
+            :setZIndex(3)
 
 
         local objects = {}
@@ -80,6 +82,7 @@ return function(mainFrame, p1, p2, p3, p4, p5)
                     group.name = group.data[3]
                     group.path = group.data[4]
                     group.token = group.data[5]
+                --group.window = win.getWindow(group.token)
                 --basalt.debug("Data about "..v..":\n"..textutils.serialise(group.data))
                 --basalt.debug(group.index)
 
@@ -96,13 +99,13 @@ return function(mainFrame, p1, p2, p3, p4, p5)
                 group.icon = trFrame:addImage()
                     :setSize(3,2)
                     :setPosition(group.w, 6)
-                    :setZIndex(3)
+                    :setZIndex(4)
                     :loadImage(group.iconPath)
 
                 group.label = trFrame:addLabel()
                     :setSize(1,1)
                     :setPosition(group.w.."+1", 8)
-                    :setZIndex(3)
+                    :setZIndex(4)
                     :setForeground(colors.lightGray)
 
                 if runningApps ~= nil then
@@ -136,5 +139,9 @@ return function(mainFrame, p1, p2, p3, p4, p5)
         end)
 
         loadDock()
+
+        local function update()
+        end
+
 
 end

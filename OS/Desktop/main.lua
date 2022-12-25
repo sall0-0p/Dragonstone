@@ -1,7 +1,8 @@
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 local db = require(".UwUntuCC.OS.Libraries.Databaser")
 
-local mainFrame = basalt.createFrame()
+
+local mainFrame = require(".UwUntuCC.OS.Desktop.values")
 
         db.setDir("UwUntuCC/OS/Data")
         fs.delete("UwUntuCC/OS/Data/RunningApps/name.json")
@@ -21,36 +22,36 @@ basalt.debugLabel
     :setSize("parent.w", 1)
     :setForeground(colors.lightGray)
 
-local p1 = mainFrame:addFrame()
-    :setBackground(false)
-    :setSize("parent.w", "parent.h")
+-- local p1 = mainFrame:addFrame()
+--     :setBackground(false)
+--     :setSize("parent.w", "parent.h")
 
-local p2 = mainFrame:addFrame()
-    :setBackground(false)
-    :setSize("parent.w", "parent.h") 
+-- local p2 = mainFrame:addFrame()
+--     :setBackground(false)
+--     :setSize("parent.w", "parent.h") 
 
-local p3 = mainFrame:addFrame()
-    :setBackground(false)
-    :setSize("parent.w", "parent.h")
+-- local p3 = mainFrame:addFrame()
+--     :setBackground(false)
+--     :setSize("parent.w", "parent.h")
 
-local p4 = mainFrame:addFrame()
-    :setBackground(false)
-    :setSize("parent.w", "parent.h")
+-- local p4 = mainFrame:addFrame()
+--     :setBackground(false)
+--     :setSize("parent.w", "parent.h")
 
-local p5 = mainFrame:addFrame()
-    :setBackground(false)
-    :setSize("parent.w", "parent.h")
+-- local p5 = mainFrame:addFrame()
+--     :setBackground(false)
+--     :setSize("parent.w", "parent.h")
 
 for _, v in pairs(fs.list("UwUntuCC/OS/Desktop/plugins")) do
-
     local newPlugin = require(".UwUntuCC.OS.Desktop.plugins."..v:gsub(".lua", ""))
-    newPlugin(mainFrame, p1, p2, p3, p4, p5)
+    newPlugin(mainFrame)
 end
 
 
 
-local function openterminal()
+--local function openterminal()
     local win = require(".UwUntuCC.OS.Libraries.windowingSystem")
+    --os.queueEvent("547485834394884934", win)
     win.setup()
 
 local terminal = win.create()
@@ -64,10 +65,11 @@ local worm = win.create()
     :setResizable()
     :setBar("Worm")
     :run("/UwUntuCC/Apps/Worm/worm.lua")
-end
+--end
 
 local function Update()
     basalt.autoUpdate()
 end
 
-parallel.waitForAll(openterminal, Update)
+Update()
+--parallel.waitForAll(openterminal, Update)

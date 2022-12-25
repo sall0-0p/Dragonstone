@@ -1,7 +1,8 @@
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 
-return function(mainFrame, p1, p2, p3, p4, p5) 
+return function(mainFrame) 
     
+local mainFrame = require(".UwUntuCC.OS.Desktop.values")
 -- TODO: Update on 1.6.4
 --[[
     local desktop = mainFrame:addFrame()
@@ -16,9 +17,10 @@ local useDesktopBG = true
 if useDesktopBG then
     local DesktopImage = "UwUntuCC/OS/DesktopBackgrounds/Desktop3.bimg"
 
-    local DesktopBG = p1:addImage()
+    local DesktopBG = mainFrame:addImage()
         :setSize(rw,rh)
         :setPosition(1,1)
+        :setZIndex(1)
         :loadImage(DesktopImage)
 else
     

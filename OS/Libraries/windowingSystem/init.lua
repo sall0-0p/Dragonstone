@@ -1,8 +1,15 @@
 local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 local db = require(".UwUntuCC.OS.Libraries.Databaser")
-os.queueEvent("8495532365")
 
-local event, mainFrame, p1, p2, p3, p4, p5 = os.pullEvent("6771818008")
+-- os.queueEvent("8495532365")
+
+-- local event, mainFrame, p1, p2, p3, p4, p5 = os.pullEvent("6771818008")
+
+-- --local event, win = os.pullEvent("547485834394884934")
+
+
+local mainFrame, p1, p2, p3, p4, p5 = require(".UwUntuCC.OS.Desktop.values")
+
 
 local function createToken()
     return math.random(1000000, 9999999)
@@ -12,9 +19,10 @@ local function centerText(obj)
     obj:setPosition("parent.w / 2 -"..obj:getSize().."/2", 1)
 end
 
+local win = {}
 local windows = {}
 
-return {
+win =  {
 
     create = function()
         local token = createToken()
@@ -32,13 +40,14 @@ return {
         db.setDir("/UwUntuCC/OS/Data/")
         db.setValue("RunningApps", "token", token, index)
         db.setValue("RunningApps", "hidden", "false", index)
-        local frame = p3:addFrame()
+        local frame = mainFrame:addFrame()
             :setSize(53,21)
             :setMovable()
             :setPosition(5,5)
-        local bar = frame:addFrame()
-            :setSize(53,1)
-        local label = bar:addLabel()
+            :setZIndex(10)
+        -- local bar = frame:addFrame()
+        --     :setSize(53,1)
+        local label = frame:addLabel()
             :setPosition(22, 1)
             :setText("Window")
             :setForeground(colors.lightGray)
@@ -46,7 +55,7 @@ return {
         local program = frame:addProgram()
             :setSize(51,19)
             :setPosition(2,2)
-        local buttons = bar:addFrame()
+        local buttons = frame:addFrame()
             :setSize(5,1)
             :setPosition(2,1)
             :setBackground(false)
@@ -186,7 +195,7 @@ return {
             frame:remove()
             --basalt.debug("HELLO THERE")
         end)
-        
+
         program:onDone(function()
             os.queueEvent("updateDock")
             local index = db.search("RunningApps", "token", token)
@@ -203,11 +212,13 @@ return {
     end,
 
     setup = function()
-        
+    
     end,
 
     getWindow = function(token)
-        
+        return windows[token]
     end,
 
 }
+
+return win
