@@ -22,6 +22,12 @@ if useDesktopBG then
         :setPosition(1,1)
         :setZIndex(1)
         :loadImage(DesktopImage)
+
+    local DesktopBG = mainFrame:addFrame()
+        :setSize(rw, rh)
+        :setPosition(1,1)
+        :setZIndex(1)
+        :setTexture(DesktopImage, "stretch")
 else
     
     local DesktopColor = colors.lightGray
@@ -29,6 +35,17 @@ else
 
 end
 
+
+mainFrame:onResize(function() 
+    basalt.debug("RESIZED")
+    local rw, rh = mainFrame:getSize()
+
+    DesktopBG
+        :setSize(rw, rh)
+        :setTexture(DesktopImage, "stretch")
+
+
+end)
 
 
 end
