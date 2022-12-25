@@ -3,9 +3,9 @@ local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 return function(mainFrame)
     local rw, rh = mainFrame:getSize()
 
-    local screensaver = "UwUntuCC/test.lua"--"/UwUntuCC/OS/SystemApps/Screensavers/fireworks.lua"
+    local screensaver = "/UwUntuCC/OS/SystemApps/Screensavers/fireworks.lua"
     local useScreensaver = true
-    local ScreenSaverTimeOut = 600
+    local ScreenSaverTimeOut = 10
     local function launchScreensaver()
 
         local mainFrame = require(".UwUntuCC.OS.Desktop.values")
