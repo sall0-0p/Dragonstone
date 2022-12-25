@@ -3,7 +3,7 @@ local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
 return function(mainFrame)
     local rw, rh = mainFrame:getSize()
 
-    local screensaver = "UwUntuCC/OS/SystemApps/ScreenSavers/fireworks.lua"
+    local screensaver = "UwUntuCC/test.lua"--"/UwUntuCC/OS/SystemApps/Screensavers/fireworks.lua"
     local useScreensaver = true
     local ScreenSaverTimeOut = 600
     local function launchScreensaver()
@@ -16,8 +16,9 @@ return function(mainFrame)
             :setSize(rw,rh)
             :setFocus()
             :execute(screensaver)
-            :setZIndex(100)
+            :setZIndex(15)
         --desktop:hide()
+        basalt.debug(ScreensaverProgram:getStatus())
         
         mainFrame:onClick(function()
             ScreensaverProgram:remove()

@@ -63,10 +63,11 @@ return function(mainFrame)
                 group.body = desc
                 group.title = title
 
-                group.frame = p5:addFrame()
+                group.frame = mainFrame:addFrame()
                     :setSize(31,6)
                     :setPosition(rw.."-31", 3)
                     :setBackground(colors.gray)
+                    :setZIndex(20)
                 group.titleL = group.frame:addLabel()
                     :setPosition(3,2)
                     :setText(title)
