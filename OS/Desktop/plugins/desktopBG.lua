@@ -1,8 +1,8 @@
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 
 return function(mainFrame) 
     
-local mainFrame = require(".UwUntuCC.OS.Desktop.values")
+local mainFrame = require(".Dragonstone.OS.Desktop.values")
 -- TODO: Update on 1.6.4
 --[[
     local desktop = mainFrame:addFrame()
@@ -13,17 +13,17 @@ local mainFrame = require(".UwUntuCC.OS.Desktop.values")
 local rw, rh = mainFrame:getSize()
 
 local useDesktopBG = true
-
+local DesktopBG
 if useDesktopBG then
-    local DesktopImage = "UwUntuCC/OS/DesktopBackgrounds/Desktop3.bimg"
+    local DesktopImage = "Dragonstone/OS/DesktopBackgrounds/Desktop3.bimg"
 
-    local DesktopBG = mainFrame:addImage()
+    --[[local DesktopBG = mainFrame:addImage()
         :setSize(rw,rh)
         :setPosition(1,1)
         :setZIndex(1)
-        :loadImage(DesktopImage)
+        :loadImage(DesktopImage)]]
 
-    local DesktopBG = mainFrame:addFrame()
+    DesktopBG = mainFrame:addFrame()
         :setSize(rw, rh)
         :setPosition(1,1)
         :setZIndex(1)
@@ -36,12 +36,10 @@ else
 end
 
 
-mainFrame:onResize(function() 
-    basalt.debug("RESIZED")
-    local rw, rh = mainFrame:getSize()
+mainFrame:onResize(self, function() 
 
     DesktopBG
-        :setSize(rw, rh)
+        :setSize("parent.w", "parent.h")
         :setTexture(DesktopImage, "stretch")
 
 

@@ -37,12 +37,12 @@ local licenseScreen = mainFrame:addFrame()
     :setPosition(6,6)
     :setBackground(colors.gray)
 
-    --[[local request = http.get("https://raw.githubusercontent.com/sall0-0p/UwUntuCC/master/LICENSE")
+    --[[local request = http.get("https://raw.githubusercontent.com/sall0-0p/Dragonstone/master/LICENSE")
     local License = request.readAll()
     request.close()]]
 
     License = [[
-        Copyright 2022 UwUntuCC 
+        Copyright 2022 Dragonstone 
         -------------------
         Permission is hereby granted, free of charge, 
         to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -122,12 +122,12 @@ local licenseScreen = mainFrame:addFrame()
         end)
 
 NextButton:onClick(function()
-    local request = http.get("https://raw.githubusercontent.com/sall0-0p/UwUntuCC/master/UwU.lua")
+    local request = http.get("https://raw.githubusercontent.com/sall0-0p/Dragonstone/master/UwU.lua")
     
     basalt.stop()
     term.clear()
     term.setCursorPos(1,1)
-    shell.run("wget", "https://raw.githubusercontent.com/sall0-0p/UwUntuCC/master/UwU.lua")
+    shell.run("wget", "https://raw.githubusercontent.com/sall0-0p/Dragonstone/master/UwU.lua")
 
     shell.run("UwU.lua")
 

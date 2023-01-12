@@ -1,7 +1,7 @@
 
 -- Change this if you want to set custom directory for saving local Databases
-local directory = "UwUntuCC/OS/Data/"
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+local directory = "Dragonstone/OS/Data/"
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 
 local databaser = {}
 

@@ -1,7 +1,7 @@
 local service = {}
-local db = require(".UwUntuCC.OS.Libraries.Databaser")
+local db = require(".Dragonstone.OS.Libraries.Databaser")
 
-db.setDir("UwUntuCC/OS/Libraries/ExtensionsService/DB/")
+db.setDir("Dragonstone/OS/Libraries/ExtensionsService/DB/")
 
 local extensions = {
     ".mid",

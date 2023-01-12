@@ -1,24 +1,26 @@
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 
 return function(mainFrame)
     local rw, rh = mainFrame:getSize()
 
-    local screensaver = "/UwUntuCC/OS/SystemApps/Screensavers/fireworks.lua"
+    local screensaver = "/Dragonstone/OS/SystemApps/Screensavers/fireworks.lua"
     local useScreensaver = true
-    local ScreenSaverTimeOut = 10
+    local ScreenSaverTimeOut = 600
     local function launchScreensaver()
 
-        local mainFrame = require(".UwUntuCC.OS.Desktop.values")
+        local mainFrame = require(".Dragonstone.OS.Desktop.values")
         shell.setDir(":")
+        
         basalt.debugLabel
             :setBackground(colors.black)
         local ScreensaverProgram = mainFrame:addProgram()
             :setSize(rw,rh)
+            :setZIndex(15)
             :setFocus()
             :execute(screensaver)
-            :setZIndex(15)
+            
         --desktop:hide()
-        basalt.debug(ScreensaverProgram:getStatus())
+        --basalt.debug(ScreensaverProgram:getStatus())
         
         mainFrame:onClick(function()
             ScreensaverProgram:remove()

@@ -1,5 +1,5 @@
 <frame id="homePage" width="parent.w" height="parent.h" bg="lightGray">
-    <frame id="sidebar" width="15" height="parent.h" layout="/UwUntuCC/Apps/Store/assets/layout/sidebar.xml" />
+    <frame id="sidebar" width="15" height="parent.h" layout="/Dragonstone/Apps/Store/assets/layout/sidebar.xml" />
     <frame id="header" width="parent.w-14" height="2" x="16" bg="gray">
 
     </frame>

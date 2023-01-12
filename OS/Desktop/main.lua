@@ -1,15 +1,15 @@
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
-local db = require(".UwUntuCC.OS.Libraries.Databaser")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
+local db = require(".Dragonstone.OS.Libraries.Databaser")
 
 
-local mainFrame = require(".UwUntuCC.OS.Desktop.values")
+local mainFrame = require(".Dragonstone.OS.Desktop.values")
 
-        db.setDir("UwUntuCC/OS/Data")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/name.json")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/path.json")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/hidden.json")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/token.json")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/icon.json")
+        db.setDir("Dragonstone/OS/Data")
+        fs.delete("Dragonstone/OS/Data/RunningApps/name.json")
+        fs.delete("Dragonstone/OS/Data/RunningApps/path.json")
+        fs.delete("Dragonstone/OS/Data/RunningApps/hidden.json")
+        fs.delete("Dragonstone/OS/Data/RunningApps/token.json")
+        fs.delete("Dragonstone/OS/Data/RunningApps/icon.json")
 
         db.addColumn("RunningApps", "name")
         db.addColumn("RunningApps", "path")
@@ -42,15 +42,15 @@ basalt.debugLabel
 --     :setBackground(false)
 --     :setSize("parent.w", "parent.h")
 
-for _, v in pairs(fs.list("UwUntuCC/OS/Desktop/plugins")) do
-    local newPlugin = require(".UwUntuCC.OS.Desktop.plugins."..v:gsub(".lua", ""))
+for _, v in pairs(fs.list("Dragonstone/OS/Desktop/plugins")) do
+    local newPlugin = require(".Dragonstone.OS.Desktop.plugins."..v:gsub(".lua", ""))
     newPlugin(mainFrame)
 end
 
 
 
 --local function openterminal()
-    local win = require(".UwUntuCC.OS.Libraries.windowingSystem")
+    local win = require(".Dragonstone.OS.Libraries.windowingSystem")
     --os.queueEvent("547485834394884934", win)
     win.setup()
 
@@ -58,13 +58,13 @@ local terminal = win.create()
     :setSize(51,19)
     :setResizable()
     :setBar("Terminal")
-    :run("/UwUntuCC/Apps/Terminal/Terminal.lua")
+    :run("/Dragonstone/Apps/Terminal/Terminal.lua")
 
 local worm = win.create()
     :setSize(51,19)
     :setResizable()
     :setBar("Worm")
-    :run("/UwUntuCC/Apps/Worm/worm.lua")
+    :run("/Dragonstone/Apps/Worm/worm.lua")
 --end
 
 local function Update()

@@ -1,8 +1,8 @@
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 
 return function(mainFrame)
 
-    local mainFrame = require(".UwUntuCC.OS.Desktop.values")
+    local mainFrame = require(".Dragonstone.OS.Desktop.values")
     local rw, rh = mainFrame:getSize()
     local currentNotif = {}
 
@@ -101,7 +101,7 @@ return function(mainFrame)
                         end)
                 elseif button1Event and button2Event ~= nil then
                     group.allow = group.frame:addImage()
-                        :loadImage("UwUntuCC/OS/Icons/okay.bimg")
+                        :loadImage("Dragonstone/OS/Icons/okay.bimg")
                         :setPosition(24,4)
                         :setSize(3,2)
                         :onClick(function()
@@ -109,7 +109,7 @@ return function(mainFrame)
                         end)
                     
                     group.reject = group.frame:addImage()
-                        :loadImage("UwUntuCC/OS/Icons/okay.bimg")
+                        :loadImage("Dragonstone/OS/Icons/okay.bimg")
                         :setPosition(28,4)
                         :setSize(3,2)
                         :onClick(function()

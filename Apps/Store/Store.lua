@@ -1,6 +1,6 @@
 
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
-local dir = "/UwUntuCC/Apps/Store"
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
+local dir = "/Dragonstone/Apps/Store"
 local accentColor = settings.get("uwuntucc.accent_color")
 
 local mainFrame = basalt.createFrame()

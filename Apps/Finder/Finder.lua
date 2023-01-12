@@ -5,15 +5,15 @@
 --|___/\__,_/__/_\__| 
 
 -- This is file management App. You can use it :D
--- It based on Basalt Library (all OS based on it) and other self-made libs that could be found in "/UwUntuCC/OS/Libraries", also I recommend you installing your libraries there too.
+-- It based on Basalt Library (all OS based on it) and other self-made libs that could be found in "/Dragonstone/OS/Libraries", also I recommend you installing your libraries there too.
 -- Basalt wiki: https://basalt.madefor.cc/#/objects/Object
 -- Basalt github: https://github.com/Pyroxenium/Basalt
 
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt") -- importing Basalt file into our document.
-local db = require(".UwUntuCC.OS.Libraries.Databaser") -- importing database management API that included with UwUntu.
-local fss = require(".UwUntuCC.OS.Libraries.FileSystem")
-local ext = require(".UwUntuCC.OS.Libraries.ExtensionsService")
-local search = require(".UwUntuCC.OS.Libraries.SearchEngine")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt") -- importing Basalt file into our document.
+local db = require(".Dragonstone.OS.Libraries.Databaser") -- importing database management API that included with UwUntu.
+local fss = require(".Dragonstone.OS.Libraries.FileSystem")
+local ext = require(".Dragonstone.OS.Libraries.ExtensionsService")
+local search = require(".Dragonstone.OS.Libraries.SearchEngine")
 
 local accentColor = settings.get("uwuntucc.accent_color")
 -- getting platform where user launches UwU
@@ -26,14 +26,14 @@ local mainFrame = basalt.createFrame()
 local args = { ... }
 
 -- this value is directory the user is currently in. By default it is root directory of computer. Or the first argument of a launch command can be used.
-local Directory = "UwUntuCC/OS/Libraries"
+local Directory = "Dragonstone/OS/Libraries"
 
 if args[1] ~= nil then
     Directory = args[1]
 end
 
 -- "Path" is shown on top of the UI and is quite good value to use in future. You will get something like this:
--- "/UwUntuCC/Apps/Finder"
+-- "/Dragonstone/Apps/Finder"
 local Path = "/"..fs.getName(fs.getDir(Directory)).."/"..fs.getName(Directory)
 
 -- This values are config. They will be needed in future.
@@ -57,7 +57,7 @@ table.insert(history, Directory)
 
 -- Setting up some databases;
 
-    db.setDir("/UwUntuCC/Apps/Fimber/Data")
+    db.setDir("/Dragonstone/Apps/Fimber/Data")
 
 --___             _   _             
 --| __|  _ _ _  __| |_(_)___ _ _  ___

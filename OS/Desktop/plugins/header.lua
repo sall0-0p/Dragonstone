@@ -1,8 +1,8 @@
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 
 return function(mainFrame)
     
-local mainFrame = require(".UwUntuCC.OS.Desktop.values")
+local mainFrame = require(".Dragonstone.OS.Desktop.values")
 local TimeFormat = true
 local TimeType = "local"
 local rw, rh = mainFrame:getSize()
@@ -34,14 +34,14 @@ local header = mainFrame:addFrame()
         :setBackground(false)
         :setText("")
         :setForeground(colors.white)
-        :setSize(15,1)
+        :setSize(16,1)
     
     local function RunClock()
         while true do
             local rw, rh = mainFrame:getSize()
             local time = os.time("local")
             day = os.date("%a %d %b")
-            local clockWidth = rw - clock:getSize() - 1
+            local clockWidth = rw - clock:getSize()
             clock:setPosition(clockWidth,1)
             clock:setText(day.." "..textutils.formatTime(time, TimeFormat))
             sleep(5)

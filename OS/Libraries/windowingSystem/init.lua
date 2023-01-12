@@ -1,14 +1,8 @@
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
-local db = require(".UwUntuCC.OS.Libraries.Databaser")
-
--- os.queueEvent("8495532365")
-
--- local event, mainFrame, p1, p2, p3, p4, p5 = os.pullEvent("6771818008")
-
--- --local event, win = os.pullEvent("547485834394884934")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
+local db = require(".Dragonstone.OS.Libraries.Databaser")
 
 
-local mainFrame, p1, p2, p3, p4, p5 = require(".UwUntuCC.OS.Desktop.values")
+local mainFrame, p1, p2, p3, p4, p5 = require(".Dragonstone.OS.Desktop.values")
 
 
 local function createToken()
@@ -22,12 +16,16 @@ end
 local win = {}
 local windows = {}
 
+local hideAnimation = mainFrame:addAnimation()
+local showAnimation = mainFrame:addAnimation()
+
 win =  {
 
     create = function()
         local token = createToken()
         local tokens = db.getColumn("RunningApps", "token")
         local index
+        local fullscre = "false"
         if tokens == nil then
             index = 1
         else
@@ -37,7 +35,7 @@ win =  {
             index = 1
         end
 
-        db.setDir("/UwUntuCC/OS/Data/")
+        db.setDir("/Dragonstone/OS/Data/")
         db.setValue("RunningApps", "token", token, index)
         db.setValue("RunningApps", "hidden", "false", index)
         local frame = mainFrame:addFrame()
@@ -74,7 +72,7 @@ win =  {
                 :setForeground(colors.lightGray)
                 :setText("\7")
 
-            local fullScreenButton = buttons:addButton()
+            local fullscreenButton = buttons:addButton()
                 :setSize(1,1)
                 :setPosition(5,1)
                 :setBackground(false)
@@ -150,21 +148,60 @@ win =  {
                 return self
             end,
 
-            hide = function(self)
-                -- function to hide window
+            hideWindow = function(self)
+                local rw, rh = mainFrame:getSize()
+                label:hide()
+                buttons:hide()
+                resizableButton:hide()
+                hideAnimation
+                    :setObject(frame)
+                    :move(rw+1, rh+1, 1)
+                    :size(3, 3, 1)
+                    :play()
                 return self
             end,
 
-            show = function(self)
+            showWindow = function(self)
+                label:show()
+                buttons:show()
+                resizableButton:show()
+                fullscre = "false"
+                frame:setMovable(true)
+                showAnimation
+                    :setObject(frame)
+                    :move(5, 5, 1)
+                    :size(53, 21, 1)
+                    :setObject(program)
+                    :size(51, 19, 1)
+                    :setObject(buttons)
+                    :move(2, 1, 1)
+                    :play()
                 return self
-
             end,
 
             fullscreen = function(self)
-
+                local rw, rh = mainFrame:getSize()
+                resizableButton:hide()
+                frame:setMovable(false)
+                fullscre = "true"
+                showAnimation
+                    :setObject(frame)
+                    :move(0, 2, 1)
+                    :size(rw+1, rh-1, 1)
+                    :setObject(program)
+                    :size(rw, rh, 1)
+                    :setObject(buttons)
+                    :move(3, 1, 1)
+                    :play()
                 return self
             end,
         }
+
+        table.insert(instance, frame)
+        table.insert(instance, label)
+        table.insert(instance, program)
+        table.insert(instance, program)
+        table.insert(instance, fullscre)
         windows[token] = instance
 
         frame:onGetFocus(function() 
@@ -172,7 +209,7 @@ win =  {
             label:setForeground(colors.white)
             closeButton:setForeground(colors.red)
             hideButton:setForeground(colors.orange)
-            fullScreenButton:setForeground(colors.lime)
+            fullscreenButton:setForeground(colors.lime)
         end)
 
         frame:onLoseFocus(function()
@@ -180,7 +217,7 @@ win =  {
             label:setForeground(colors.lightGray)
             closeButton:setForeground(colors.lightGray)
             hideButton:setForeground(colors.lightGray)
-            fullScreenButton:setForeground(colors.lightGray)
+            fullscreenButton:setForeground(colors.lightGray)
         
         end)
 
@@ -194,6 +231,30 @@ win =  {
                 db.removeValue("RunningApps", "token", index)
             frame:remove()
             --basalt.debug("HELLO THERE")
+        end)
+
+        hideButton:onClick(function() 
+            instance.hideWindow()
+            mainFrame:addThread():start(function() 
+                sleep(2)
+                instance.showWindow()
+            end)
+            
+        
+        end)
+
+        fullscreenButton:onClick(function()
+            if fullscre == "false" then
+                instance.fullscreen()
+                -- mainFrame:addThread():start(function() 
+                --     sleep(5)
+                --     instance.showWindow()
+                -- end)
+                instance.fullscre = "true"
+            else
+                instance.showWindow()
+                instance.fullscre = "false"
+            end
         end)
 
         program:onDone(function()

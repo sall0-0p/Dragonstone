@@ -1,10 +1,10 @@
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
-local db = require(".UwUntuCC.OS.Libraries.Databaser")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
+local db = require(".Dragonstone.OS.Libraries.Databaser")
 
 
 return function(mainFrame) 
 
-    local mainFrame = require(".UwUntuCC.OS.Desktop.values")
+    local mainFrame = require(".Dragonstone.OS.Desktop.values")
         local rw, rh = mainFrame:getSize()
         local trFrame = mainFrame:addFrame()
             :setSize(rw, 8)
@@ -32,11 +32,11 @@ return function(mainFrame)
             local dx, dy = duckFrame:getAbsolutePosition()
             local dw, dy = duckFrame:getSize()
             local rw, rh = mainFrame:getSize()
-            local runningApps = db.getColumn("RunningApps", "path")
+            local runningApps = db.getColumn("RunningApps", "token")
 
             local pinnedApps = 
             {
-                "UwUntuCC/Apps/Finder/Finder.lua",
+                "Dragonstone/Apps/Finder/Finder.lua",
 
             }
             local defaultIcons = {}
@@ -76,24 +76,24 @@ return function(mainFrame)
             for i,v in pairs(apps) do
                 local group = {}
                 group.running = false
-                group.index = db.search("RunningApps", "path", v)
+                group.index = db.search("RunningApps", "token", v)
                 group.data = db.getData("RunningApps", group.index)
                     group.hidden = group.data[1]
                     group.name = group.data[3]
                     group.path = group.data[4]
                     group.token = group.data[5]
-                --group.window = win.getWindow(group.token)
-                --basalt.debug("Data about "..v..":\n"..textutils.serialise(group.data))
-                --basalt.debug(group.index)
 
-                --basalt.debug(v)
-                --basalt.debug(fs.getDir(v).."/icon.bimg")
-                if fs.exists(fs.getDir(v).."/icon.bimg") then
-                    group.iconPath = fs.getDir(v).."/icon.bimg"
+
+                if type(group.path) == "string" then
+                    if fs.exists(fs.getDir(group.path).."/icon.bimg") then
+                        group.iconPath = fs.getDir(group.path).."/icon.bimg"
+                    else
+                        group.iconPath = "Dragonstone/OS/Icons/app.bimg"
+                    end
                 else
-                    group.iconPath = "UwUntuCC/OS/Icons/app.bimg"
+                    group.iconPath = "Dragonstone/OS/Icons/app.bimg"
                 end
-                
+
                 group.w = math.floor(1 + i * 4 - 4 + rw/4)
                 
                 group.icon = trFrame:addImage()
@@ -139,9 +139,5 @@ return function(mainFrame)
         end)
 
         loadDock()
-
-        local function update()
-        end
-
-
+        
 end
