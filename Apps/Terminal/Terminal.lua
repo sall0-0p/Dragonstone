@@ -23,8 +23,8 @@ shell.setDir(":")
 
 local version
 
-if fs.exists("UwUntuCC/OS/Version.md") then
-    local file = fs.open("UwUntuCC/OS/Version.md", "r")
+if fs.exists("Dragonstone/OS/Version.md") then
+    local file = fs.open("Dragonstone/OS/Version.md", "r")
         version = file.readAll()
         file.close()
 end

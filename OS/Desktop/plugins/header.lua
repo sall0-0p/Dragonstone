@@ -1,22 +1,25 @@
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 
-return function(mainFrame, p1, p2, p3, p4, p5)
+return function(mainFrame)
     
+local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
 local TimeFormat = true
 local TimeType = "local"
 local rw, rh = mainFrame:getSize()
 
 
 
-local header = p2:addFrame()
+local header = mainFrame:addFrame()
     :setSize(rw,1)
     :setPosition(1,1)
     :setBackground(colors.gray)
+    :setZIndex(2)
 
-    local headerPanel1 = p2:addFrame()
+    local headerPanel1 = mainFrame:addFrame()
         :setSize(rw,1)
         :setPosition(1,2)
         :setBackground(false, "\131", colors.gray)
+        :setZIndex(2)
 
     
     
@@ -31,14 +34,14 @@ local header = p2:addFrame()
         :setBackground(false)
         :setText("")
         :setForeground(colors.white)
-        :setSize(15,1)
+        :setSize(16,1)
     
     local function RunClock()
         while true do
             local rw, rh = mainFrame:getSize()
             local time = os.time("local")
             day = os.date("%a %d %b")
-            local clockWidth = rw - clock:getSize() - 1
+            local clockWidth = rw - clock:getSize()
             clock:setPosition(clockWidth,1)
             clock:setText(day.." "..textutils.formatTime(time, TimeFormat))
             sleep(5)

@@ -1,6 +1,8 @@
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 
-return function(mainFrame, p1, p2, p3, p4, p5)
+return function(mainFrame)
+
+    local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
     local rw, rh = mainFrame:getSize()
     local currentNotif = {}
 
@@ -61,10 +63,11 @@ return function(mainFrame, p1, p2, p3, p4, p5)
                 group.body = desc
                 group.title = title
 
-                group.frame = p5:addFrame()
+                group.frame = mainFrame:addFrame()
                     :setSize(31,6)
                     :setPosition(rw.."-31", 3)
                     :setBackground(colors.gray)
+                    :setZIndex(20)
                 group.titleL = group.frame:addLabel()
                     :setPosition(3,2)
                     :setText(title)
@@ -98,7 +101,7 @@ return function(mainFrame, p1, p2, p3, p4, p5)
                         end)
                 elseif button1Event and button2Event ~= nil then
                     group.allow = group.frame:addImage()
-                        :loadImage("UwUntuCC/OS/Icons/okay.bimg")
+                        :loadImage("Dragonstone/OS/Icons/okay.bimg")
                         :setPosition(24,4)
                         :setSize(3,2)
                         :onClick(function()
@@ -106,7 +109,7 @@ return function(mainFrame, p1, p2, p3, p4, p5)
                         end)
                     
                     group.reject = group.frame:addImage()
-                        :loadImage("UwUntuCC/OS/Icons/okay.bimg")
+                        :loadImage("Dragonstone/OS/Icons/okay.bimg")
                         :setPosition(28,4)
                         :setSize(3,2)
                         :onClick(function()

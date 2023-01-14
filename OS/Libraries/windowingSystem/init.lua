@@ -1,8 +1,9 @@
-local basalt = require(".UwUntuCC.OS.Libraries.Basalt")
-local db = require(".UwUntuCC.OS.Libraries.Databaser")
-os.queueEvent("8495532365")
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
+local db = require(".Dragonstone.OS.Libraries.Databaser")
 
-local event, mainFrame, p1, p2, p3, p4, p5 = os.pullEvent("6771818008")
+
+local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
+
 
 local function createToken()
     return math.random(1000000, 9999999)
@@ -12,24 +13,39 @@ local function centerText(obj)
     obj:setPosition("parent.w / 2 -"..obj:getSize().."/2", 1)
 end
 
+local win = {}
 local windows = {}
 
-return {
+win =  {
 
     create = function()
+        local winX, winY = math.random(3, 40), math.random(5, 25)
         local token = createToken()
-        local index = table.maxn(db.getColumn("RunningApps", "token")) + 1
- 
-        basalt.debug(index)
+        local tokens = db.getColumn("RunningApps", "token")
+        local index
+        local fullscre = "false"
+        if tokens == nil then
+            index = 1
+        else
+            index = #tokens+1
+        end
+        if index == nil then
+            index = 1
+        end
+
+        db.setDir("/Dragonstone/OS/Data/")
         db.setValue("RunningApps", "token", token, index)
         db.setValue("RunningApps", "hidden", "false", index)
-        local frame = p3:addFrame()
+        local frame = mainFrame:addFrame()
             :setSize(53,21)
             :setMovable()
-            :setPosition(5,5)
-        local bar = frame:addFrame()
-            :setSize(53,1)
-        local label = bar:addLabel()
+            :setPosition(math.random(3, 40), math.random(5, 25))
+            :setZIndex(10)
+            local hideAnimation = mainFrame:addAnimation()
+            local showAnimation = mainFrame:addAnimation()
+        -- local bar = frame:addFrame()
+        --     :setSize(53,1)
+        local label = frame:addLabel()
             :setPosition(22, 1)
             :setText("Window")
             :setForeground(colors.lightGray)
@@ -37,7 +53,7 @@ return {
         local program = frame:addProgram()
             :setSize(51,19)
             :setPosition(2,2)
-        local buttons = bar:addFrame()
+        local buttons = frame:addFrame()
             :setSize(5,1)
             :setPosition(2,1)
             :setBackground(false)
@@ -56,14 +72,14 @@ return {
                 :setForeground(colors.lightGray)
                 :setText("\7")
 
-            local fullScreenButton = buttons:addButton()
+            local fullscreenButton = buttons:addButton()
                 :setSize(1,1)
                 :setPosition(5,1)
                 :setBackground(false)
                 :setForeground(colors.lightGray)
                 :setText("\7")
         
-            local resizableButton
+            local resizableButton = frame:addButton():hide()
 
         local minW = minW or 4
         local minH = minH or 4
@@ -84,7 +100,7 @@ return {
 
             setResizable = function(self)
                 if(resizableButton==nil)then
-                    resizableButton = frame:addButton()
+                    resizableButton = frame:addButton():hide()
                         :setSize(1,1)
                         :setPosition("parent.w", "parent.h")
                         :setText("/")
@@ -109,29 +125,99 @@ return {
                 else
                     program:execute(path, args)
                 end
+                db.setValue("RunningApps", "path", path, index)
+                db.setValue("RunningApps", "icon", fs.getDir(path).."/icon.bimg", index)
+
+                os.queueEvent("updateDock")
+
                 return true
             end, 
 
             close = function(self)
+                
+                local index = db.search("RunningApps", "token", token)
+                    db.removeValue("RunningApps", "hidden", index)
+                    db.removeValue("RunningApps", "icon", index)
+                    db.removeValue("RunningApps", "name", index)
+                    db.removeValue("RunningApps", "path", index)
+                    db.removeValue("RunningApps", "token", index)
+
+                os.queueEvent("updateDock")
+
                 frame:remove()
                 return self
             end,
 
-            hide = function(self)
-                -- function to hide window
+            hideWindow = function(self)
+                local rw, rh = mainFrame:getSize()
+                label:hide()
+                buttons:hide()
+                resizableButton:hide()
+                winX, winY = frame:getPosition()
+                hideAnimation
+                    :clear()
+                    :setObject(frame)
+                    :move(rw+1, rh+1, 1)
+                    :size(3, 3, 1)
+                    :play()
+
+                local index = db.search("RunningApps", "token", token)
+                db.setValue("RunningApps", "hidden", "true", index)
+                os.queueEvent("updateDock")
                 return self
             end,
 
-            show = function(self)
-                return self
+            showWindow = function(self)
+                label:show()
+                buttons:show()
+                resizableButton:hide()
+                fullscre = "false"
+                frame:setMovable(true)
+                showAnimation
+                    :clear()
+                    :setObject(frame)
+                    :move(winX, winY, 1)
+                    :size(53, 21, 1)
+                    :setObject(program)
+                    :size(51, 19, 1)
+                    :setObject(buttons)
+                    :move(2, 1, 1)
+                    :play()
 
+                local index = db.search("RunningApps", "token", token)
+                db.setValue("RunningApps", "hidden", "false", index)
+                os.queueEvent("updateDock")
+                return self
             end,
 
             fullscreen = function(self)
-
+                local rw, rh = mainFrame:getSize()
+                resizableButton:hide()
+                frame:setMovable(false)
+                fullscre = "true"
+                showAnimation
+                    :clear()
+                    :setObject(frame)
+                    :move(0, 2, 1)
+                    :size(rw+1, rh-1, 1)
+                    :setObject(program)
+                    :size(rw, rh, 1)
+                    :setObject(buttons)
+                    :move(3, 1, 1)
+                    :play()
                 return self
             end,
+
+            focus = function(self)
+                frame:setFocus()
+            end,
         }
+
+        table.insert(instance, frame)
+        table.insert(instance, label)
+        table.insert(instance, program)
+        table.insert(instance, program)
+        table.insert(instance, fullscre)
         windows[token] = instance
 
         frame:onGetFocus(function() 
@@ -139,7 +225,7 @@ return {
             label:setForeground(colors.white)
             closeButton:setForeground(colors.red)
             hideButton:setForeground(colors.orange)
-            fullScreenButton:setForeground(colors.lime)
+            fullscreenButton:setForeground(colors.lime)
         end)
 
         frame:onLoseFocus(function()
@@ -147,29 +233,59 @@ return {
             label:setForeground(colors.lightGray)
             closeButton:setForeground(colors.lightGray)
             hideButton:setForeground(colors.lightGray)
-            fullScreenButton:setForeground(colors.lightGray)
+            fullscreenButton:setForeground(colors.lightGray)
         
         end)
 
+        closeButton:onClick(function() 
+            os.queueEvent("updateDock")
+            local index = db.search("RunningApps", "token", token)
+                db.removeValue("RunningApps", "hidden", index)
+                db.removeValue("RunningApps", "icon", index)
+                db.removeValue("RunningApps", "name", index)
+                db.removeValue("RunningApps", "path", index)
+                db.removeValue("RunningApps", "token", index)
+            frame:remove()
+            --basalt.debug("HELLO THERE")
+        end)
+
+        hideButton:onClick(function() 
+            instance.hideWindow()
+        end)
+
+        fullscreenButton:onClick(function()
+            if fullscre == "false" then
+                instance.fullscreen()
+                instance.fullscre = "true"
+            else
+                instance.showWindow()
+                instance.fullscre = "false"
+            end
+        end)
+
+        program:onDone(function()
+            os.queueEvent("updateDock")
+            local index = db.search("RunningApps", "token", token)
+                db.removeValue("RunningApps", "hidden", index)
+                db.removeValue("RunningApps", "icon", index)
+                db.removeValue("RunningApps", "name", index)
+                db.removeValue("RunningApps", "path", index)
+                db.removeValue("RunningApps", "token", index)
+            frame:remove()
+        end)
+        
         return instance
 
     end,
 
     setup = function()
-        db.setDir("UwUntuCC/OS/Data")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/name.json")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/path.json")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/hidden.json")
-        fs.delete("UwUntuCC/OS/Data/RunningApps/token.json")
-
-        db.addColumn("RunningApps", "name")
-        db.addColumn("RunningApps", "path")
-        db.addColumn("RunningApps", "hidden")
-        db.addColumn("RunningApps", "token")
+    
     end,
 
     getWindow = function(token)
-        
+        return windows[token]
     end,
 
 }
+
+return win

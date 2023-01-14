@@ -1,6 +1,6 @@
 local FileSystem = {}
 
-local perm = require(".UwUntuCC.OS.Libraries.PermissionService")
+local perm = require(".Dragonstone.OS.Libraries.PermissionService")
 
 local function checkPerms(path, file, success)
     success = true
@@ -21,7 +21,7 @@ FileSystem = {
     
     edit = function(path)
         if checkPerms(path, file) then
-            os.queueEvent("run_program", "/UwUntuCC/OS/SystemApps/Edit", "edit.lua", nil, "Editor")
+            os.queueEvent("run_program", "/Dragonstone/OS/SystemApps/Edit", "edit.lua", nil, "Editor")
             sleep(0.1)
             os.queueEvent("3210050775", path)
             return success
@@ -30,7 +30,7 @@ FileSystem = {
     
     copy = function(path, file)
         if checkPerms(path, file) then
-            fs.move(path.."/"..file, "/UwUntuCC/OS/Clipboard/"..file)
+            fs.move(path.."/"..file, "/Dragonstone/OS/Clipboard/"..file)
             return success
         end
     end,
@@ -43,7 +43,7 @@ FileSystem = {
     end,
 
     paste = function(path)
-        local files = fs.list("/UwUntuCC/OS/Clipboard/")
+        local files = fs.list("/Dragonstone/OS/Clipboard/")
         for i = 1, #files do
             fs.move(i, path.."/"..i)
             return success
@@ -52,15 +52,15 @@ FileSystem = {
 
     rename = function(path, file, name)
         if checkPerms(path, file) then
-            fs.move(path.."/"..file, "/UwUntuCC/OS/Clipboard/"..name)
-            fs.move("/UwUntuCC/OS/Clipboard/"..name, path.."/"..name)
+            fs.move(path.."/"..file, "/Dragonstone/OS/Clipboard/"..name)
+            fs.move("/Dragonstone/OS/Clipboard/"..name, path.."/"..name)
             return success
         end
     end,
 
     delete = function(path, file)
         if checkPerms(path, file) then
-            fs.move(path.."/"..file, "/UwUntuCC/User/Bin/"..name)
+            fs.move(path.."/"..file, "/Dragonstone/User/Bin/"..name)
         end
     end,
 }

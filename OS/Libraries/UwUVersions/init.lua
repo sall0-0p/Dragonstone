@@ -4,15 +4,15 @@ library = {
     
     checkVersion = function()
 
-        local request = http.get("https://raw.githubusercontent.com/sall0-0p/UwUntuCC/master/OS/Version.md")
+        local request = http.get("https://raw.githubusercontent.com/sall0-0p/Dragonstone/master/OS/Version.md")
         if request == nil then
             os.queueEvent("notification", "Error", "Cannot connect to the server. Check your internet connection")
         else
             local serverVersion = request.readAll()
             request.close()
             
-            if fs.exists(":/UwUntuCC/OS/Version.md") then
-                local file = fs.open("UwUntuCC/OS/Version.md", "r")
+            if fs.exists(":/Dragonstone/OS/Version.md") then
+                local file = fs.open("Dragonstone/OS/Version.md", "r")
                     version = file.readAll()
                     file.close()
             end
@@ -26,8 +26,8 @@ library = {
     end,
 
     getVersion = function()
-
-        local request = http.get("https://raw.githubusercontent.com/sall0-0p/UwUntuCC/master/OS/Version.md")
+        
+        local request = http.get("https://raw.githubusercontent.com/sall0-0p/Dragonstone/master/OS/Version.md")
             
         if request == nil then
             os.queueEvent("notification", "Error", "Cannot connect to the server. Check your internet connection")
@@ -36,8 +36,8 @@ library = {
         local serverVersion = request.readAll()
         request.close()
         
-        if fs.exists(":/UwUntuCC/OS/Version.md") then
-            local file = fs.open("UwUntuCC/OS/Version.md", "r")
+        if fs.exists(":/Dragonstone/OS/Version.md") then
+            local file = fs.open("Dragonstone/OS/Version.md", "r")
                 version = file.readAll()
                 file.close()
         end
