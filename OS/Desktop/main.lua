@@ -71,5 +71,12 @@ local function Update()
     basalt.autoUpdate()
 end
 
+-- local lastClickedObject
+-- for k,v in pairs(allObjects) do
+--     v:onClick(function(self)         
+--     lastClickedObject = self 
+--   end)
+-- end
+
 Update()
 --parallel.waitForAll(openterminal, Update)

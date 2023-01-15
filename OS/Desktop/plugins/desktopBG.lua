@@ -30,7 +30,7 @@ if useDesktopBG then
         :setTexture(DesktopImage, "stretch")
 else
     
-    local DesktopColor = colors.red
+    local DesktopColor = colors.cyan
     mainFrame:setBackground(DesktopColor)
 
 end

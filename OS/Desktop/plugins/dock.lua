@@ -39,6 +39,7 @@ return function(mainFrame)
             {
                 "Dragonstone/Apps/Finder/Finder.lua",
                 "Dragonstone/Apps/Terminal/Terminal.lua",
+                "Dragonstone/Apps/BasaltImages/BasaltImages.lua"
             }
             local defaultIcons = {}
 
