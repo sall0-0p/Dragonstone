@@ -12,7 +12,7 @@ local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
 
 local rw, rh = mainFrame:getSize()
 
-local useDesktopBG = false
+local useDesktopBG = true
 local DesktopBG
 if useDesktopBG then
     local DesktopImage = "Dragonstone/OS/DesktopBackgrounds/Desktop3.bimg"
@@ -37,11 +37,11 @@ end
 
 
 mainFrame:onResize(self, function() 
-
-    DesktopBG
-        :setSize("parent.w", "parent.h")
-        :setTexture(DesktopImage, "stretch")
-
+    if useDesktopBG then
+        DesktopBG
+            :setSize("parent.w", "parent.h")
+            :setTexture(DesktopImage, "stretch")
+    end
 
 end)
 

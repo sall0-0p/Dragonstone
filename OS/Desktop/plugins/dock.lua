@@ -13,8 +13,8 @@ return function(mainFrame)
             :setZIndex(2)
 
         local duckFrame = trFrame:addFrame()
-            :setSize(math.floor(rw/2), 2)
-            :setPosition(math.floor(rw/4), 7)
+            :setSize(rw, 2)
+            :setPosition(1, 7)
             :setBackground(colors.gray)
             :setZIndex(3)
 
@@ -38,6 +38,7 @@ return function(mainFrame)
             local pinnedApps = 
             {
                 "Dragonstone/Apps/Finder/Finder.lua",
+                "Dragonstone/Apps/Terminal/Terminal.lua",
             }
             local defaultIcons = {}
 
@@ -49,7 +50,7 @@ return function(mainFrame)
 
             
             for i,v in pairs(pinnedApps) do
-                
+                local path
                 if runningApps ~= nil then
                     
                     for l,k in pairs(runningApps) do
@@ -57,7 +58,7 @@ return function(mainFrame)
                         local index = db.search("RunningApps", "token", k)
                         
                         local data = db.getColumn("RunningApps", "path")
-                        local path = "/"..data[index]
+                        path = "/"..data[index]
                         
                     end
                     if path == v then
@@ -103,7 +104,7 @@ return function(mainFrame)
                     group.iconPath = "Dragonstone/OS/Icons/app.bimg"
                 end
 
-                group.w = math.floor(1 + i * 4 - 4 + rw/4)
+                group.w = math.floor(1 + i * 4 - 4 + 1)
                 
                 group.icon = trFrame:addImage()
                     :setSize(3,2)
