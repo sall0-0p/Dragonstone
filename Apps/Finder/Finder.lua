@@ -16,6 +16,10 @@ local ext = require(".Dragonstone.OS.Libraries.ExtensionsService")
 local search = require(".Dragonstone.OS.Libraries.SearchEngine")
 
 local accentColor = settings.get("uwuntucc.accent_color")
+local mainColor = settings.get("uwuntucc.main_color")
+local secondColor = settings.get("uwuntucc.second_color")
+local text_color1 = settings.get("uwuntucc.text_color1")
+local text_color2 = settings.get("uwuntucc.text_color2")
 -- getting platform where user launches UwU
 local Host = _HOST
 
@@ -92,7 +96,7 @@ local function open(path)
     else
         fss.edit(path)
     end
-    os.queueEvent("notification", "Debug", path)
+    
 end
 
 local function makeFavourite(path)
@@ -123,22 +127,22 @@ local rw, rh = mainFrame:getSize()
 local header = mainFrame:addFrame()
     :setSize(rw, 2)
     :setPosition(1,1)
-    :setBackground(colors.gray)
+    :setBackground(mainColor)
 
 
     -- This is another border. As you see Im adding some panels with symbols. Try changing some of the colors and you will see the UI changing after restart.
     local headerPane1 = header:addFrame()
         :setSize(rw.."-14",1)
         :setPosition(15,2)
-        :setBackground(colors.gray, "\140", colors.black)
+        :setBackground(mainColor, "\140", secondColor)
     local headerPane2 = header:addFrame()
         :setSize(1, 2)
         :setPosition(14,1)
-        :setBackground(colors.gray, "\149", colors.black)
+        :setBackground(mainColor, "\149", secondColor)
     local headerCorner1 = header:addFrame()
         :setSize(1,1)
         :setPosition(rw, 2)
-        :setBackground(colors.black, "\131", colors.gray)
+        :setBackground(secondColor, "\131", mainColor)
 
         -- This search bar uses Input object.
         local searchBar = header:addInput()
@@ -151,12 +155,12 @@ local header = mainFrame:addFrame()
             local searhBarBorder = header:addFrame()
                 :setSize(1, 1)
                 :setPosition(rw.."-11", 1)
-                :setBackground(colors.black, "\149", colors.gray)
+                :setBackground(colors.black, "\149", mainColor)
         -- Menu
         local menuButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-12", 1)
-            :setBackground(colors.gray)
+            :setBackground(false)
             :setForeground(colors.lightGray)
             :setText("=")
 
@@ -172,8 +176,8 @@ local header = mainFrame:addFrame()
         local cloudButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-14", 1)
-            :setBackground(colors.gray)
-            :setForeground(colors.lightGray)
+            :setBackground(false)
+            :setForeground(text_color1)
             :setText("\24")
         
         -- Sorting
@@ -188,16 +192,16 @@ local header = mainFrame:addFrame()
         local createButton = header:addButton()
             :setSize(1,1)
             :setPosition(rw.."-16", 1)
-            :setBackground(colors.gray)
-            :setForeground(colors.lightGray)
+            :setBackground(false)
+            :setForeground(text_color1)
             :setText("+")
 
         -- undo
         local undoButton = header:addButton()
             :setSize(1,1)
             :setPosition(17, 1)
-            :setBackground(colors.gray)
-            :setForeground(colors.lightGray)
+            :setBackground(false)
+            :setForeground(text_color1)
             :setText("\171")
 
             :onClick(function() 
@@ -208,8 +212,8 @@ local header = mainFrame:addFrame()
         local folderTitle = header:addLabel()
             :setSize(11,1)
             :setPosition(19)
-            :setBackground(colors.gray)
-            :setForeground(colors.lightGray)
+            :setBackground(false)
+            :setForeground(text_color2)
             :setText(fs.getName(Directory))
             
         
@@ -226,12 +230,12 @@ local header = mainFrame:addFrame()
 local sidePanel = mainFrame:addFrame()
     :setSize(14, rh)
     :setPosition(1,1)
-    :setBackground(colors.gray)
+    :setBackground(mainColor)
 
     local sidePane = sidePanel:addFrame()
         :setSize(1,rh)
         :setPosition(14,1)
-        :setBackground(colors.black, "\149", colors.gray)
+        :setBackground(secondColor, "\149", mainColor)
     
     --local favourited = sidePanel:addFrame()
         
@@ -239,24 +243,24 @@ local sidePanel = mainFrame:addFrame()
 local fileListFrame = mainFrame:addFrame()
     :setPosition(15, 3)
     :setSize(rw.."-14", table.maxn(files).."+20")
-    :setBackground(colors.black)
+    :setBackground(mainColor)
     :setScrollable()
 
     local FLScrollBarFrame = fileListFrame:addFrame()
         :setPosition(rw.."-14", 1)
         :setSize(1, rh.."-2")
-        :setBackground(colors.black)
+        :setBackground(text_color1)
 
         local FLScrollBar = FLScrollBarFrame:addScrollbar()
             :setPosition(1,1)
             :setSize(1, rh.."-3")
-            :setBackground(colors.black)
+            :setBackground(mainColor)
         
         local GTTbutton = FLScrollBarFrame:addButton()
             :setPosition(1, rh.."-2")
             :setSize(1,1)
-            :setBackground(colors.black)
-            :setForeground(colors.gray)
+            :setBackground(mainColor)
+            :setForeground(text_color1)
             :setText("\30")
 
 -- Making some onFocus event code.
@@ -264,12 +268,12 @@ local fileListFrame = mainFrame:addFrame()
     mainFrame:onEvent(function(self, event, arg1, arg2, arg3) 
     
         if event == "gained_focus" then
-            folderTitle:setForeground(colors.white)
+            folderTitle:setForeground(text_color1)
             searchBar:setDefaultText("Search", colors.lightGray, colors.black)
         end
     
         if event == "losed_focus" then
-            folderTitle:setForeground(colors.lightGray)
+            folderTitle:setForeground(text_color2)
             searchBar:setDefaultText(" ", colors.lightGray, colors.black)
         end
     
@@ -313,7 +317,7 @@ local fileListFrame = mainFrame:addFrame()
                     :setText(" "..text)
                     :setPosition(3, y)
                     :setBackground(accentColor)
-                    :setForeground(colors.black)
+                    :setForeground(text_color1)
                     :show()
                 group.icon
                     :setText("\131")
@@ -325,7 +329,7 @@ local fileListFrame = mainFrame:addFrame()
                     :setText(fileType)
                     :setPosition(23,y)
                     :setBackground(accentColor)
-                    :setForeground(colors.black)
+                    :setForeground(text_color1)
                     :show()
 
                 if isDir then
@@ -360,13 +364,13 @@ local fileListFrame = mainFrame:addFrame()
                 if isDir then
                     group.icon
                         :setBackground(colors.lightBlue)
-                        :setForeground(rColoring and colors.gray or colors.black)
+                        :setForeground(rColoring and secondColor or mainColor)
                     group.typeLabel
                         :setText("Directory")
                 else
                     group.icon
-                        :setBackground(colors.white)
-                        :setForeground(rColoring and colors.gray or colors.black) 
+                        :setBackground(text_color1)
+                        :setForeground(rColoring and secondColor or mainColor) 
                     group.typeLabel
                         :setText(fileType)
                 end
@@ -384,7 +388,7 @@ local fileListFrame = mainFrame:addFrame()
                     extension = "."..extension
                     local fileType = ext.get(extension)
                 --end
-                updateItem(fileObjects[y], v, isDir, fileType, rColoring and colors.gray or colors.black, colors.white)
+                updateItem(fileObjects[y], v, isDir, fileType, rColoring and secondColor or mainColor, text_color1)
             else
                 local extension = v:match "[^%.]+$"
                     extension = "."..extension
@@ -398,7 +402,7 @@ local fileListFrame = mainFrame:addFrame()
                 group.icon = fileListFrame:addLabel():hide()
                 group.typeLabel = fileListFrame:addLabel():hide()
                 local isDir = fs.isDir(Directory.."/"..v)
-                updateItem(group, v, isDir, fileType, rColoring and colors.gray or colors.black, colors.white)
+                updateItem(group, v, isDir, fileType, rColoring and secondColor or mainColor, text_color1)
                 group.pane:onClick(function()
                     loadList(files, group.pane:getY())
                 end)
