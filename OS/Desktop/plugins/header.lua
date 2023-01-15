@@ -36,10 +36,11 @@ local header = mainFrame:addFrame()
     
     
     -- Clock services located here.
-    local clock = header:addLabel()
+    local clock = mainFrame:addLabel()
         :setBackground(false)
         :setText("")
         :setForeground(text_color1)
+        :setZIndex(12)
         :setSize(16,1)
     
     local function RunClock()
