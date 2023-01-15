@@ -1,6 +1,9 @@
 local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 local db = require(".Dragonstone.OS.Libraries.Databaser")
 
+local accentColor = settings.get("uwuntucc.accent_color")
+local mainColor = settings.get("uwuntucc.main_color")
+local secondColor = settings.get("uwuntucc.second_color")
 
 local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
 
@@ -18,9 +21,9 @@ local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
         db.addColumn("RunningApps", "icon")
 
 basalt.debugLabel
-    :setBackground(colors.gray)
+    :setBackground(mainColor)
     :setSize("parent.w", 1)
-    :setForeground(colors.lightGray)
+    :setForeground(secondColor)
 
 -- local p1 = mainFrame:addFrame()
 --     :setBackground(false)
@@ -63,7 +66,7 @@ end
 local terminal = win.create()
      :setSize(51,19)
      :setResizable()
-     :setBar("Worm")
+     :setBar("Terminal")
      :run("/Dragonstone/Apps/Terminal/Terminal.lua")
 
 

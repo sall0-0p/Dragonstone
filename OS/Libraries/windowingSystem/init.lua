@@ -2,6 +2,12 @@ local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 local db = require(".Dragonstone.OS.Libraries.Databaser")
 
 
+local accentColor = settings.get("uwuntucc.accent_color")
+local mainColor = settings.get("uwuntucc.main_color")
+local secondColor = settings.get("uwuntucc.second_color")
+local text_color1 = settings.get("uwuntucc.text_color1")
+local text_color2 = settings.get("uwuntucc.text_color2")
+
 local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
 
 
@@ -41,6 +47,7 @@ win =  {
             :setMovable()
             :setPosition(math.random(3, 40), math.random(5, 25))
             :setZIndex(10)
+            :setBackground(mainColor)
             local hideAnimation = mainFrame:addAnimation()
             local showAnimation = mainFrame:addAnimation()
         -- local bar = frame:addFrame()
@@ -48,7 +55,7 @@ win =  {
         local label = frame:addLabel()
             :setPosition(22, 1)
             :setText("Window")
-            :setForeground(colors.lightGray)
+            :setForeground(text_color2)
             centerText(label)
         local program = frame:addProgram()
             :setSize(51,19)
@@ -62,21 +69,21 @@ win =  {
                 :setSize(1,1)
                 :setPosition(1,1)
                 :setBackground(false)
-                :setForeground(colors.lightGray)
+                :setForeground(secondColor)
                 :setText("\7")
             
             local hideButton = buttons:addButton()
                 :setSize(1,1)
                 :setPosition(3,1)
                 :setBackground(false)
-                :setForeground(colors.lightGray)
+                :setForeground(secondColor)
                 :setText("\7")
 
             local fullscreenButton = buttons:addButton()
                 :setSize(1,1)
                 :setPosition(5,1)
                 :setBackground(false)
-                :setForeground(colors.lightGray)
+                :setForeground(secondColor)
                 :setText("\7")
         
             local resizableButton = frame:addButton():hide()
@@ -199,9 +206,9 @@ win =  {
                     :clear()
                     :setObject(frame)
                     :move(0, 2, 1)
-                    :size(rw+1, rh-1, 1)
+                    :size(rw+1, rh-2, 1)
                     :setObject(program)
-                    :size(rw, rh, 1)
+                    :size(rw, rh-4, 1)
                     :setObject(buttons)
                     :move(3, 1, 1)
                     :play()
@@ -222,7 +229,7 @@ win =  {
 
         frame:onGetFocus(function() 
             program:injectEvent("gained_focus")
-            label:setForeground(colors.white)
+            label:setForeground(text_color1)
             closeButton:setForeground(colors.red)
             hideButton:setForeground(colors.orange)
             fullscreenButton:setForeground(colors.lime)
@@ -230,10 +237,10 @@ win =  {
 
         frame:onLoseFocus(function()
             program:injectEvent("loosed_focus")
-            label:setForeground(colors.lightGray)
-            closeButton:setForeground(colors.lightGray)
-            hideButton:setForeground(colors.lightGray)
-            fullscreenButton:setForeground(colors.lightGray)
+            label:setForeground(text_color2)
+            closeButton:setForeground(secondColor)
+            hideButton:setForeground(secondColor)
+            fullscreenButton:setForeground(secondColor)
         
         end)
 

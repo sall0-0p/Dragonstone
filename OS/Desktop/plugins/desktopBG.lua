@@ -12,7 +12,7 @@ local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
 
 local rw, rh = mainFrame:getSize()
 
-local useDesktopBG = true
+local useDesktopBG = false
 local DesktopBG
 if useDesktopBG then
     local DesktopImage = "Dragonstone/OS/DesktopBackgrounds/Desktop3.bimg"

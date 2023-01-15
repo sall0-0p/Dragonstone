@@ -1,5 +1,11 @@
 local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 
+local accentColor = settings.get("uwuntucc.accent_color")
+local mainColor = settings.get("uwuntucc.main_color")
+local secondColor = settings.get("uwuntucc.second_color")
+local text_color1 = settings.get("uwuntucc.text_color1")
+local text_color2 = settings.get("uwuntucc.text_color2")
+
 return function(mainFrame)
     
 local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
@@ -12,13 +18,13 @@ local rw, rh = mainFrame:getSize()
 local header = mainFrame:addFrame()
     :setSize(rw,1)
     :setPosition(1,1)
-    :setBackground(colors.gray)
+    :setBackground(mainColor)
     :setZIndex(2)
 
     local headerPanel1 = mainFrame:addFrame()
         :setSize(rw,1)
         :setPosition(1,2)
-        :setBackground(false, "\131", colors.gray)
+        :setBackground(false, "\131", mainColor)
         :setZIndex(2)
 
     
@@ -33,7 +39,7 @@ local header = mainFrame:addFrame()
     local clock = header:addLabel()
         :setBackground(false)
         :setText("")
-        :setForeground(colors.white)
+        :setForeground(text_color1)
         :setSize(16,1)
     
     local function RunClock()

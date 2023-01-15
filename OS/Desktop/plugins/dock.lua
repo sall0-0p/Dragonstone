@@ -2,6 +2,13 @@ local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 local db = require(".Dragonstone.OS.Libraries.Databaser")
 local win = require(".Dragonstone.OS.Libraries.windowingSystem")
 
+local accentColor = settings.get("uwuntucc.accent_color")
+local mainColor = settings.get("uwuntucc.main_color")
+local secondColor = settings.get("uwuntucc.second_color")
+local text_color1 = settings.get("uwuntucc.text_color1")
+local text_color2 = settings.get("uwuntucc.text_color2")
+
+
 return function(mainFrame) 
 
     local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
@@ -10,12 +17,12 @@ return function(mainFrame)
             :setSize(rw, 8)
             :setPosition(1, rh.."-7")
             :setBackground(false)
-            :setZIndex(2)
+            :setZIndex(11)
 
         local duckFrame = trFrame:addFrame()
             :setSize(rw, 2)
             :setPosition(1, 7)
-            :setBackground(colors.gray)
+            :setBackground(mainColor)
             :setZIndex(3)
 
 
@@ -39,6 +46,7 @@ return function(mainFrame)
             {
                 "Dragonstone/Apps/Finder/Finder.lua",
                 "Dragonstone/Apps/Terminal/Terminal.lua",
+                "Dragonstone/Apps/ASCII/ASCII.lua",
                 "Dragonstone/Apps/BasaltImages/BasaltImages.lua"
             }
             local defaultIcons = {}
@@ -114,10 +122,10 @@ return function(mainFrame)
                     :loadImage(group.iconPath)
 
                 group.label = trFrame:addLabel()
-                    :setSize(1,1)
-                    :setPosition(group.w.."+1", 8)
+                    :setSize(3,1)
+                    :setPosition(group.w.."", 8)
                     :setZIndex(4)
-                    :setForeground(colors.lightGray)
+                    :setForeground(secondColor)
 
                 if runningApps ~= nil then
                     for l,k in pairs(runningApps) do
@@ -133,7 +141,7 @@ return function(mainFrame)
                 if group.running then
 
                     if group.hidden == "false" then
-                        group.label:setText("\7")
+                        group.label:setText("\128\7\128")
                         group.icon:onClick(function(self, event, button)
                             local instance = win.getWindow(group.token)
                             if instance ~= nil then
@@ -141,7 +149,7 @@ return function(mainFrame)
                             end
                         end)
                     else
-                        group.label:setText("\186")
+                        group.label:setText("\128\186\128")
 
                         group.icon:onClick(function(self, event, button)
                             local instance = win.getWindow(group.token)
@@ -152,12 +160,12 @@ return function(mainFrame)
                         end)
                     end
                 else
-                    group.label:setText(" ")
+                    group.label:setText("\140\140\140")
 
                     group.icon:onClick(function(self, event, button)
                         local newInstance = win.create()
                             :setSize(51,19)
-                            :setBar(fs.getName(group.path))
+                            :setBar(fs.getName(fs.getDir(group.path)))
                             :run(group.path)
                             os.queueEvent("updateDock")
                     end)
