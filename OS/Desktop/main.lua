@@ -54,18 +54,18 @@ end
     --os.queueEvent("547485834394884934", win)
     win.setup()
 
-local terminal = win.create()
-    :setSize(51,19)
-    :setResizable()
-    :setBar("Terminal")
-    :run("/Dragonstone/Apps/Terminal/Terminal.lua")
+-- local terminal = win.create()
+--     :setSize(51,19)
+--     :setResizable()
+--     :setBar("Terminal")
+--     :run("/Dragonstone/Apps/Terminal/Terminal.lua")
 
-local worm = win.create()
-    :setSize(51,19)
-    :setResizable()
-    :setBar("Worm")
-    :run("/Dragonstone/Apps/Worm/worm.lua")
---end
+local terminal = win.create()
+     :setSize(51,19)
+     :setResizable()
+     :setBar("Worm")
+     :run("/Dragonstone/Apps/Terminal/Terminal.lua")
+
 
 local function Update()
     basalt.autoUpdate()
