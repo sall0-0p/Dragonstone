@@ -7,7 +7,7 @@ return function(mainFrame)
     local useScreensaver = true
     local ScreenSaverTimeOut = 600
     local function launchScreensaver()
-        os.shutdown()
+        --os.shutdown()
         local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
         shell.setDir(":")
         
