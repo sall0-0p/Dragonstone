@@ -205,10 +205,10 @@ win =  {
                 showAnimation
                     :clear()
                     :setObject(frame)
-                    :move(0, 2, 1)
-                    :size(rw+1, rh-2, 1)
+                    :move(0, 1, 1)
+                    :size(rw+1, rh-1, 1)
                     :setObject(program)
-                    :size(rw, rh-4, 1)
+                    :size(rw, rh-3, 1)
                     :setObject(buttons)
                     :move(3, 1, 1)
                     :play()
