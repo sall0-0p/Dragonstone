@@ -9,7 +9,7 @@ return function(mainFrame)
     local function launchScreensaver()
         --os.shutdown()
         local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
-        shell.setDir(":")
+        shell.setDir("")
         
         basalt.debugLabel
             :setBackground(colors.black)
