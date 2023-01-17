@@ -1,0 +1,6 @@
+<frame id="main" width="parent.w" height="parent.h" bg="black" border="gray">
+    <frame id="sidebar" width="3" height="parent.h" layout="/Dragonstone/OS/Desktop/layouts/launchMenu/sidebar.xml"/>
+
+
+
+</frame>

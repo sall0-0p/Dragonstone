@@ -209,43 +209,44 @@ local function getFreeNotification()
 end
 
 local function sendNotification(title, info, time)
-    freeNotification = getFreeNotification()
-    if(notifications[freeNotification]==nil)then
-        notifications[freeNotification] = {}
-        notifications[freeNotification].frame = main:addFrame():setSize(30, 5):setZIndex(20)
-        notifications[freeNotification].title = notifications[freeNotification].frame:addLabel():setForeground(colors.lightGray):setPosition(2, 1)
-        notifications[freeNotification].label = notifications[freeNotification].frame:addLabel():setSize("parent.w - 3", "parent.h - 2"):setPosition(2, 3):setForeground(colors.black)
-        notifications[freeNotification].show = main:addAnimation()
-        notifications[freeNotification].hide = main:addAnimation()
-    end
-    local selectedNotification = notifications[freeNotification]
-    selectedNotification.active = true
-    local notificationOffset = (freeNotification-1)*6
-    selectedNotification.frame:setPosition("parent.w + 2", "parent.h - 5 - "..notificationOffset)
-    selectedNotification.frame:show()
-    selectedNotification.title:setText(title)
-    selectedNotification.label:setText(info)
-    basalt.schedule(function()
-        selectedNotification.show:clear()
-        selectedNotification.show:setMode("easeOutBounce")
-        selectedNotification.show:setObject(selectedNotification.frame)
-        selectedNotification.show:move(main:getWidth() - 30, main:getHeight() - 5 - notificationOffset, 1)
-        selectedNotification.show:onDone(function()
-            selectedNotification.frame:setPosition("parent.w - 30", "parent.h - 5 - "..notificationOffset)
-        end)
-        selectedNotification.show:play()
-        sleep(time or 4)
-        selectedNotification.hide:clear()
-        selectedNotification.hide:setObject(selectedNotification.frame)
-        selectedNotification.hide:move(main:getWidth() + 2, main:getHeight() - 5 - notificationOffset, 1)
-        selectedNotification.hide:onDone(function()
-            selectedNotification.frame:setPosition("parent.w + 2", "parent.h - 5 - "..notificationOffset)
-            selectedNotification.frame:hide()
-        end)
-        selectedNotification.hide:play()
-        activeNotifications = activeNotifications - 1
-        selectedNotification.active = false
-    end)()
+    os.queueEvent("notification", title, info)
+    -- freeNotification = getFreeNotification()
+    -- if(notifications[freeNotification]==nil)then
+    --     notifications[freeNotification] = {}
+    --     notifications[freeNotification].frame = main:addFrame():setSize(30, 5):setZIndex(20)
+    --     notifications[freeNotification].title = notifications[freeNotification].frame:addLabel():setForeground(colors.lightGray):setPosition(2, 1)
+    --     notifications[freeNotification].label = notifications[freeNotification].frame:addLabel():setSize("parent.w - 3", "parent.h - 2"):setPosition(2, 3):setForeground(colors.black)
+    --     notifications[freeNotification].show = main:addAnimation()
+    --     notifications[freeNotification].hide = main:addAnimation()
+    -- end
+    -- local selectedNotification = notifications[freeNotification]
+    -- selectedNotification.active = true
+    -- local notificationOffset = (freeNotification-1)*6
+    -- selectedNotification.frame:setPosition("parent.w + 2", "parent.h - 5 - "..notificationOffset)
+    -- selectedNotification.frame:show()
+    -- selectedNotification.title:setText(title)
+    -- selectedNotification.label:setText(info)
+    -- basalt.schedule(function()
+    --     selectedNotification.show:clear()
+    --     selectedNotification.show:setMode("easeOutBounce")
+    --     selectedNotification.show:setObject(selectedNotification.frame)
+    --     selectedNotification.show:move(main:getWidth() - 30, main:getHeight() - 5 - notificationOffset, 1)
+    --     selectedNotification.show:onDone(function()
+    --         selectedNotification.frame:setPosition("parent.w - 30", "parent.h - 5 - "..notificationOffset)
+    --     end)
+    --     selectedNotification.show:play()
+    --     sleep(time or 4)
+    --     selectedNotification.hide:clear()
+    --     selectedNotification.hide:setObject(selectedNotification.frame)
+    --     selectedNotification.hide:move(main:getWidth() + 2, main:getHeight() - 5 - notificationOffset, 1)
+    --     selectedNotification.hide:onDone(function()
+    --         selectedNotification.frame:setPosition("parent.w + 2", "parent.h - 5 - "..notificationOffset)
+    --         selectedNotification.frame:hide()
+    --     end)
+    --     selectedNotification.hide:play()
+    --     activeNotifications = activeNotifications - 1
+    --     selectedNotification.active = false
+    -- end)()
 end
 
 -- Topbar

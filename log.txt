@@ -1,7 +1,0 @@
-{
-  "Store",
-  "Mon Dec 12 17:27:55 2022",
-  "Bucket",
-  "ComputerCraft 1.100.9 (CraftOS-PC v2.7)",
-  "/UwUntuCC/OS/Libraries/Basalt.lua:2903: attempt to concatenate field 'name' (a function value)",
-}

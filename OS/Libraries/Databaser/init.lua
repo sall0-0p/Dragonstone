@@ -15,7 +15,7 @@ local function checkcolumn(name, columnName)
     end
 
     if not fs.exists(directory.."/"..name) then
-        error("Such database do not exist")
+        error(directory.."/"..name..": Such database do not exist")
     end
 
     if not fs.exists(directory.."/"..name.."/"..columnName..".json") then
@@ -258,7 +258,7 @@ databaser = {
         info = textutils.unserialize(info)
         if info == nil then 
             file.close()
-            return "NO DATA FOUND"
+            return ""
         end
         file.close()
 

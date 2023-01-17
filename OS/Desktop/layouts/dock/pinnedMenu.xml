@@ -1,0 +1,7 @@
+<frame id="menu1" width="parent.w" height="parent.h" bg="white" border="gray">
+    <label id="open" x="2" y="parent.h-1" width="parent.w-2" height="1" bg="white" fg="black" text="&#4; Open"/>
+    <label id="separator1" x="2" y="parent.h-2" width="parent.w-2" height="1" bg="white" fg="lightGray" text="&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;&#140;"/>
+    <label id="unpin" x="2" y="parent.h-3" width="parent.w-2" height="1" bg="white" fg="black" text="&#24; Unpin"/>
+    <label id="showFolder" x="2" y="parent.h-4" width="parent.w-2" height="1" bg="white" fg="black" text="/ Show Folder"/>
+
+</frame>
