@@ -15,6 +15,8 @@ local fss = require(".Dragonstone.OS.Libraries.FileSystem")
 local ext = require(".Dragonstone.OS.Libraries.ExtensionsService")
 local search = require(".Dragonstone.OS.Libraries.SearchEngine")
 
+--local win = require(".Dragonstone.OS.Libraries.windowingSystem")
+
 local accentColor = settings.get("uwuntucc.accent_color")
 local mainColor = settings.get("uwuntucc.main_color")
 local secondColor = settings.get("uwuntucc.second_color")
@@ -22,15 +24,17 @@ local text_color1 = settings.get("uwuntucc.text_color1")
 local text_color2 = settings.get("uwuntucc.text_color2")
 -- getting platform where user launches UwU
 local Host = _HOST
+local searchActive
 
 -- creating Main Frame of an app.
 local mainFrame = basalt.createFrame()
 
+--local win = require(".Dragonstone.OS.Libraries.windowingSystem")
 -- getting launch arguments
 local args = { ... }
 
 -- this value is directory the user is currently in. By default it is root directory of computer. Or the first argument of a launch command can be used.
-local Directory = "Dragonstone/OS/Libraries"
+local Directory = "Dragonstone/"
 
 if args[1] ~= nil then
     Directory = args[1]
@@ -55,13 +59,9 @@ local files = fs.list(Directory)
 
 local filtermode = "name"
 
-local history = {}
-
-table.insert(history, Directory)
-
 -- Setting up some databases;
 
-    db.setDir("/Dragonstone/Apps/Fimber/Data")
+    db.setDir("/Dragonstone/OS/Data")
 
 --___             _   _             
 --| __|  _ _ _  __| |_(_)___ _ _  ___
@@ -85,16 +85,23 @@ local function DoubleClick(btn, func, mouseButton)
 end
 
 -- Now file changing functions will come. They are quite simple anyways. Also most of FileSystem manipulations are contained in separate API. It not accessible for users :<
-
 local function open(path)
+    path = "/"..string.gsub(path, "//", "/")
     if fs.isDir(path) then
         local files = fs.list(path)
-        table.insert(history, Directory)
         Directory = path
         Path = "/"..fs.getName(fs.getDir(Directory)).."/"..fs.getName(Directory)
+        local files = fs.list(path)
         loadList(files, 0)
     else
-        fss.edit(path)
+        --local win = require(".Dragonstone.OS.Libraries.windowingSystem")
+        --local editor = win.create()
+            --:setSize(53,21)
+            --:setBar("Worm")
+            --:run("/Dragonstone/Apps/Worm/Worm.lua")
+            
+        os.queueEvent("uwuntu.runEditor", path)
+
     end
     
 end
@@ -205,7 +212,7 @@ local header = mainFrame:addFrame()
             :setText("\171")
 
             :onClick(function() 
-                    open(history[table.maxn(history)])
+                    open(fs.getDir(Directory), 0)
             end)
         
         -- folder title
@@ -214,7 +221,7 @@ local header = mainFrame:addFrame()
             :setPosition(19)
             :setBackground(false)
             :setForeground(text_color2)
-            :setText(fs.getName(Directory))
+            :setText("Dragonstone")
             
         
 
@@ -295,8 +302,12 @@ local fileListFrame = mainFrame:addFrame()
 
     -- weird code. I wont describe it. Thats too scary :<
     loadList = function(files, selected)
-        
-        folderTitle:setText(fs.getName(Directory))
+
+        if fs.getName(Directory) ~= "" then
+            folderTitle:setText(fs.getName(Directory))
+        else
+            folderTitle:setText("Local Drive")
+        end
         selectedItem = selected
         for k,v in pairs(fileObjects)do
             v.label:setPosition(1,1):hide()
@@ -308,6 +319,8 @@ local fileListFrame = mainFrame:addFrame()
         local y = 1
 
         local function updateItem(group, text, isDir, fileType, bg, fg)
+
+            group.path = Directory.."/"..text
             if(selected==y)then
                 group.pane
                     :setPosition(1, y)
@@ -331,7 +344,7 @@ local fileListFrame = mainFrame:addFrame()
                     :setBackground(accentColor)
                     :setForeground(text_color1)
                     :show()
-
+                
                 if isDir then
                     group.typeLabel
                         :setText("Directory")
@@ -377,7 +390,7 @@ local fileListFrame = mainFrame:addFrame()
             end
             y = y + 1
         end
-        
+
         for k,v in pairs(files) do
             if(fileObjects[y]~=nil)then
                 local isDir = fs.isDir(Directory.."/"..v)
@@ -404,6 +417,7 @@ local fileListFrame = mainFrame:addFrame()
                 local isDir = fs.isDir(Directory.."/"..v)
                 updateItem(group, v, isDir, fileType, rColoring and secondColor or mainColor, text_color1)
                 group.pane:onClick(function()
+                    local files = fs.list(Directory)
                     loadList(files, group.pane:getY())
                 end)
                 table.insert(fileObjects, group)
@@ -414,6 +428,7 @@ local fileListFrame = mainFrame:addFrame()
 
     select = function(index)
         selectedItem = index
+        local files = fs.list(Directory)
         loadList(files, selectedItem)
     end
 
@@ -425,10 +440,22 @@ local fileListFrame = mainFrame:addFrame()
 
     end, 1)
 
+    mainFrame:onKey(function(self, event, key) 
+        if key == keys.r then
+            if basalt.isKeyDown(keys.leftCtrl) then
+                if selectedItem ~= 0 then
+                    os.queueEvent("uwuntu.runProgram", fileObjects[selectedItem].path)
+                end
+            end
+        end
+    end)
+
     mainFrame:onKey(function(self, event, key)
         if key == keys.enter then
-            if selectedItem ~= 0 then
-                open(fileObjects[selectedItem].path) --
+            if not searchActive then
+                if selectedItem ~= 0 then
+                    open(fileObjects[selectedItem].path) --
+                end
             end
         end
     end)
@@ -454,8 +481,9 @@ local searchList = searchFrame:addList()
 
     searchBar:onKey(function(self, event, key) 
         local searchResult = nil
-        if key == keys.rightShift then
+        if key == keys.enter then
             searchFrame:show()
+            searchActive = true
             local value = searchBar:getValue()
             
             if string.len(value) >= 3 then
@@ -485,11 +513,12 @@ local searchList = searchFrame:addList()
     end)
 
     searchBar:onChange(function() 
-        searchModeFrame:show()
+        --searchModeFrame:show()
         local value = searchBar:getValue()
         
         if value == "" then
-            searchModeFrame:hide()
+            --searchModeFrame:hide()
+            searchActive = false
             searchFrame:hide()
             searchResult = nil
         else
@@ -502,7 +531,67 @@ local searchList = searchFrame:addList()
             end
         end
     end)
+
+
+    local function createFile()
+        local prompt = mainFrame:addFrame()
+            :setSize(15,5)
+            :setBackground(secondColor)
+            :setMovable()
+            :setBorder(colors.black)
+            :setBar(colors.gray)
+
+        local input = prompt:addInput()
+            :setSize(13,1)
+            :setPosition(2,2)
+            :setBackground(colors.black)
+            :setForeground(colors.white)
+            :setDefaultText(" Name...", colors.lightGray, colors.black)
+
+        local isFolder = prompt:addCheckbox()
+            :setPosition(2,4)
+            :setBackground(colors.white)
+        
+        prompt:addLabel()
+            :setPosition(4,4)
+            :setText("Folder")
+
+        local enterbutton = prompt:addButton()
+            :setSize(1,1)
+            :setBackground(colors.green)
+            :setForeground(colors.black)
+            :setPosition(13,4)
+            :setText(">")
+            :onClick(function() 
+                local filename = string.gsub(input:getValue(), " ", "_")
+                if not fs.exists(Directory.."/"..filename) then
+                    
+                    if isFolder:getValue() == true then
+                        fs.makeDir(Directory.."/"..filename)
+                        local files = fs.list(Directory)
+                        loadList(files, 0)
+                        prompt:remove()
+                    else
+                        local file = fs.open(Directory.."/"..filename, "w")
+                        file.close()
+                        --os.queueEvent("3210050776", Directory.."/"..filename)
+                        local files = fs.list(Directory)
+                        loadList(files, 0)
+                        prompt:remove()
+                    end
+                else    
+                    os.queueEvent("notification", "Error!", Directory..filename.." already exists")
+                end
+                
+            
+            
+            
+            
+            
+            end)
+    end
     
+    createButton:onClick(createFile)
     loadList(files, 0)
     select(3)
 

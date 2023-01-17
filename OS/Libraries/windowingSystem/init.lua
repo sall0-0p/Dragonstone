@@ -43,9 +43,9 @@ win =  {
         db.setValue("RunningApps", "token", token, index)
         db.setValue("RunningApps", "hidden", "false", index)
         local frame = mainFrame:addFrame()
-            :setSize(53,21)
+            :setSize(53,23)
             :setMovable()
-            :setPosition(math.random(3, 40), math.random(5, 25))
+            :setPosition(winX, winY)
             :setZIndex(10)
             :setBackground(mainColor)
             local hideAnimation = mainFrame:addAnimation()
@@ -92,7 +92,7 @@ win =  {
         local minH = minH or 4
         local maxW = maxW or 99
         local maxH = maxH or 99
-
+        --os.queueEvent("updateDock")
         local instance = {
             setSize = function(self, width, height)
                 frame:setSize(width.."+2", height.."+2")
@@ -164,8 +164,8 @@ win =  {
                 hideAnimation
                     :clear()
                     :setObject(frame)
-                    :move(rw+1, rh+1, 1)
-                    :size(3, 3, 1)
+                    :move(rw+1, rh+1, 0.6)
+                    :size(3, 3, 0.6)
                     :play()
 
                 local index = db.search("RunningApps", "token", token)
@@ -183,12 +183,12 @@ win =  {
                 showAnimation
                     :clear()
                     :setObject(frame)
-                    :move(winX, winY, 1)
-                    :size(53, 21, 1)
+                    :move(winX, winY, 0.6)
+                    :size(53, 21, 0.6)
                     :setObject(program)
-                    :size(51, 19, 1)
+                    :size(51, 19, 0.6)
                     :setObject(buttons)
-                    :move(2, 1, 1)
+                    :move(2, 1, 0.6)
                     :play()
 
                 local index = db.search("RunningApps", "token", token)
@@ -205,12 +205,12 @@ win =  {
                 showAnimation
                     :clear()
                     :setObject(frame)
-                    :move(0, 1, 1)
-                    :size(rw+1, rh-1, 1)
+                    :move(0, 1, 0.6)
+                    :size(rw+1, rh-1, 0.6)
                     :setObject(program)
-                    :size(rw, rh-3, 1)
+                    :size(rw, rh-3, 0.6)
                     :setObject(buttons)
-                    :move(3, 1, 1)
+                    :move(3, 1, 0.6)
                     :play()
                 return self
             end,

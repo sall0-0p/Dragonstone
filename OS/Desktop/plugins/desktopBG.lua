@@ -12,10 +12,10 @@ local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
 
 local rw, rh = mainFrame:getSize()
 
-local useDesktopBG = false
+local useDesktopBG = settings.get("uwuntucc.useDesktopBG")
 local DesktopBG
-if useDesktopBG then
-    local DesktopImage = "Dragonstone/OS/DesktopBackgrounds/Desktop3.bimg"
+if useDesktopBG == "true" then
+    local DesktopImage = settings.get("uwuntucc.desktopBG")
 
     --[[local DesktopBG = mainFrame:addImage()
         :setSize(rw,rh)
@@ -30,14 +30,14 @@ if useDesktopBG then
         :setTexture(DesktopImage, "stretch")
 else
     
-    local DesktopColor = colors.cyan
+    local DesktopColor = settings.get("uwuntucc.desktopColor")
     mainFrame:setBackground(DesktopColor)
 
 end
 
 
 mainFrame:onResize(self, function() 
-    if useDesktopBG then
+    if useDesktopBG == "true" then
         DesktopBG
             :setSize("parent.w", "parent.h")
             :setTexture(DesktopImage, "stretch")

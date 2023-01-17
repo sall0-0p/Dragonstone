@@ -1,6 +1,8 @@
 local FileSystem = {}
 
+local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 local perm = require(".Dragonstone.OS.Libraries.PermissionService")
+local success
 
 local function checkPerms(path, file, success)
     success = true
@@ -15,15 +17,27 @@ FileSystem = {
     run = function(path, executable, argument, name)
         if checkPerms(path, executable) then
             os.queueEvent("run_program", path, executable, argument, name)
+            
+            local program = win.create()
+                :setSize(51,19)
+                :setBar(name)
+                :run(path.."/"..executable)
             return success
         end
     end,
     
     edit = function(path)
         if checkPerms(path, file) then
-            os.queueEvent("run_program", "/Dragonstone/OS/SystemApps/Edit", "edit.lua", nil, "Editor")
-            sleep(0.1)
-            os.queueEvent("3210050775", path)
+            basalt.debug(path)
+            local win = require(".Dragonstone.OS.Libraries.windowingSystem")
+            --os.queueEvent("run_program", "/Dragonstone/OS/SystemApps/Edit", "edit.lua", nil, "Editor")
+        
+            --local programEdit = win.create()
+                --:setSize(51,19)
+                --:setBar("Editor")
+                --:run("/Dragonstone/OS/SystemApps/Edit/edit.lua")
+            --sleep(0.1)
+            --os.queueEvent("3210050775", path)
             return success
         end
     end,

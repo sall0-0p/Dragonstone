@@ -69,7 +69,6 @@ local terminal = win.create()
      :setBar("Terminal")
      :run("/Dragonstone/Apps/Terminal/Terminal.lua")
 
-
 local function Update()
     basalt.autoUpdate()
 end
