@@ -19,7 +19,7 @@ local multishell = multishell
 local parentShell = shell
 local parentTerm = term.current()
 
-shell.setDir(":")
+shell.setDir("")
 
 local version
 
