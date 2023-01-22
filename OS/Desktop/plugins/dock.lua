@@ -40,7 +40,7 @@ return function(mainFrame)
             :setSize(rw, 8)
             :setPosition(1, "parent.h-7")
             :setBackground(false)
-            :setZIndex(11)
+            :setZIndex(17)
 
         if rh < 22 then 
             trFrame:setZIndex(5)
@@ -49,7 +49,7 @@ return function(mainFrame)
             :setSize(rw, 2)
             :setPosition(1, 7)
             :setBackground(mainColor)
-            :setZIndex(3)
+            :setZIndex(17)
 
             --duckFrame:onClick(function() basalt.debug(mainFrame:getSize()) end)
 
@@ -137,13 +137,13 @@ return function(mainFrame)
                 group.icon = trFrame:addImage()
                     :setSize(3,2)
                     :setPosition(group.w, 6)
-                    :setZIndex(4)
+                    :setZIndex(17)
                     :loadImage(group.iconPath)
 
                 group.label = trFrame:addLabel()
                     :setSize(3,1)
                     :setPosition(group.w.."", 8)
-                    :setZIndex(4)
+                    :setZIndex(17)
                     :setForeground(secondColor)
 
                 if runningApps ~= nil then
