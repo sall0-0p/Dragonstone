@@ -4,6 +4,12 @@ return function(mainFrame)
     local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
     local closeFrame = require(".Dragonstone.OS.Desktop.values.closeFrame")
 
+    local accentColor = settings.get("uwuntucc.accent_color")
+    local mainColor = settings.get("uwuntucc.main_color")
+    local secondColor = settings.get("uwuntucc.second_color")
+    local text_color1 = settings.get("uwuntucc.text_color1")
+    local text_color2 = settings.get("uwuntucc.text_color2")
+
     local launchMenuStatus = false
     local launchIcon = mainFrame:addImage()
         :setSize(3,2)
@@ -11,6 +17,8 @@ return function(mainFrame)
         :setZIndex(18)
         :setBackground(colors.red)
         :loadImage("/Dragonstone/OS/Icons/LaunchIcon.bimg")
+
+    basalt.setVariable("mainColor", mainColor)
 
     
     local rw, rh = mainFrame:getSize()

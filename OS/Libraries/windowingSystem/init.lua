@@ -26,10 +26,12 @@ win =  {
 
     create = function()
         local winX, winY = math.random(3, 40), math.random(5, 25)
+        local winW, winH = 51, 19
         local token = createToken()
         local tokens = db.getColumn("RunningApps", "token")
         local index
         local fullscre = "false"
+
         if tokens == nil then
             index = 1
         else
@@ -43,7 +45,7 @@ win =  {
         db.setValue("RunningApps", "token", token, index)
         db.setValue("RunningApps", "hidden", "false", index)
         local frame = mainFrame:addFrame()
-            :setSize(53,23)
+            :setSize(winW + 2, winH + 2)
             :setMovable()
             :setPosition(winX, winY)
             :setZIndex(10)
@@ -95,7 +97,9 @@ win =  {
         --os.queueEvent("updateDock")
         local instance = {
             setSize = function(self, width, height)
-                frame:setSize(width.."+2", height.."+2")
+                winW, winH = width, height
+                frame:setSize(winW + 2, winH + 2)
+                program:setSize(winW, winH)
                 return self
             end,
             
@@ -127,10 +131,39 @@ win =  {
             end,
 
             run = function(self, path, args)
+
+                if fs.exists(fs.getDir(path).."/DG_config.lua") then
+                    local file = fs.open(fs.getDir(path).."/DG_config.lua", "r")
+                    local table = textutils.unserialise(file.readAll())
+
+                    file.close()
+
+                        db.setValue("RunningApps", "name", table["name"], index)
+                        label:setText(table["name"])
+                        frame:setSize(table["width"].."+2", table["height"].."+2")
+                        program:setSize(table["width"], table["height"])
+                        winW, winH = table["width"], table["height"]
+                    
+                end
+
                 if not args then
                     program:execute(path)
+                    basalt.schedule(function()
+                        sleep(0.1)
+                        program:injectEvent("uwuntu.program_path", path)
+                        program:injectEvent("uwuntu.token", token)
+                    
+                    
+                    end)
                 else
                     program:execute(path, args)
+                    basalt.schedule(function()
+                        sleep(0.1)
+                        program:injectEvent("uwuntu.program_path", path)
+                        program:injectEvent("uwuntu.token", token)
+                    
+                    
+                    end)
                 end
                 db.setValue("RunningApps", "path", path, index)
                 db.setValue("RunningApps", "icon", fs.getDir(path).."/icon.bimg", index)
@@ -184,9 +217,9 @@ win =  {
                     :clear()
                     :setObject(frame)
                     :move(winX, winY, 0.6)
-                    :size(53, 21, 0.6)
+                    :size(winW+2, winH+2, 0.6)
                     :setObject(program)
-                    :size(51, 19, 0.6)
+                    :size(winW, winH, 0.6)
                     :setObject(buttons)
                     :move(2, 1, 0.6)
                     :play()

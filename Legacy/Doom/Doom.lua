@@ -7,11 +7,11 @@
 
 local path = "/Dragonstone/Apps/Doom"
 local Pine3D = require("Pine3D-minified")
-os.loadAPI(path.."/blittle")
+local blittle = require("blittle")
 
 local objects = {}
 
-local gun = paintutils.loadImage(path.."/images/gun")
+local gun = paintutils.loadImage(path.."images/gun")
 local gunf = paintutils.loadImage(path.."/images/gunf")
 local bgun = paintutils.loadImage(path.."/images/bgun")
 local bgunf = paintutils.loadImage(path.."/images/bgunf")
