@@ -19,17 +19,18 @@ local function centerText(obj)
     obj:setPosition("parent.w / 2 -"..obj:getSize().."/2", 1)
 end
 
-local win = {}
 local windows = {}
 
 win =  {
 
     create = function()
         local winX, winY = math.random(3, 40), math.random(5, 25)
+        local winW, winH = 51, 19
         local token = createToken()
         local tokens = db.getColumn("RunningApps", "token")
         local index
         local fullscre = "false"
+
         if tokens == nil then
             index = 1
         else
@@ -43,7 +44,7 @@ win =  {
         db.setValue("RunningApps", "token", token, index)
         db.setValue("RunningApps", "hidden", "false", index)
         local frame = mainFrame:addFrame()
-            :setSize(53,23)
+            :setSize(winW + 2, winH + 2)
             :setMovable()
             :setPosition(winX, winY)
             :setZIndex(10)
@@ -95,7 +96,9 @@ win =  {
         --os.queueEvent("updateDock")
         local instance = {
             setSize = function(self, width, height)
-                frame:setSize(width.."+2", height.."+2")
+                winW, winH = width, height
+                frame:setSize(winW + 2, winH + 2)
+                program:setSize(winW, winH)
                 return self
             end,
             
@@ -127,10 +130,39 @@ win =  {
             end,
 
             run = function(self, path, args)
+
+                if fs.exists(fs.getDir(path).."/DG_config.lua") then
+                    local file = fs.open(fs.getDir(path).."/DG_config.lua", "r")
+                    local table = textutils.unserialise(file.readAll())
+
+                    file.close()
+
+                        db.setValue("RunningApps", "name", table["name"], index)
+                        label:setText(table["name"])
+                        frame:setSize(table["width"].."+2", table["height"].."+2")
+                        program:setSize(table["width"], table["height"])
+                        winW, winH = table["width"], table["height"]
+                    
+                end
+
                 if not args then
                     program:execute(path)
+                    basalt.schedule(function()
+                        sleep(0.1)
+                        program:injectEvent("uwuntu.program_path", path)
+                        program:injectEvent("uwuntu.token", token)
+                    
+                    
+                    end)
                 else
                     program:execute(path, args)
+                    basalt.schedule(function()
+                        sleep(0.1)
+                        program:injectEvent("uwuntu.program_path", path)
+                        program:injectEvent("uwuntu.token", token)
+                    
+                    
+                    end)
                 end
                 db.setValue("RunningApps", "path", path, index)
                 db.setValue("RunningApps", "icon", fs.getDir(path).."/icon.bimg", index)
@@ -141,6 +173,8 @@ win =  {
             end, 
 
             close = function(self)
+                basalt.debug("delete")
+                os.queueEvent("uwuntu.fullscreen_off")
                 
                 local index = db.search("RunningApps", "token", token)
                     db.removeValue("RunningApps", "hidden", index)
@@ -150,7 +184,7 @@ win =  {
                     db.removeValue("RunningApps", "token", index)
 
                 os.queueEvent("updateDock")
-
+                
                 frame:remove()
                 return self
             end,
@@ -170,6 +204,7 @@ win =  {
 
                 local index = db.search("RunningApps", "token", token)
                 db.setValue("RunningApps", "hidden", "true", index)
+                os.queueEvent("uwuntu.fullscreen_off")
                 os.queueEvent("updateDock")
                 return self
             end,
@@ -184,9 +219,9 @@ win =  {
                     :clear()
                     :setObject(frame)
                     :move(winX, winY, 0.6)
-                    :size(53, 21, 0.6)
+                    :size(winW+2, winH+2, 0.6)
                     :setObject(program)
-                    :size(51, 19, 0.6)
+                    :size(winW, winH, 0.6)
                     :setObject(buttons)
                     :move(2, 1, 0.6)
                     :play()
@@ -194,6 +229,7 @@ win =  {
                 local index = db.search("RunningApps", "token", token)
                 db.setValue("RunningApps", "hidden", "false", index)
                 os.queueEvent("updateDock")
+                os.queueEvent("uwuntu.fullscreen_off")
                 return self
             end,
 
@@ -206,12 +242,14 @@ win =  {
                     :clear()
                     :setObject(frame)
                     :move(0, 1, 0.6)
-                    :size(rw+1, rh-1, 0.6)
+                    :size(rw+1, rh, 0.6)
                     :setObject(program)
-                    :size(rw, rh-3, 0.6)
+                    :size(rw, rh-1, 0.6)
                     :setObject(buttons)
                     :move(3, 1, 0.6)
                     :play()
+
+                os.queueEvent("uwuntu.fullscreen_on")
                 return self
             end,
 
@@ -246,6 +284,7 @@ win =  {
 
         closeButton:onClick(function() 
             os.queueEvent("updateDock")
+            os.queueEvent("uwuntu.fullscreen_off")
             local index = db.search("RunningApps", "token", token)
                 db.removeValue("RunningApps", "hidden", index)
                 db.removeValue("RunningApps", "icon", index)
@@ -266,11 +305,12 @@ win =  {
                 instance.fullscre = "true"
             else
                 instance.showWindow()
+                os.queueEvent("uwuntu.fullscreen_off")
                 instance.fullscre = "false"
             end
         end)
 
-        program:onDone(function()
+        --[[program:onDone(function()
             os.queueEvent("updateDock")
             local index = db.search("RunningApps", "token", token)
                 db.removeValue("RunningApps", "hidden", index)
@@ -279,7 +319,8 @@ win =  {
                 db.removeValue("RunningApps", "path", index)
                 db.removeValue("RunningApps", "token", index)
             frame:remove()
-        end)
+        end)]]
+        
         
         return instance
 

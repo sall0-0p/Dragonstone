@@ -18,10 +18,27 @@ FileSystem = {
         if checkPerms(path, executable) then
             os.queueEvent("run_program", path, executable, argument, name)
             
-            local program = win.create()
-                :setSize(51,19)
-                :setBar(name)
-                :run(path.."/"..executable)
+            local success, errormsg = pcall(function()
+                local program = win.create()
+                    :setSize(51,19)
+                    :setBar(name)
+                    :run(path.."/"..executable)
+                    
+            end)
+            
+            if not success then
+                os.queueEvent("notification", "Program Crashed!", "Error log was written to 'dragonstone' directory")
+                
+                pcall(function() 
+                    local file = fs.open("/Dragonstone/crash-log.log", "w")
+                    file.write(errormsg)
+                
+                    file.close()
+                end)
+            end
+            os.queueEvent("updateDock")
+
+            
             return success
         end
     end,

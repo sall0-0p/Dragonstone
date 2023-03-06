@@ -13,3 +13,5 @@
     settings.save()
 
     print("Success!")
+    sleep(1)
+    os.reboot()

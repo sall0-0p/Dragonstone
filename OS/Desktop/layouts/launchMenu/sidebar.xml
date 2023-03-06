@@ -1,7 +1,7 @@
 <frame id="main" width="parent.w" height="parent.h" bg="gray">
-    <button id="shutdown" width="3" height="3" text="&#1;" y="parent.h-3" fg="white" />
-    <button id="settings" width="3" height="3" text="&#164;" y="parent.h-6" fg="white" />
-    <button id="account" width="3" height="3" text="&#2;" y="parent.h-9" fg="white" />
+    <button id="shutdown" width="3" height="3" text="&#1;" y="7" fg="white" />
+    <button id="settings" width="3" height="3" text="&#164;" y="4" fg="white" />
+    <button id="account" width="3" height="3" text="&#2;" y="1" fg="white" />
 
 
 </frame>

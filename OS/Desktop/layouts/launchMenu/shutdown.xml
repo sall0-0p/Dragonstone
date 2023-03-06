@@ -1,0 +1,5 @@
+<frame id="main" width="parent.w" height="parent.h" bg="white" border="gray">
+    <label id="shutdown" bg="false" fg="black" text="&#1; Shutdown" x="2" y="2"/>
+    <label id="reboot" bg="false" fg="black" text="&#186; Reboot" x="2" y="3"/>
+    <label id="logout" bg="false" fg="lightGray" text="&#24; Log Out" x="2" y="4"/>
+</frame>

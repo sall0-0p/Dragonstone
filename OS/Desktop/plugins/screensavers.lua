@@ -15,7 +15,7 @@ return function(mainFrame)
             :setBackground(colors.black)
         local ScreensaverProgram = mainFrame:addProgram()
             :setSize(rw,rh)
-            :setZIndex(15)
+            :setZIndex(30)
             :setFocus()
             :execute(screensaver)
             

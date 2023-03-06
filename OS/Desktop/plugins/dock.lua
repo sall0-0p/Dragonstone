@@ -40,16 +40,17 @@ return function(mainFrame)
             :setSize(rw, 8)
             :setPosition(1, "parent.h-7")
             :setBackground(false)
-            :setZIndex(11)
+            :setZIndex(17)
 
         if rh < 22 then 
             trFrame:setZIndex(5)
         end
+        
         local duckFrame = trFrame:addFrame()
             :setSize(rw, 2)
             :setPosition(1, 7)
             :setBackground(mainColor)
-            :setZIndex(3)
+            :setZIndex(17)
 
             --duckFrame:onClick(function() basalt.debug(mainFrame:getSize()) end)
 
@@ -137,13 +138,13 @@ return function(mainFrame)
                 group.icon = trFrame:addImage()
                     :setSize(3,2)
                     :setPosition(group.w, 6)
-                    :setZIndex(4)
+                    :setZIndex(17)
                     :loadImage(group.iconPath)
 
                 group.label = trFrame:addLabel()
                     :setSize(3,1)
                     :setPosition(group.w.."", 8)
-                    :setZIndex(4)
+                    :setZIndex(17)
                     :setForeground(secondColor)
 
                 if runningApps ~= nil then
@@ -187,8 +188,8 @@ return function(mainFrame)
                             --local Animation = mainFrame:addAnimation()
                             local menu = mainFrame:addFrame()
                                 :addLayout("/Dragonstone/OS/Desktop/layouts/dock/activeMenu.xml")
-                                :setSize(15,7)
-                                :setPosition(iconPosX, iconPosY.."-8")
+                                :setSize(15,9)
+                                :setPosition(iconPosX, iconPosY.."-10")
                                 :setZIndex(12)
 
                             local menuBRD = mainFrame:addLabel()
@@ -205,6 +206,13 @@ return function(mainFrame)
                             local closeBtn = menu:getObject("menu2"):getObject("close")
                             local folderBtn = menu:getObject("menu2"):getObject("showFolder") 
                             local pinBtn = menu:getObject("menu2"):getObject("pin")
+                            local programLabel = menu:getObject("menu2"):getObject("label")
+
+                            local name = fs.getName(group.path)
+                            local extension = name:match "[^%.]+$"
+                            local name = string.gsub(name, "."..extension, "")
+                            programLabel:setText(name)
+                            
                                 closeBtn:onClick(function() 
                                     local instance = win.getWindow(group.token)
                                     if instance ~= nil then
@@ -215,12 +223,28 @@ return function(mainFrame)
                                 end)
 
                                 folderBtn:onClick(function()
-                                    local finder = win.create()
-                                        :setSize(51,19)
-                                        :setBar("Finder")
-                                        :run("Dragonstone/Apps/Finder/Finder.lua", fs.getDir(group.path))
-                                        menu:remove()
-                                        menuBRD:remove()
+                                    local success, errormsg = pcall(function()
+                                        local finder = win.create()
+                                            :setSize(51,19)
+                                            :setBar("Finder")
+                                            :run("Dragonstone/Apps/Finder/Finder.lua", fs.getDir(group.path))
+                                            
+                                    end)
+                                    
+                                    if not success then
+                                        os.queueEvent("notification", "Program Crashed!", "Error log was written to 'dragonstone' directory")
+                                        
+                                        pcall(function() 
+                                            local file = fs.open("/Dragonstone/crash-log.log", "w")
+                                            file.write(errormsg)
+                                            
+                                            file.close()
+                                        end)
+                                    end
+                                
+                                    menu:remove()
+                                    menuBRD:remove()
+                                    
                                 end)
 
                                 pinBtn:onClick(function() 
@@ -249,20 +273,36 @@ return function(mainFrame)
                     group.icon:onClick(function(self, event, button)
                         --basalt.debug(button)
                         if button == 1 then
-                            local newInstance = win.create()
-                                :setSize(51,19)
-                                :setBar(fs.getName(fs.getDir(group.path)))
-                                :run(group.path)
-                                os.queueEvent("updateDock")
+
+                            local success, errormsg = pcall(function()
+                                local newInstance = win.create()
+                                    :setSize(51,19)
+                                    :setBar(fs.getName(fs.getDir(group.path)))
+                                    :run(group.path)
+                                    
+                            end)
+                            
+                            if not success then
+                                os.queueEvent("notification", "Program Crashed!", "Error log was written to 'dragonstone' directory")
+                                
+                                pcall(function() 
+                                    local file = fs.open("/Dragonstone/crash-log.log", "w")
+                                    file.write(errormsg)
+                                
+                                    file.close()
+                                end)
+                            end
+
+                            os.queueEvent("updateDock")
                         end
                         if button == 2 then
                             local iconPosX, iconPosY = group.icon:getAbsolutePosition()
 
                             local menu = mainFrame:addFrame()
                                 :addLayout("/Dragonstone/OS/Desktop/layouts/dock/pinnedMenu.xml")
-                                :setSize(15,6)
-                                :setPosition(iconPosX, iconPosY.."-7")
-                                :setZIndex(12)
+                                :setSize(15,8)
+                                :setPosition(iconPosX, iconPosY.."-9")
+                                :setZIndex(30)
 
                             local menuBRD = mainFrame:addLabel()
                                 :setText("\130\143\129")
@@ -270,27 +310,68 @@ return function(mainFrame)
                                 :setPosition(iconPosX, iconPosY.."-1")
                                 :setBackground(false)
                                 :setForeground(colors.gray)
-                                :setZIndex(13)
+                                :setZIndex(31)
 
                             local openBtn = menu:getObject("menu1"):getObject("open")
                             local folderBtn = menu:getObject("menu1"):getObject("showFolder") 
                             local unpinBtn = menu:getObject("menu1"):getObject("unpin")
+                            local programLabel = menu:getObject("menu1"):getObject("label")
+
+                            local name = fs.getName(group.path)
+                            local extension = name:match "[^%.]+$"
+                            local name = string.gsub(name, "."..extension, "")
+                            programLabel:setText(name)
 
                             openBtn:onClick(function() 
                                 local newInstance = win.create()
                                     :setSize(51,19)
                                     :setBar(fs.getName(fs.getDir(group.path)))
                                     :run(group.path)
+
+                                local success, errormsg = pcall(function()
+                                    local newInstance = win.create()
+                                        :setSize(51,19)
+                                        :setBar(fs.getName(fs.getDir(group.path)))
+                                        :run(group.path)
+                                            
+                                end)
+                                    
+                                if not success then
+                                    os.queueEvent("notification", "Program Crashed!", "Error log was written to 'dragonstone' directory")
+                                        
+                                    pcall(function() 
+                                        local file = fs.open("/Dragonstone/crash-log.log", "w")
+                                        file.write(errormsg)
+
+                                        file.close()
+                                        
+                                    end)
+                                end
                                 os.queueEvent("updateDock")
                                 menu:remove()
                                 menuBRD:remove()
                             end)
 
                             folderBtn:onClick(function()
-                                local finder = win.create()
-                                    :setSize(51,19)
-                                    :setBar("Finder")
-                                    :run("Dragonstone/Apps/Finder/Finder.lua", fs.getDir(group.path))
+                                local success, errormsg = pcall(function()
+                                    local finder = win.create()
+                                        :setSize(51,19)
+                                        :setBar("Finder")
+                                        :run("Dragonstone/Apps/Finder/Finder.lua", fs.getDir(group.path))
+                                        
+                                end)
+                                
+                                if not success then
+                                    os.queueEvent("notification", "Program Crashed!", "Error log was written to 'dragonstone' directory")
+                                    
+                                    pcall(function() 
+                                        local file = fs.open("/Dragonstone/crash-log.log", "w")
+                                        file.write(errormsg)
+                                    
+                                        file.close()
+                                    end)
+                                end
+
                                 menu:remove()
                                 menuBRD:remove()
                             end)
@@ -324,6 +405,12 @@ return function(mainFrame)
         mainFrame:onEvent(function(self, event)
             if event == "updateDock" then
                 loadDock()
+            end
+            if event == "uwuntu.fullscreen_off" then
+                trFrame:show()
+            end
+            if event == "uwuntu.fullscreen_on" then
+                trFrame:hide()
             end
         end)
 
