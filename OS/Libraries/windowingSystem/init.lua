@@ -19,7 +19,6 @@ local function centerText(obj)
     obj:setPosition("parent.w / 2 -"..obj:getSize().."/2", 1)
 end
 
-local win = {}
 local windows = {}
 
 win =  {
@@ -174,6 +173,8 @@ win =  {
             end, 
 
             close = function(self)
+                basalt.debug("delete")
+                os.queueEvent("uwuntu.fullscreen_off")
                 
                 local index = db.search("RunningApps", "token", token)
                     db.removeValue("RunningApps", "hidden", index)
@@ -183,7 +184,7 @@ win =  {
                     db.removeValue("RunningApps", "token", index)
 
                 os.queueEvent("updateDock")
-
+                
                 frame:remove()
                 return self
             end,
@@ -203,6 +204,7 @@ win =  {
 
                 local index = db.search("RunningApps", "token", token)
                 db.setValue("RunningApps", "hidden", "true", index)
+                os.queueEvent("uwuntu.fullscreen_off")
                 os.queueEvent("updateDock")
                 return self
             end,
@@ -227,6 +229,7 @@ win =  {
                 local index = db.search("RunningApps", "token", token)
                 db.setValue("RunningApps", "hidden", "false", index)
                 os.queueEvent("updateDock")
+                os.queueEvent("uwuntu.fullscreen_off")
                 return self
             end,
 
@@ -239,12 +242,14 @@ win =  {
                     :clear()
                     :setObject(frame)
                     :move(0, 1, 0.6)
-                    :size(rw+1, rh-1, 0.6)
+                    :size(rw+1, rh, 0.6)
                     :setObject(program)
-                    :size(rw, rh-3, 0.6)
+                    :size(rw, rh-1, 0.6)
                     :setObject(buttons)
                     :move(3, 1, 0.6)
                     :play()
+
+                os.queueEvent("uwuntu.fullscreen_on")
                 return self
             end,
 
@@ -279,6 +284,7 @@ win =  {
 
         closeButton:onClick(function() 
             os.queueEvent("updateDock")
+            os.queueEvent("uwuntu.fullscreen_off")
             local index = db.search("RunningApps", "token", token)
                 db.removeValue("RunningApps", "hidden", index)
                 db.removeValue("RunningApps", "icon", index)
@@ -299,11 +305,12 @@ win =  {
                 instance.fullscre = "true"
             else
                 instance.showWindow()
+                os.queueEvent("uwuntu.fullscreen_off")
                 instance.fullscre = "false"
             end
         end)
 
-        program:onDone(function()
+        --[[program:onDone(function()
             os.queueEvent("updateDock")
             local index = db.search("RunningApps", "token", token)
                 db.removeValue("RunningApps", "hidden", index)
@@ -312,7 +319,8 @@ win =  {
                 db.removeValue("RunningApps", "path", index)
                 db.removeValue("RunningApps", "token", index)
             frame:remove()
-        end)
+        end)]]
+        
         
         return instance
 

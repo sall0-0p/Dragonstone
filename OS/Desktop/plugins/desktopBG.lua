@@ -15,7 +15,7 @@ local rw, rh = mainFrame:getSize()
 local useDesktopBG = settings.get("uwuntucc.useDesktopBG")
 local DesktopBG
 if useDesktopBG == "true" then
-    local DesktopImage = settings.get("uwuntucc.desktopBG")
+    local DesktopImage = "/Dragonstone/OS/DesktopBackgrounds/VenturaLight-low.bimg"--/settings.get("uwuntucc.desktopBG")
 
     --[[local DesktopBG = mainFrame:addImage()
         :setSize(rw,rh)

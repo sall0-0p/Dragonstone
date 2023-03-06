@@ -63,11 +63,24 @@ end
 --     :setBar("Terminal")
 --     :run("/Dragonstone/Apps/Terminal/Terminal.lua")
 
-local terminal = win.create()
-     :setSize(51,19)
-     :setResizable()
-     :setBar("Terminal")
-     :run("/Dragonstone/Apps/Terminal/Terminal.lua")
+local success, errormsg = pcall(function()
+    local terminal = win.create()
+        :setSize(51,19)
+        :setResizable()
+        :setBar("Terminal")
+        :run("/Dragonstone/Apps/Terminal/Terminal.lua")
+end)
+
+if not success then
+    os.queueEvent("notification", "Program Crashed!", "Error log was written to 'dragonstone' directory")
+    
+    pcall(function() 
+        local file = fs.open("/Dragonstone/crash-log.log", "w")
+        file.write(errormsg)
+        
+        file.close()
+    end)
+end
 
 local function Update()
     basalt.autoUpdate()

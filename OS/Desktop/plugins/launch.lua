@@ -1,5 +1,7 @@
 local basalt = require(".Dragonstone.OS.Libraries.Basalt")
 
+local win = require(".Dragonstone.OS.Libraries.windowingSystem")
+
 return function(mainFrame)
     local mainFrame = require(".Dragonstone.OS.Desktop.values.mainFrame")
     local closeFrame = require(".Dragonstone.OS.Desktop.values.closeFrame")
@@ -19,6 +21,20 @@ return function(mainFrame)
         :loadImage("/Dragonstone/OS/Icons/LaunchIcon.bimg")
 
     basalt.setVariable("mainColor", mainColor)
+
+    local function DoubleClick(btn, func, mouseButton)
+        local doubleClickMaxTime = 0.20 -- in seconds
+        local doubleClick = 0
+        btn:onClick(function(self, event, button)
+            if(os.epoch("local")-doubleClickMaxTime*1000<=doubleClick)then
+                if button == mouseButton then
+                    func()
+                end
+                doubleClick = 0
+            end
+            doubleClick = os.epoch("local")
+        end)
+    end
 
     
     local rw, rh = mainFrame:getSize()
@@ -43,6 +59,53 @@ return function(mainFrame)
             :clear()
             :setObject(launchMenu)
             :move(1, rh, 0.3)
+
+        local selectedItem
+
+        local launchList = launchMenu:addList()
+            :setSize("20", "parent.h-2")
+            :setPosition(5, 2)
+            :setBackground(colors.black)
+            :setSelectedItem(colors.black, colors.white)
+            :setZIndex(17)
+
+            local apps = fs.list("/Dragonstone/Apps")
+
+            for i,v in pairs(apps) do
+                launchList:addItem(fs.getName(v), colors.black, colors.lightGray)
+            end
+
+            launchList:onChange(function() 
+                selectedItem = launchList:getItemIndex()
+            end)
+
+            DoubleClick(launchList, function() 
+                local item = "/Dragonstone/Apps/"..apps[selectedItem].."/"..apps[selectedItem]..".lua"
+                --basalt.debug(item)
+
+                local success, errormsg = pcall(function()
+                    local window = win.create()
+                        :setSize(51,19)
+                        :setBar(apps[selectedItem])
+                        :run(item)
+                        
+                end)
+                
+                if not success then
+                    os.queueEvent("notification", "Program Crashed!", "Error log was written to 'dragonstone' directory")
+                    
+                    pcall(function() 
+                        local file = fs.open("/Dragonstone/crash-log.log", "w")
+                        file.write(errormsg)
+                    
+                        file.close()
+                    end)
+                end
+
+                
+            
+            
+            end, 1)
 
     launchIcon:onClick(function() 
         if launchMenuStatus == false then
@@ -71,7 +134,7 @@ return function(mainFrame)
         :setPosition(-15, 4)
         :setBackground(colors.white)
         :setBorder(colors.gray)
-        :setZIndex(10)
+        :setZIndex(18)
         :addLayout("/Dragonstone/OS/Desktop/layouts/launchMenu/shutdown.xml")
 
     
@@ -113,13 +176,40 @@ return function(mainFrame)
         local win = require(".Dragonstone.OS.Libraries.windowingSystem")
 
         SPMenuButton:onClickUp(function()
+
+            local success, errormsg = pcall(function()
+                local settingsWIN = win.create()
+                    :setSize(51,19)
+                    :setBar("Settings")
+                    :run("/Dragonstone/Apps/Settings/Settings.lua")
+                    
+            end)
             
-            local settingsWIN = win.create()
-                :setSize(51,19)
-                :setBar("Settings")
-                :run("/Dragonstone/Apps/Settings/Settings.lua")
+            if not success then
+                os.queueEvent("notification", "Program Crashed!", "Error log was written to 'dragonstone' directory")
+                
+                pcall(function() 
+                    local file = fs.open("/Dragonstone/crash-log.log", "w")
+                    file.write(errormsg)
+                
+                    file.close()
+                end)
+            end
+
+            
         
         end)
 
-     launchMenu:onClick()
+    mainFrame:onEvent(function(self, event) 
+        if event == "uwuntu.fullscreen_off" then
+            launchIcon:show()
+            launchMenu:show()
+        end
+        if event == "uwuntu.fullscreen_on" then
+            launchIcon:hide()
+            launchMenu:hide()
+        end
+    end)
+
+    launchMenu:onClick()
 end
